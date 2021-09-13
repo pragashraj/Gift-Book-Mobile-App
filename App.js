@@ -1,11 +1,41 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+
+import {createStackNavigator} from '@react-navigation/stack'
+import {NavigationContainer} from '@react-navigation/native'
+
+import routes from './src/routes/routes'
+
+const stack = createStackNavigator()
+
+const AuthFlow = () => {
+  return(
+    <stack.Navigator>
+      { routes.auth.map(route => {
+          const {name, component, options} = route
+          return (
+            <stack.Screen
+              name = {name}
+              component = {component}
+              options = {options}
+              key = {name}
+            />
+          )
+      }) }
+    </stack.Navigator>
+  )
+}
 
 const App = () => {
   return (
-    <View>
-      <Text>Gift Book</Text>
-    </View>
+    <NavigationContainer>
+      <stack.Navigator>
+         <stack.Screen
+          name = "Authentication"
+          component = {AuthFlow}
+          options = { { headerShown: false } }
+        />
+      </stack.Navigator>
+    </NavigationContainer>
   )
 }
 
