@@ -29,7 +29,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <stack.Navigator>
-         <stack.Screen
+        <stack.Screen
           name = "Authentication"
           component = {AuthFlow}
           options = { { headerShown: false } }
