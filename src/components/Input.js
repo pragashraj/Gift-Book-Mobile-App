@@ -1,8 +1,6 @@
 import React from 'react'
 import { View, TextInput, StyleSheet, Image } from 'react-native'
 
-import {primaryColor} from '../values/values'
-
 const Input = ({
     placeholder, 
     defaultValue, 
@@ -24,6 +22,7 @@ const Input = ({
                     defaultValue = {defaultValue}
                     secureTextEntry = {secureTextEntry}
                     value = {value}
+                    placeholderTextColor = "#fff"
                 />
                 <Image style = {styles.tinyLogo} source = {icon}/>
             </View>
@@ -34,11 +33,11 @@ const Input = ({
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: 70,
+        height: 80,
     },
     inputRoot: {
         borderRadius: 20,
-        borderColor: primaryColor,
+        borderColor: "#DC7633",
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
@@ -48,6 +47,8 @@ const styles = StyleSheet.create({
     },
     input: {
         width: "80%",
+        color: "#fff",
+        fontSize: 17
     },
     tinyLogo: {
         width: 25,

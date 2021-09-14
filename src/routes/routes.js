@@ -6,12 +6,12 @@ const routes = {
         {
             name: "Sign-Up",
             component: SignUp,
-            Options: { headerShown: false }
+            options: { headerShown: false }
         },
         {
             name: "Sign-In",
             component: SignIn,
-            Options: { headerShown: false }
+            options: { headerShown: false }
         },
     ]
 }
