@@ -1,5 +1,5 @@
-import SignUp from "../screens/SignUp"
-import SignIn from '../screens/SignIn'
+import SignUp from "../screens/SignUp/SignUp"
+import SignIn from '../screens/SignIn/SignIn'
 
 const routes = {
     auth: [

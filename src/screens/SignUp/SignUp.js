@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, Image, Text, TouchableOpacity } from 'react-native'
+import { View, Image, Text, TouchableOpacity } from 'react-native'
 
-import Input from '../components/Input'
-import Button from '../components/Button'
+import Input from '../../components/Input'
+import Button from '../../components/Button'
 
-import nameIcon from '../assets/icons/name.png'
-import emailIcon from '../assets/icons/email.png'
-import keyIcon from '../assets/icons/key.png'
-import confirmIcon from '../assets/icons/confirm.png'
-import wallpaper from '../assets/wallpapers/wallpaper2.jpg'
+import nameIcon from '../../assets/icons/name.png'
+import emailIcon from '../../assets/icons/email.png'
+import keyIcon from '../../assets/icons/key.png'
+import confirmIcon from '../../assets/icons/confirm.png'
+import wallpaper from '../../assets/wallpapers/Signup.jpg'
 
-import {primaryColor} from '../values/values'
+import {styles} from './styles'
 
 class SignUp extends Component {
     state = {
@@ -32,7 +32,7 @@ class SignUp extends Component {
     }
 
     handleSignInOnClick = () => {
-        console.log("clicked");
+        this.props.navigation.navigate("Sign-In")
     }
 
     handleOnChangeText = (value, name) => {
@@ -83,66 +83,5 @@ class SignUp extends Component {
         )
     }
 }
-
-const screenHight = Dimensions.get('screen').height
-const screenWidth = Dimensions.get('screen').width
-
-const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        height: "100%",
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    imageRoot: {
-        height: screenHight,
-        width: screenWidth,
-        position: "absolute"
-    },
-    wallpaper: {
-        width: "100%",
-        height: "100%"
-    },
-    formRoot: {
-        padding: 1,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    form: {
-        elevation: 1,
-        padding: 5,
-        borderRadius: 30
-    },
-    btnRoot: {
-        justifyContent: "center",
-        width: "90%",
-        marginTop: 15,
-    },
-    footer: {
-        position: "absolute",
-        elevation: 1,
-        bottom: 0,
-        height: 50,
-        width: "100%",
-        borderColor: primaryColor,
-        borderTopWidth: 1,
-        borderBottomWidth: 0.5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: "flex",
-        flexDirection: 'row'
-    },
-    footerText: {
-        color: "#fff",
-        fontSize: 15
-    },
-    footerLink: {
-        color: primaryColor,
-        fontSize: 16,
-        marginLeft: 7,
-        fontWeight: "bold"
-    }
-})
 
 export default SignUp
