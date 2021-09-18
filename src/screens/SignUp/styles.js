@@ -38,19 +38,21 @@ export const styles = StyleSheet.create({
         width: "90%",
         marginTop: 20,
     },
-    footer: {
+    footerRoot: {
+        height: 50,
+        width: "100%",
         position: "absolute",
         elevation: 1,
         bottom: 0,
-        height: 50,
-        width: "100%",
         borderColor: primaryColor,
         borderTopWidth: 1,
         borderBottomWidth: 0.5,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    footer: {
         display: "flex",
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     footerText: {
         color: "#fff",

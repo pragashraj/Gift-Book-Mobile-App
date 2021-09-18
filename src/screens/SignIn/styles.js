@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native'
 
-import {primaryColor} from '../../values/values'
+import {primaryColor, backgroundColor} from '../../values/values'
 
 const screenHight = Dimensions.get('screen').height
 const screenWidth = Dimensions.get('screen').width
@@ -26,31 +26,43 @@ export const styles = StyleSheet.create({
         padding: 1,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: "10%"
+        marginTop: "5%",
     },
     form: {
         elevation: 1,
         padding: 5,
-        borderRadius: 30
+        borderRadius: 30,
+    },
+    forgotPasswordRoot: {
+        display: "flex",
+        alignItems: 'flex-end',
+        marginBottom: 10,
+        marginRight: 15
+    },
+    forgotPasswordLink: {
+        color: "white",
+        fontSize: 15
     },
     btnRoot: {
         justifyContent: "center",
         width: "90%",
         marginTop: 20,
     },
-    footer: {
+    footerRoot: {
+        height: 50,
+        width: "100%",
         position: "absolute",
         elevation: 1,
         bottom: 0,
-        height: 50,
-        width: "100%",
         borderColor: primaryColor,
         borderTopWidth: 1,
         borderBottomWidth: 0.5,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    footer: {
         display: "flex",
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     footerText: {
         color: "#fff",
@@ -61,5 +73,5 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 7,
         fontWeight: "bold"
-    }
+    },
 })

@@ -17,7 +17,9 @@ class SignUp extends Component {
         name: "",
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        openAlert: false,
+        alertMessage: ""
     }
 
     INPUTS = [
@@ -27,8 +29,24 @@ class SignUp extends Component {
         {id: "4", name: "confirmPassword", placeholder: "Confirm Password", secureTextEntry: true, icon: confirmIcon},
     ]
 
-    handleBtnOnClick = () => {
+    handleSignUpApi = (data) => {
 
+    }
+
+    handleSignUpOnClick = () => {
+        const {name, email, password, confirmPassword} = this.state
+        if (name && email && password && confirmPassword) {
+            if (password === confirmPassword) {
+                const data = {name, email, password}
+                this.handleSignUpApi(data)
+            }
+            else {
+                this.setState({ openAlert: true, alertMessage: "" })
+            }
+        } 
+        else {
+            this.setState({ openAlert: true, alertMessage: "" })
+        }
     }
 
     handleSignInOnClick = () => {
@@ -39,45 +57,63 @@ class SignUp extends Component {
         this.setState({ [name]: value })
     }
 
+    renderInputFields = () => {
+        return this.INPUTS.map(input => {
+            const {placeholder, secureTextEntry, name, icon, id} = input
+            return (
+                <Input
+                    placeholder = {placeholder}
+                    defaultValue = ""
+                    secureTextEntry = {secureTextEntry}
+                    value = {this.state[name]}
+                    onChangeText = {this.handleOnChangeText}
+                    name = {name}
+                    icon = {icon}
+                    key = {id}
+                />
+            )
+        })
+    }
+
     renderForm = () => {
         return (
             <View style = {styles.form}>
-                { this.INPUTS.map(input => {
-                    const {placeholder, secureTextEntry, name, icon, id} = input
-                    return (
-                        <Input
-                            placeholder = {placeholder}
-                            defaultValue = ""
-                            secureTextEntry = {secureTextEntry}
-                            value = {this.state[name]}
-                            onChangeText = {this.handleOnChangeText}
-                            name = {name}
-                            icon = {icon}
-                            key = {id}
-                        />
-                    )
-                }) }
+                { this.renderInputFields() }
             </View>
         )
     }
+
+    renderFooter = () => (
+        <View style = {styles.footer}>
+            <Text style = {styles.footerText}>Already have an account ?</Text>
+            <TouchableOpacity onPress = {this.handleSignInOnClick}>
+                <Text style = {styles.footerLink}>SIGN-IN</Text>
+            </TouchableOpacity>
+        </View>
+    )
+
+    renderButton = () => (
+        <Button text = "SIGN UP" handleBtnOnClick = {this.handleSignUpOnClick}/>
+    )
+
+    renderBackground = () => (
+        <Image style = {styles.wallpaper} source = {wallpaper}/>
+    )
 
     render() {
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
-                    <Image style = {styles.wallpaper} source = {wallpaper}/>
+                    { this.renderBackground() }
                 </View>
                 <View style = {styles.formRoot}>
                     { this.renderForm() }
                 </View>
                 <View style = {styles.btnRoot}>
-                    <Button text = "SIGN UP" handleBtnOnClick = {this.handleBtnOnClick}/>
+                    { this.renderButton() }
                 </View>
-                <View style = {styles.footer}>
-                    <Text style = {styles.footerText}>Already have an account ?</Text>
-                    <TouchableOpacity onPress = {this.handleSignInOnClick}>
-                        <Text style = {styles.footerLink}>SIGN-IN</Text>
-                    </TouchableOpacity>
+                <View style = {styles.footerRoot}>
+                    { this.renderFooter() }
                 </View>
             </View>
         )
