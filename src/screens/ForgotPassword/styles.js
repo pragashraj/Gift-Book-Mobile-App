@@ -22,4 +22,33 @@ export const styles = StyleSheet.create({
         width: "100%",
         height: "100%"
     },
+    infoRoot: {
+        padding: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "15%",
+        marginBottom: 10,
+        width: "80%"
+    },
+    infoText: {
+        color: "white",
+        fontSize: 18
+    },
+    mainRoot: {
+        padding: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    main: {
+        elevation: 1,
+        padding: 5,
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    btnRoot: {
+        justifyContent: "center",
+        width: "90%",
+        marginTop: 20,
+    },
 })
