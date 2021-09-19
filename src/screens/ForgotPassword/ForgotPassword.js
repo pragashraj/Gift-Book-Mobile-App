@@ -8,6 +8,9 @@ import PasswordInput from '../../components/PasswordInput'
 import wallpaper from '../../assets/wallpapers/ForgotPassword.jpg'
 import emailIcon from '../../assets/icons/email.png'
 import codeIcon from '../../assets/icons/code.png'
+import confirmIcon from '../../assets/icons/confirm.png'
+import notVisible from '../../assets/icons/notVisible.png'
+import visible from '../../assets/icons/visible.png'
 
 import {styles} from './styles'
 
@@ -16,8 +19,13 @@ class ForgotPassword extends Component {
         index: 0,
         email: "",
         code: "",
+        password: "",
+        confirmPassword: "",
         btnText: "SEND",
-        infoTextMessage: "Don't worry let us know your email, we will send a reset code for you."
+        infoTextMessage: "Don't worry let us know your email, we will send a reset code for you.",
+        visibility: false,
+        openAlert: false,
+        alertMessage: "",
     }
 
     MessageText = [
@@ -28,19 +36,54 @@ class ForgotPassword extends Component {
 
     ButtonText = ["SEND", "CONFIRM", "RESET"]
 
+    handlePasswordChangeApi = (data) => {
+        this.setContentState(0)
+    }
+
+    handleConfirmResetCodeApi = (code) => {
+        const {index} = this.state
+        this.setContentState(index + 1)
+    }
+
+    handleSendResetCodeApi = (email) => {
+        const {index} = this.state
+        this.setContentState(index + 1)
+    }
+
     handlePasswordChange = () => {
-        const newIndex = 0
-        this.setContentState(newIndex)
+        const {password, confirmPassword, email} = this.state
+        if (password && confirmPassword) {
+            if (password === confirmPassword) {
+                const data = {email, password}
+                this.handlePasswordChangeApi(data)
+            }
+            else {
+                this.setAlert("Passwords not matched")
+            }
+        }
+        else {
+            this.setAlert("Password or confirmPassword code cannot be empty")
+        }
     }
 
     handleConfirmResetCode = () => {
-        const newIndex = this.state.index + 1
-        this.setContentState(newIndex)
+        const {code} = this.state
+        if (code) {
+            this.handleConfirmResetCodeApi(code)
+        }
+        else {
+            this.setAlert("Reset code cannot be empty")
+        }
     }
 
     handleSendResetCode = () => {
-        const newIndex = this.state.index + 1
-        this.setContentState(newIndex)
+        const {email} = this.state
+        if (email) {
+            this.handleSendResetCodeApi(email)
+        } 
+        else {
+            this.setAlert("Email cannot be empty")
+        }
     }
 
     handleBtnOnClick = () => {
@@ -55,6 +98,10 @@ class ForgotPassword extends Component {
         }
     }
 
+    handleIconOnClick = () => {
+        this.setState({ visibility: !this.state.visibility })
+    }
+
     handleOnChangeText = (value, name) => {
         this.setState({ [name]: value })
     }
@@ -67,10 +114,17 @@ class ForgotPassword extends Component {
         })
     }
 
-    renderInputField = (placeholder, name, icon) => {
+    setAlert = (message) => {
+        this.setState({
+            openAlert: true,
+            alertMessage: message
+        })
+    }
+
+    renderInputField = (placeholder, name, icon, secureTextEntry) => {
         return <Input
             placeholder = {placeholder}
-            secureTextEntry = {false}
+            secureTextEntry = {secureTextEntry}
             value = {this.state[name]}
             onChangeText = {this.handleOnChangeText}
             name = {name}
@@ -78,10 +132,24 @@ class ForgotPassword extends Component {
         />
     }
 
+    renderPasswordInputField = () => {
+        const {visibility, password} = this.state
+        return <PasswordInput
+            placeholder = "Password"
+            secureTextEntry = {!visibility}
+            value = {password}
+            onChangeText = {this.handleOnChangeText}
+            name = "password"
+            icon = { visibility ? notVisible : visible }
+            onIconPress = {this.handleIconOnClick}
+        />
+    }
+
     renderChangePassword = () => {
         return (
             <View style = {styles.form}>
-
+                { this.renderPasswordInputField() }
+                { this.renderInputField("Confirm Password", "confirmPassword", confirmIcon, true) }
             </View>
         )
     }
@@ -89,7 +157,7 @@ class ForgotPassword extends Component {
     renderResetCodeProvider = () => {
         return (
             <View style = {styles.form}>
-                { this.renderInputField("Code", "code", codeIcon) }
+                { this.renderInputField("Code", "code", codeIcon, false) }
             </View>
         )
     }
@@ -97,7 +165,7 @@ class ForgotPassword extends Component {
     renderEmailprovider = () => {
         return (
             <View style = {styles.form}>
-                { this.renderInputField("Email", "email", emailIcon) }
+                { this.renderInputField("Email", "email", emailIcon, false) }
             </View>
         )
     }
