@@ -4,6 +4,7 @@ import { Text, View, Image } from 'react-native'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
+import AlertPopup from '../../components/AlertPopup'
 
 import wallpaper from '../../assets/wallpapers/ForgotPassword.jpg'
 import emailIcon from '../../assets/icons/email.png'
@@ -214,6 +215,7 @@ class ForgotPassword extends Component {
                 <View style = {styles.btnRoot}>
                     { this.renderButton() }
                 </View>
+                <AlertPopup open = {true}/>
             </View>
         )
     }
