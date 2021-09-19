@@ -3,9 +3,11 @@ import { View, Image, Text, TouchableOpacity } from 'react-native'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
+import PasswordInput from '../../components/PasswordInput'
 
 import emailIcon from '../../assets/icons/email.png'
-import keyIcon from '../../assets/icons/key.png'
+import notVisible from '../../assets/icons/notVisible.png'
+import visible from '../../assets/icons/visible.png'
 import wallpaper from '../../assets/wallpapers/Signin.jpg'
 
 import {styles} from './styles'
@@ -15,13 +17,9 @@ class SignIn extends Component {
         email: "",
         password: "",
         openAlert: false,
-        alertMessage: ""
+        alertMessage: "",
+        visibility: false
     }
-
-    INPUTS = [
-        {id: "1", name: "email", placeholder: "Email", secureTextEntry: false, icon: emailIcon},
-        {id: "2", name: "password", placeholder: "Password", secureTextEntry: true, icon: keyIcon},
-    ]
 
     handleSignInApi = (data) => {
 
@@ -46,26 +44,36 @@ class SignIn extends Component {
         this.props.navigation.navigate("Forgot-Password")
     }
 
+    handleIconOnClick = () => {
+        this.setState({ visibility: !this.state.visibility })
+    }
+
     handleOnChangeText = (value, name) => {
         this.setState({ [name]: value })
     }
 
-    renderInputFields = () => {
-        return this.INPUTS.map(input => {
-            const {placeholder, secureTextEntry, name, icon, id} = input
-            return (
-                <Input
-                    placeholder = {placeholder}
-                    defaultValue = ""
-                    secureTextEntry = {secureTextEntry}
-                    value = {this.state[name]}
-                    onChangeText = {this.handleOnChangeText}
-                    name = {name}
-                    icon = {icon}
-                    key = {id}
-                />
-            )
-        }) 
+    renderEmailInputField = () => {
+        return <Input
+            placeholder = "Email"
+            secureTextEntry = {false}
+            value = {this.state.email}
+            onChangeText = {this.handleOnChangeText}
+            name = "email"
+            icon = {emailIcon}
+        />
+    }
+
+    renderPasswordInputField = () => {
+        const {visibility, password} = this.state
+        return <PasswordInput
+            placeholder = "Password"
+            secureTextEntry = {!visibility}
+            value = {password}
+            onChangeText = {this.handleOnChangeText}
+            name = "password"
+            icon = { visibility ? notVisible : visible }
+            onIconPress = {this.handleIconOnClick}
+        />
     }
 
     renderForgotPassword = () => {
@@ -81,7 +89,8 @@ class SignIn extends Component {
     renderForm = () => {
         return (
             <View style = {styles.form}>
-                { this.renderInputFields() }
+                { this.renderEmailInputField() }
+                { this.renderPasswordInputField() }
                 { this.renderForgotPassword() }
             </View>
         )

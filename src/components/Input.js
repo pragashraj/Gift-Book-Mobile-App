@@ -2,8 +2,7 @@ import React from 'react'
 import { View, TextInput, StyleSheet, Image } from 'react-native'
 
 const Input = ({
-    placeholder, 
-    defaultValue, 
+    placeholder,  
     secureTextEntry, 
     value, 
     onChangeText, 
@@ -19,7 +18,6 @@ const Input = ({
                     autoCapitalize = 'none'
                     autoCorrect = {false}
                     onChangeText = {val => onChangeText(val, name)}
-                    defaultValue = {defaultValue}
                     secureTextEntry = {secureTextEntry}
                     value = {value}
                     placeholderTextColor = "#fff"

@@ -63,7 +63,6 @@ class SignUp extends Component {
             return (
                 <Input
                     placeholder = {placeholder}
-                    defaultValue = ""
                     secureTextEntry = {secureTextEntry}
                     value = {this.state[name]}
                     onChangeText = {this.handleOnChangeText}
