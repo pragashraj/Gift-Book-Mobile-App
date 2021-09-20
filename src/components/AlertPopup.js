@@ -1,39 +1,29 @@
 import React from 'react'
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import { Modal, StyleSheet, Text, View } from "react-native";
 
-const AlertPopup = ({open}) => {
+const AlertPopup = ({open, message}) => {
 
     const renderContent = () => {
         return (
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                <Text style={styles.modalText}>Hello World!</Text>
-                <Pressable
-                    style={[styles.button, styles.buttonClose]}
-                    onPress={() => setModalVisible(!modalVisible)}
-                >
-                    <Text style={styles.textStyle}>Hide Modal</Text>
-                </Pressable>
+            <View style = {styles.centeredView}>
+                <View style = {styles.modalView}>
+                    <Text style = {styles.modalText}>{message}</Text>
                 </View>
             </View>
         )
     }
 
     return (
-        <View style = {styles.conatiner}>
-            <Modal
-                animationType = "slide"
-                transparent = {true}
-                visible = {open}
-            >
-            { renderContent() }
+        <View style = {styles.container}>
+            <Modal animationType = "slide" transparent = {true} visible = {open}>
+                { renderContent() }
             </Modal>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    conatiner: {
+    container: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
@@ -60,24 +50,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-    },
-    buttonOpen: {
-        backgroundColor: "#F194FF",
-    },
-    buttonClose: {
-        backgroundColor: "#2196F3",
-    },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
     modalText: {
-        marginBottom: 15,
         textAlign: "center"
     }
 })

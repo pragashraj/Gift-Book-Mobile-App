@@ -215,7 +215,7 @@ class ForgotPassword extends Component {
                 <View style = {styles.btnRoot}>
                     { this.renderButton() }
                 </View>
-                <AlertPopup open = {true}/>
+                <AlertPopup open = {true} message = "Hello world!"/>
             </View>
         )
     }
