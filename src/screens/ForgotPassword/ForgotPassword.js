@@ -4,6 +4,7 @@ import { Text, View, Image } from 'react-native'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
+import AlertSnackBar from '../../components/AlertSnackBar'
 
 import wallpaper from '../../assets/wallpapers/ForgotPassword.jpg'
 import emailIcon from '../../assets/icons/email.png'
@@ -62,7 +63,7 @@ class ForgotPassword extends Component {
             }
         }
         else {
-            this.setAlert("Password or confirmPassword code cannot be empty")
+            this.setAlert("Password or confirmPassword cannot be empty")
         }
     }
 
@@ -79,7 +80,12 @@ class ForgotPassword extends Component {
     handleSendResetCode = () => {
         const {email} = this.state
         if (email) {
-            this.handleSendResetCodeApi(email)
+            if (!this.confirmEmail(email)) {
+                this.setAlert("Enter valid email address")
+            }
+            else {
+                this.handleSendResetCodeApi(email)
+            }
         } 
         else {
             this.setAlert("Email cannot be empty")
@@ -103,7 +109,11 @@ class ForgotPassword extends Component {
     }
 
     handleOnChangeText = (value, name) => {
-        this.setState({ [name]: value })
+        this.setState({ 
+            [name]: value,
+            openAlert: false,
+            alertMessage: "",
+        })
     }
 
     setContentState = (newIndex) => {
@@ -119,6 +129,11 @@ class ForgotPassword extends Component {
             openAlert: true,
             alertMessage: message
         })
+    }
+
+    confirmEmail = (email) => {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return pattern.test(email)
     }
 
     renderInputField = (placeholder, name, icon, secureTextEntry) => {
@@ -200,6 +215,7 @@ class ForgotPassword extends Component {
     )
 
     render() {
+        const {openAlert, alertMessage} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -214,6 +230,7 @@ class ForgotPassword extends Component {
                 <View style = {styles.btnRoot}>
                     { this.renderButton() }
                 </View>
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
             </View>
         )
     }

@@ -4,6 +4,7 @@ import { View, Image, Text, TouchableOpacity } from 'react-native'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
+import AlertSnackBar from '../../components/AlertSnackBar'
 
 import emailIcon from '../../assets/icons/email.png'
 import notVisible from '../../assets/icons/notVisible.png'
@@ -28,11 +29,16 @@ class SignIn extends Component {
     handleSignInOnClick = () => {
         const {email, password} = this.state
         if (email && password) {
-            const data = {email, password}
-            this.handleSignInApi(data)
+            if (!this.confirmEmail(email)) {
+                this.setAlert("Enter valid email address")
+            }
+            else {
+                const data = {email, password}
+                this.handleSignInApi(data)
+            }
         } 
         else {
-            this.setState({ openAlert: true, alertMessage: "" })
+            this.setState({ openAlert: true, alertMessage: "Fields cannot be empty" })
         }
     }
 
@@ -50,6 +56,11 @@ class SignIn extends Component {
 
     handleOnChangeText = (value, name) => {
         this.setState({ [name]: value })
+    }
+
+    confirmEmail = (email) => {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return pattern.test(email)
     }
 
     renderEmailInputField = () => {
@@ -114,6 +125,7 @@ class SignIn extends Component {
     )
 
     render() {
+        const {openAlert, alertMessage} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -128,6 +140,7 @@ class SignIn extends Component {
                 <View style = {styles.footerRoot}>
                     { this.renderFooter() }
                 </View>
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
             </View>
         )
     }
