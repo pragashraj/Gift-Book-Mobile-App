@@ -3,6 +3,7 @@ import { View, Image, Text, TouchableOpacity } from 'react-native'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
+import AlertSnackBar from '../../components/AlertSnackBar'
 
 import nameIcon from '../../assets/icons/name.png'
 import emailIcon from '../../assets/icons/email.png'
@@ -36,16 +37,19 @@ class SignUp extends Component {
     handleSignUpOnClick = () => {
         const {name, email, password, confirmPassword} = this.state
         if (name && email && password && confirmPassword) {
-            if (password === confirmPassword) {
+            if (!this.confirmEmail(email)) {
+                this.setAlert("Enter valid email address")
+            }
+            else if (password !== confirmPassword) {
+                this.setState({ openAlert: true, alertMessage: "Passwords not matched" })
+            }
+            else {
                 const data = {name, email, password}
                 this.handleSignUpApi(data)
             }
-            else {
-                this.setState({ openAlert: true, alertMessage: "" })
-            }
         } 
         else {
-            this.setState({ openAlert: true, alertMessage: "" })
+            this.setState({ openAlert: true, alertMessage: "Fields cannot be empty" })
         }
     }
 
@@ -55,6 +59,11 @@ class SignUp extends Component {
 
     handleOnChangeText = (value, name) => {
         this.setState({ [name]: value })
+    }
+
+    confirmEmail = (email) => {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return pattern.test(email)
     }
 
     renderInputFields = () => {
@@ -100,6 +109,7 @@ class SignUp extends Component {
     )
 
     render() {
+        const {openAlert, alertMessage} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -114,6 +124,7 @@ class SignUp extends Component {
                 <View style = {styles.footerRoot}>
                     { this.renderFooter() }
                 </View>
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
             </View>
         )
     }
