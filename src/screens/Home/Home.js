@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Text, SafeAreaView, ScrollView } from 'react-native'
+
+import {styles} from './styles'
 
 class Home extends Component {
     render() {
         return (
-            <View>
-                <Text> Home </Text>
-            </View>
+            <SafeAreaView style = {styles.container}>
+                <ScrollView style = {styles.scrollView} indicatorStyle = "white">
+                    <Text> Home </Text>
+                </ScrollView>
+            </SafeAreaView>
         )
     }
 }
