@@ -17,4 +17,13 @@ export const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
     },
+    imageRoot: {
+        height: screenHight,
+        width: screenWidth,
+        position: "absolute"
+    },
+    wallpaper: {
+        width: "100%",
+        height: "100%"
+    },
 })

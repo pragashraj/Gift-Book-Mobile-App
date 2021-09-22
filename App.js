@@ -3,7 +3,6 @@ import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
 import {NavigationContainer} from '@react-navigation/native'
 
-import TopBar from './src/components/TopBar'
 import routes from './src/routes/routes'
 
 const stack = createStackNavigator()
@@ -57,12 +56,9 @@ const App = () => {
   )
 
   const renderAuthenticatedFlow = () => (
-    <>
-      <TopBar/>
-      <stack.Navigator>
+    <stack.Navigator>
         { createStackScreen("Main", MainFlow) }
-      </stack.Navigator>
-    </>
+    </stack.Navigator>
   )
 
   const renderUnAuthenticatedFlow = () => (
