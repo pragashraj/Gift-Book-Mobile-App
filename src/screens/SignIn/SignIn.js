@@ -22,8 +22,12 @@ class SignIn extends Component {
         visibility: false
     }
 
-    handleSignInApi = (data) => {
+    handleSignInApi = async(data) => {
+        try {
 
+        } catch (e) {
+            
+        }
     }
 
     handleSignInOnClick = () => {

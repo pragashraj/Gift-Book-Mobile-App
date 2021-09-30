@@ -3,14 +3,15 @@ import { Text, View } from 'react-native'
 
 import {styles} from './styles'
 
-class Profile extends Component {
+class NewVoucher extends Component {
     render() {
         return (
             <View style = {styles.container}>
-                <Text> Profile </Text>
+                <Text> New Voucher </Text>
             </View>
         )
     }
 }
 
-export default Profile
+
+export default NewVoucher
