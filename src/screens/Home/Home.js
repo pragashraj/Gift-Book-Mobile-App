@@ -17,8 +17,10 @@ class Home extends Component {
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar/>
+                <View style = {styles.imageRoot}>
+                    { this.renderBackground() }
+                </View>
                 <ScrollView style = {styles.scrollView} indicatorStyle = "white">
-
                 </ScrollView>
             </SafeAreaView>
         )
