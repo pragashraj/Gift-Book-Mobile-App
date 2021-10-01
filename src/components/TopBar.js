@@ -3,20 +3,24 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 
 import menuIcon from '../assets/icons/menu.png'
 import user from '../assets/icons/user.png'
-import { primaryColor } from '../values/values'
 
-const TopBar = () => {
+const TopBar = ({title, navigation}) => {
+
+    const menuOnPress = () => {
+        navigation.openDrawer()
+    }
+
     return (
         <View style = {styles.container}>
             <View style = {styles.root}>
                 <View style = {styles.menuRoot}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress = {menuOnPress}>
                         <Image source = {menuIcon} style = {styles.icon}/>
                     </TouchableOpacity>
-                    <Text style = {styles.title}>Gift Book</Text>
+                    <Text style = {styles.title}>{title}</Text>
                 </View>
                 <TouchableOpacity>
-                        <Image source = {user} style = {styles.icon}/>
+                    <Image source = {user} style = {styles.icon}/>
                 </TouchableOpacity>
             </View>
         </View>

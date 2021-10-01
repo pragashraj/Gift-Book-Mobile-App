@@ -7,6 +7,7 @@ import Profile from "../screens/Profile/Profile"
 import Merchants from "../screens/Merchants/Merchants"
 import MyVouchers from "../screens/MyVouchers/MyVouchers"
 import NewVoucher from "../screens/NewVoucher/NewVoucher"
+import MyPayments from "../screens/Payments/MyPayments"
 
 const routes = {
     auth: [
@@ -38,18 +39,23 @@ const routes = {
             options: { headerShown: false }
         },
         {
-            name: "MyVouchers",
+            name: "My Vouchers",
             component: MyVouchers,
             options: { headerShown: false }
         },
         {
-            name: "NewVouchers",
+            name: "New Voucher",
             component: NewVoucher,
             options: { headerShown: false }
         },
         {
             name: "Merchants",
             component: Merchants,
+            options: { headerShown: false }
+        },
+        {
+            name: "My Payments",
+            component: MyPayments,
             options: { headerShown: false }
         },
     ]
