@@ -16,9 +16,9 @@ class Home extends Component {
     render() {
         return (
             <SafeAreaView style = {styles.container}>
-                <View style = {styles.imageRoot}>
+                {/* <View style = {styles.imageRoot}>
                     { this.renderBackground() }
-                </View>
+                </View> */}
                 <TopBar title = "Home" navigation = {this.props.navigation}/>
                 <ScrollView style = {styles.scrollView} indicatorStyle = "white">
                 </ScrollView>

@@ -30,7 +30,7 @@ const CustomDrawer = ({props}) => {
     const renderFooter = () => (
         <View style = {styles.footer}>
             <TouchableOpacity>
-                <Text style = {styles.footerLink}>Log out</Text>
+                <Text style = {styles.footerText}>Log out</Text>
             </TouchableOpacity>
         </View>
     )
@@ -42,6 +42,7 @@ const CustomDrawer = ({props}) => {
             onPress = {() => { props.navigation.navigate(label) }}
             icon = {() => <Image source = {icon} style = {styles.drawerItemIcon}/>}
             key = {key}
+            style = {styles.drawerItem}
         />
     )
 
@@ -49,9 +50,12 @@ const CustomDrawer = ({props}) => {
         <View style = {styles.container}>
             <View style = {styles.headerRoot}>
                 <Image style = {styles.headerWallpaper} source = {DrawerHeader}/>
+                <Text style = {styles.headerText}>Chris evans</Text>
             </View>
             <View style = {styles.DrawerItemsRoot}>
-                { DrawerItems.map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
+                { DrawerItems.slice(0, 2).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
+                <View style = {styles.divider}/>
+                { DrawerItems.slice(2, 6).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
             </View>
             <View style = {styles.footerRoot}>
                 { renderFooter() }
@@ -71,25 +75,45 @@ const styles = StyleSheet.create({
     headerRoot: {
         width: "100%",
         height: screenHight * 0.25,
-        marginTop: -5
+        marginTop: -5,
     },
     headerWallpaper: {
         width: "100%",
         height: "100%"
     },
+    headerText:{
+        position: "absolute",
+        color: "silver",
+        fontSize: 15,
+        right: 0,
+        marginRight: 45,
+        marginTop: 7
+    },
     DrawerItemsRoot: {
         width: "100%",
         height: screenHight * 0.72,
-        padding: 10
+        padding: 10,
+    },
+    drawerItem: {
+        backgroundColor: "#F9EBEA",
+        borderRadius: 10,
     },
     drawerItemLabel: {
         color: primaryColor, 
         marginLeft: -10, 
-        fontSize: 15 
+        fontSize: 14,
+        fontWeight: "bold"
     },
     drawerItemIcon: {
         width: 18,
-        height: 18
+        height: 18,
+    },
+    divider: {
+        width: "100%",
+        marginTop: 10,
+        marginBottom: 10,
+        height: 0.3,
+        backgroundColor: "grey"
     },
     footerRoot: {
         position: "absolute",
@@ -98,6 +122,20 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignItems: "center",
         justifyContent: "center",
-        borderTopWidth: 0.5
+        backgroundColor: "#772726",
+    },
+    footerText: {
+        color: "#fff",
+        fontWeight: "bold",
+        textTransform: "uppercase"
+    },
+    imageRoot: {
+        height: screenHight,
+        width: screenWidth,
+        position: "absolute"
+    },
+    wallpaper: {
+        width: "100%",
+        height: "100%"
     },
 })

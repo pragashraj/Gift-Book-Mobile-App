@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import menuIcon from '../assets/icons/menu.png'
 import user from '../assets/icons/user.png'
 
+import {primaryColor} from '../values/values'
+
 const TopBar = ({title, navigation}) => {
 
     const menuOnPress = () => {
@@ -33,10 +35,9 @@ const styles = StyleSheet.create({
     container: {
         height: 50,
         width: "100%",
-        elevation: 4,
         paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: "#A6ACAF"
+        elevation: 1,
+        backgroundColor: "#772726"
     },
     root: {
         flex: 1,
@@ -57,6 +58,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 16,
         textTransform: "uppercase",
-        color: "#fff"
+        color: "#948787"
     }
 })
