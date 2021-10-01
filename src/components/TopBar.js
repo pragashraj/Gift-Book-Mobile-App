@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     },
     title: {
         paddingHorizontal: 10,
-        fontSize: 16,
+        fontSize: 15,
         textTransform: "uppercase",
-        color: "#948787"
+        color: "silver"
     }
 })
