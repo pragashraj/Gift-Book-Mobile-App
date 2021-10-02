@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingHorizontal: 10,
         elevation: 1,
-        backgroundColor: primaryColor
+        backgroundColor: "#DC7633"
     },
     root: {
         flex: 1,
@@ -58,6 +58,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 15,
         textTransform: "uppercase",
-        color: "silver"
+        color: "#fff"
     }
 })

@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'rea
 import { DrawerItem } from '@react-navigation/drawer'
 
 import {primaryColor} from '../values/values'
-import DrawerHeader from '../assets/wallpapers/DrawerHead.jpg'
+import DrawerHeader from '../assets/wallpapers/drawerCover.jpg'
 import home from '../assets/icons/home.png'
 import profile from '../assets/icons/profile.png'
 import merchants from '../assets/icons/merchants.png'
@@ -85,11 +85,14 @@ const styles = StyleSheet.create({
     },
     headerText:{
         position: "absolute",
-        color: "silver",
-        fontSize: 15,
-        right: 0,
-        marginRight: 45,
-        marginTop: 7
+        fontSize: 20,
+        bottom: 0,
+        marginBottom: 40,
+        marginTop: 7,
+        marginLeft: 20,
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        letterSpacing: 2
     },
     DrawerItemsRoot: {
         width: "100%",
@@ -135,7 +138,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: primaryColor,
+        backgroundColor: "#DC7633",
     },
     footerText: {
         color: "#fff",
