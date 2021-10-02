@@ -2,10 +2,13 @@ import React from 'react'
 
 import {createStackNavigator} from '@react-navigation/stack'
 import {NavigationContainer} from '@react-navigation/native'
+import {createDrawerNavigator, DrawerContentScrollView} from '@react-navigation/drawer'
 
 import routes from './src/routes/routes'
+import CustomDrawer from './src/components/CustomDrawer'
 
 const stack = createStackNavigator()
+const drawer = createDrawerNavigator()
 
 const AuthFlow = () => {
   return(
@@ -25,14 +28,21 @@ const AuthFlow = () => {
   )
 }
 
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <CustomDrawer props = {props}/>
+    </DrawerContentScrollView>
+  )
+}
 
-const MainFlow = () => {
-  return(
-    <stack.Navigator>
+function DrawerFlow() {
+  return (
+    <drawer.Navigator drawerContent = {(props) => <CustomDrawerContent {...props} />}>
       { routes.main.map(route => {
           const {name, component, options} = route
           return (
-            <stack.Screen
+            <drawer.Screen
               name = {name}
               component = {component}
               options = {options}
@@ -40,7 +50,7 @@ const MainFlow = () => {
             />
           )
       }) }
-    </stack.Navigator>
+    </drawer.Navigator>
   )
 }
 
@@ -55,12 +65,6 @@ const App = () => {
     />
   )
 
-  const renderAuthenticatedFlow = () => (
-    <stack.Navigator>
-        { createStackScreen("Main", MainFlow) }
-    </stack.Navigator>
-  )
-
   const renderUnAuthenticatedFlow = () => (
     <stack.Navigator>
       { createStackScreen("Authentication", AuthFlow) }
@@ -69,7 +73,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      { auth ? renderAuthenticatedFlow() : renderUnAuthenticatedFlow() }
+      { auth ? <DrawerFlow/> : renderUnAuthenticatedFlow() }
     </NavigationContainer>
   )
 }

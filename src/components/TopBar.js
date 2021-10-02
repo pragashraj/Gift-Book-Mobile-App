@@ -2,16 +2,28 @@ import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 
 import menuIcon from '../assets/icons/menu.png'
-import { primaryColor } from '../values/values'
+import user from '../assets/icons/user.png'
 
-const TopBar = () => {
+import {primaryColor} from '../values/values'
+
+const TopBar = ({title, navigation}) => {
+
+    const menuOnPress = () => {
+        navigation.openDrawer()
+    }
+
     return (
         <View style = {styles.container}>
             <View style = {styles.root}>
+                <View style = {styles.menuRoot}>
+                    <TouchableOpacity onPress = {menuOnPress}>
+                        <Image source = {menuIcon} style = {styles.icon}/>
+                    </TouchableOpacity>
+                    <Text style = {styles.title}>{title}</Text>
+                </View>
                 <TouchableOpacity>
-                    <Image source = {menuIcon} style = {styles.menuIcon}/>
+                    <Image source = {user} style = {styles.icon}/>
                 </TouchableOpacity>
-                <Text style = {styles.title}>Gift Book</Text>
             </View>
         </View>
     )
@@ -23,22 +35,29 @@ const styles = StyleSheet.create({
     container: {
         height: 50,
         width: "100%",
-        elevation: 4,
         paddingHorizontal: 10,
-        backgroundColor: "#fff",
+        elevation: 1,
+        backgroundColor: "#772726"
     },
     root: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between'
     },
-    menuIcon: {
-        height: 25,
-        width: 25
+    menuRoot: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    icon: {
+        height: 20,
+        width: 20
     },
     title: {
         paddingHorizontal: 10,
-        fontSize: 18,
-        color: primaryColor
+        fontSize: 16,
+        textTransform: "uppercase",
+        color: "#948787"
     }
 })
