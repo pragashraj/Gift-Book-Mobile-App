@@ -53,9 +53,11 @@ const CustomDrawer = ({props}) => {
                 <Text style = {styles.headerText}>Chris evans</Text>
             </View>
             <View style = {styles.DrawerItemsRoot}>
-                { DrawerItems.slice(0, 2).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
-                <View style = {styles.divider}/>
-                { DrawerItems.slice(2, 6).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
+                <View style = {styles.drawerItemBlock}>
+                    { DrawerItems.slice(0, 2).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
+                    <View style = {styles.divider}/>
+                    { DrawerItems.slice(2, 6).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
+                </View>
             </View>
             <View style = {styles.footerRoot}>
                 { renderFooter() }
@@ -91,8 +93,18 @@ const styles = StyleSheet.create({
     },
     DrawerItemsRoot: {
         width: "100%",
-        height: screenHight * 0.72,
+        height: screenHight * 0.6,
         padding: 10,
+        backgroundColor: "#EAECEE"
+    },
+    drawerItemBlock: {
+        width: "100%",
+        height: "100%",
+        marginTop: -40,
+        borderRadius: 30,
+        backgroundColor: "#fff",
+        padding: 5,
+        paddingTop: 10,
     },
     drawerItem: {
         backgroundColor: "#F9EBEA",
@@ -102,7 +114,8 @@ const styles = StyleSheet.create({
         color: primaryColor, 
         marginLeft: -10, 
         fontSize: 14,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontFamily: 'serif',
     },
     drawerItemIcon: {
         width: 18,
@@ -122,7 +135,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#772726",
+        backgroundColor: primaryColor,
     },
     footerText: {
         color: "#fff",

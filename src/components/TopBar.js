@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingHorizontal: 10,
         elevation: 1,
-        backgroundColor: "#772726"
+        backgroundColor: primaryColor
     },
     root: {
         flex: 1,
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     },
     title: {
         paddingHorizontal: 10,
-        fontSize: 16,
+        fontSize: 15,
         textTransform: "uppercase",
-        color: "#948787"
+        color: "silver"
     }
 })
