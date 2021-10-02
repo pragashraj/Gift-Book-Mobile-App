@@ -30,8 +30,12 @@ class SignUp extends Component {
         {id: "4", name: "confirmPassword", placeholder: "Confirm Password", secureTextEntry: true, icon: confirmIcon},
     ]
 
-    handleSignUpApi = (data) => {
+    handleSignUpApi = async(data) => {
+        try {
 
+        } catch (e) {
+
+        }
     }
 
     handleSignUpOnClick = () => {

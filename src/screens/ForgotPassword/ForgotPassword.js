@@ -37,18 +37,30 @@ class ForgotPassword extends Component {
 
     ButtonText = ["SEND", "CONFIRM", "RESET"]
 
-    handlePasswordChangeApi = (data) => {
-        this.setContentState(0)
+    handlePasswordChangeApi = async(data) => {
+        try {
+            this.setContentState(0)
+        } catch (e) {
+
+        }
     }
 
-    handleConfirmResetCodeApi = (code) => {
-        const {index} = this.state
-        this.setContentState(index + 1)
+    handleConfirmResetCodeApi = async(code) => {
+        try {
+            const {index} = this.state
+            this.setContentState(index + 1)
+        } catch (e) {
+            
+        }
     }
 
-    handleSendResetCodeApi = (email) => {
-        const {index} = this.state
-        this.setContentState(index + 1)
+    handleSendResetCodeApi = async(email) => {
+        try {
+
+        } catch (e) {
+            const {index} = this.state
+            this.setContentState(index + 1)
+        }
     }
 
     handlePasswordChange = () => {
