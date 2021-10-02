@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     },
     profileCoverRoot: {
         width: "100%",
-        height: screenHight * 0.4,
+        height: screenHight * 0.3,
     },
     coverWallpaper: {
         width: "100%",
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     profileRoot: {
         width: "90%",
         marginLeft: "5%",
-        height: screenHight * 0.3,
+        height: screenHight * 0.23,
         marginTop: -50,
         borderRadius: 10,
         backgroundColor: "#fff",
@@ -32,19 +32,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         width: "100%",
-        height: "70%",
-    },
-    vouchers: {
-        width: "100%",
-        height: "30%",
-        justifyContent: "center",
-        paddingLeft: 15,
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-    },
-    vouchersCount: {
-        color: primaryColor,
-        fontSize: 25
+        height: "100%",
     },
     profileImageBlock: {
         width: "45%",
@@ -68,26 +56,68 @@ export const styles = StyleSheet.create({
         textTransform: "uppercase",
     },
     profilerLN: {
-        fontSize: 30,
-        color: "#D98880",
+        fontSize: 24,
+        color: primaryColor,
         fontFamily: 'serif',
         textTransform: "uppercase",
         fontWeight: "bold"
     },
     mainRoot: {
         width: "100%",
-        height: screenHight * 0.4,
         marginTop: 25,
         backgroundColor: "#fff",
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,
         padding: 20
     },
+    vouchers: {
+        width: "100%",
+        justifyContent: "center",
+        paddingLeft: 15,
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        padding: 5,
+        elevation: 1
+    },
+    vouchersCount: {
+        color: "silver",
+        fontSize: 30
+    },
+    voucherText: {
+        fontWeight: "bold",
+        fontSize: 16,
+    },
     profileDetails: {
         marginTop: 25
     },
     contentHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: "#F9EBEA",
+        borderRadius: 10,
+        padding: 5
+    },
+    contentHeaderText: {
         color: "grey",
-        textTransform: "uppercase"
-    }
+        textTransform: "uppercase",
+    },
+    contentHeaderImage: {
+        width: 20,
+        height: 20
+    },
+    detailContainer: {
+        marginTop: 15,
+        padding: 5
+    },
+    detailBlock: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    detailContent: {
+        fontWeight: "bold",
+        fontSize: 16,
+    },
 })
