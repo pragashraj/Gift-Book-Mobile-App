@@ -7,11 +7,11 @@ import PasswordInput from '../../components/PasswordInput'
 import AlertSnackBar from '../../components/AlertSnackBar'
 
 import wallpaper from '../../assets/wallpapers/screens/forgotPassword.jpg'
-import emailIcon from '../../assets/icons/email.png'
-import codeIcon from '../../assets/icons/code.png'
-import confirmIcon from '../../assets/icons/confirm.png'
-import notVisible from '../../assets/icons/notVisible.png'
-import visible from '../../assets/icons/visible.png'
+import emailIcon from '../../assets/wallpapers/icons/email.png'
+import codeIcon from '../../assets/wallpapers/icons/code.png'
+import confirmIcon from '../../assets/wallpapers/icons/confirm.png'
+import notVisible from '../../assets/wallpapers/icons/notVisible.png'
+import visible from '../../assets/wallpapers/icons/visible.png'
 
 import {styles} from './styles'
 

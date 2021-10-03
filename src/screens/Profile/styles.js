@@ -10,11 +10,11 @@ export const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         height: "100%",
-        backgroundColor: "#EAECEE"
+        backgroundColor: "#EAECEE",
     },
     profileCoverRoot: {
         width: "100%",
-        height: screenHight * 0.3,
+        height: screenHight * 0.35,
     },
     coverWallpaper: {
         width: "100%",

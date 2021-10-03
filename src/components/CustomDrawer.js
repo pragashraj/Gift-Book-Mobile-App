@@ -4,12 +4,12 @@ import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'rea
 import { DrawerItem } from '@react-navigation/drawer'
 
 import DrawerHeader from '../assets/wallpapers/screens/coverD.jpg'
-import home from '../assets/icons/home.png'
-import profile from '../assets/icons/profile.png'
-import merchants from '../assets/icons/merchants.png'
-import newVoucher from '../assets/icons/new.png'
-import vouchers from '../assets/icons/vouchers.png'
-import payments from '../assets/icons/payments.png'
+import home from '../assets/wallpapers/icons/home.png'
+import profile from '../assets/wallpapers/icons/profile.png'
+import merchants from '../assets/wallpapers/icons/merchants.png'
+import newVoucher from '../assets/wallpapers/icons/new.png'
+import vouchers from '../assets/wallpapers/icons/vouchers.png'
+import payments from '../assets/wallpapers/icons/payments.png'
 
 const screenHight = Dimensions.get('screen').height
 const screenWidth = Dimensions.get('screen').width
