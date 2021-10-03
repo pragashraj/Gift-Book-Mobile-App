@@ -6,12 +6,12 @@ import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
 import AlertSnackBar from '../../components/AlertSnackBar'
 
-import wallpaper from '../../assets/wallpapers/screens/forgotPassword.jpg'
-import emailIcon from '../../assets/wallpapers/icons/email.png'
-import codeIcon from '../../assets/wallpapers/icons/code.png'
-import confirmIcon from '../../assets/wallpapers/icons/confirm.png'
-import notVisible from '../../assets/wallpapers/icons/notVisible.png'
-import visible from '../../assets/wallpapers/icons/visible.png'
+import wallpaper from '../../assets/images/screens/forgotPassword.jpg'
+import emailIcon from '../../assets/images/icons/email.png'
+import codeIcon from '../../assets/images/icons/code.png'
+import confirmIcon from '../../assets/images/icons/confirm.png'
+import notVisible from '../../assets/images/icons/notVisible.png'
+import visible from '../../assets/images/icons/visible.png'
 
 import {styles} from './styles'
 

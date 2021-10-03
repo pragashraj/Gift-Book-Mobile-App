@@ -5,11 +5,11 @@ import TopBar from '../../components/TopBar'
 import CustomInput from '../../components/CustomInput'
 import Button from '../../components/Button'
 
-import ProfileCover from '../../assets/wallpapers/screens/coverD.jpg'
-import user from '../../assets/wallpapers/others/user.jpg'
-import edit from '../../assets/wallpapers/icons/edit.png'
-import notVisible from '../../assets/wallpapers/icons/notVisible.png'
-import visible from '../../assets/wallpapers/icons/visible.png'
+import ProfileCover from '../../assets/images/screens/coverD.jpg'
+import user from '../../assets/images/others/user.jpg'
+import edit from '../../assets/images/icons/edit.png'
+import notVisible from '../../assets/images/icons/notVisible.png'
+import visible from '../../assets/images/icons/visible.png'
 
 import {styles} from './styles'
 

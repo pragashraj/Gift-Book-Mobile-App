@@ -5,11 +5,11 @@ import Input from '../../components/Input'
 import Button from '../../components/Button'
 import AlertSnackBar from '../../components/AlertSnackBar'
 
-import nameIcon from '../../assets/wallpapers/icons/name.png'
-import emailIcon from '../../assets/wallpapers/icons/email.png'
-import keyIcon from '../../assets/wallpapers/icons/key.png'
-import confirmIcon from '../../assets/wallpapers/icons/confirm.png'
-import wallpaper from '../../assets/wallpapers/screens/signup.jpg'
+import nameIcon from '../../assets/images/icons/name.png'
+import emailIcon from '../../assets/images/icons/email.png'
+import keyIcon from '../../assets/images/icons/key.png'
+import confirmIcon from '../../assets/images/icons/confirm.png'
+import wallpaper from '../../assets/images/screens/signup.jpg'
 
 import {styles} from './styles'
 

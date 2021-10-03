@@ -1,8 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 
-import menuIcon from '../assets/icons/menu.png'
-import user from '../assets/icons/user.png'
+import menuIcon from '../assets/images/icons/menu.png'
+import user from '../assets/images/icons/user.png'
 
 import {primaryColor} from '../values/values'
 
