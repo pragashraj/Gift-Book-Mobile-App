@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { Text, View, Dimensions, StyleSheet, Image } from 'react-native'
+import { View, Dimensions, StyleSheet, Image } from 'react-native'
 
 import Carousel from 'react-native-snap-carousel'
 
 import { scrollInterpolator, animatedStyles } from '../utils/animations'
-import { primaryColor } from '../values/values'
 
 const SLIDER_WIDTH = Dimensions.get('window').width
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9)
@@ -21,9 +20,6 @@ export default class ImageCarousel extends Component {
             <View style = {styles.paper}>
                 <View style = {styles.itemContainer}>
                     <Image style = {styles.carouselImage} source = {item.src}/>
-                    <View style = {styles.carouselTitle}>
-                        <Text style = {styles.title}>{item.title}</Text>
-                    </View>
                 </View>
             </View>
         )
@@ -31,7 +27,7 @@ export default class ImageCarousel extends Component {
   
     render() {
         return (
-            <View>
+            <View style = {styles.container}>
                 <Carousel
                     ref = {(c) => this.carousel = c}
                     data = {this.props.data}
@@ -51,10 +47,12 @@ export default class ImageCarousel extends Component {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        width: "100%",
+        height: 200
+    },
     carouselContainer: {
         padding: 5,
-        backgroundColor: "#fff",
-        elevation: 2
     },
     paper: {
         padding: 5,
@@ -73,18 +71,4 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
     },
-    carouselTitle: {
-        position: "absolute",
-        borderWidth: 1,
-        borderStyle: "dashed",
-        padding: 10,
-        borderColor: primaryColor
-    },
-    title: {
-        fontSize: 25,
-        color: "#fff",
-        fontWeight: "bold",
-        letterSpacing: 2,
-        textTransform: "uppercase"
-    }
 })

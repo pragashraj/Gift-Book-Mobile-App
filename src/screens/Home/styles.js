@@ -28,11 +28,13 @@ export const styles = StyleSheet.create({
     },
     texBlock: {
         marginTop: 10,
-        width: "100%",
+        width: "96%",
+        marginLeft: "2%",
         alignItems: "center",
         justifyContent: "center",
         padding: 15,
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
+        borderRadius: 10,
     },
     header: {
         fontSize: 16,
@@ -41,18 +43,34 @@ export const styles = StyleSheet.create({
         textTransform: "uppercase",
     },
     para: {
-        width: "90%",
+        width: "100%",
         alignItems: "center",
-        color: "#2C3E50",
+        color: "#707B7C",
         textAlign: "center",
-        marginTop: 10
+        marginTop: 10,
+        fontSize: 12
+    },
+    attributesRoot:{
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 15,
+        width: "100%"
+    },
+    attribute: { 
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    attributeText: {
+        textTransform: "uppercase",
+        fontSize: 12
     },
     block: {
         marginTop: 10,
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
-        padding: 5
+        padding: 5,
     },
     featureRoot: {
         marginTop: 15,
@@ -86,9 +104,47 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         padding: 15,
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
     },
     carouselRoot: {
         marginTop: 15
+    },
+    categoryListBlock: {
+        marginTop: 10,
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 5,
+    },
+    categoryList: {
+        marginTop: 15
+    },
+    categoryListImage: {
+        width: "100%",
+        height: 100
+    },
+    categoryListTitle: {
+        position: "absolute",
+        borderWidth: 1,
+        borderStyle: "dashed",
+        padding: 10,
+        borderColor: primaryColor
+    },
+    title: {
+        fontSize: 15,
+        color: "#fff",
+        fontWeight: "bold",
+        letterSpacing: 2,
+        textTransform: "uppercase"
+    },
+    footer: {
+        width: "100%",
+        height: 60,
+        backgroundColor: "#DC7633",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    footerLink: {
+        color: "#fff"
     }
 })
