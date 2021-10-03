@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
         width: "80%"
     },
     infoText: {
-        color: "white",
+        color: "#000",
         fontSize: 18
     },
     mainRoot: {

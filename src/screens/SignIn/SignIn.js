@@ -9,7 +9,8 @@ import AlertSnackBar from '../../components/AlertSnackBar'
 import emailIcon from '../../assets/icons/email.png'
 import notVisible from '../../assets/icons/notVisible.png'
 import visible from '../../assets/icons/visible.png'
-import wallpaper from '../../assets/wallpapers/Signin.jpg'
+
+import wallpaper from '../../assets/wallpapers/screens/signin.jpg'
 
 import {styles} from './styles'
 

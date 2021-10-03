@@ -19,7 +19,7 @@ import valentine from '../../assets/wallpapers/categories/valentine.jpg'
 import personal from '../../assets/wallpapers/categories/personal.png'
 import watch from '../../assets/wallpapers/categories/watches.png'
 
-import slide from '../../assets/wallpapers/screens/slide.png'
+import cover from '../../assets/wallpapers/screens/cover.jpg'
 import merchants from '../../assets/icons/shops.png'
 import onlinePayment from '../../assets/icons/onlinePayment.png'
 import delivery from '../../assets/icons/delivery.png'
@@ -152,7 +152,7 @@ class Home extends Component {
     renderCover = () => {
         return (
             <View style = {styles.coverRoot}>
-                <Image style = {styles.coverWallpaper} source = {slide}/>
+                <Image style = {styles.coverWallpaper} source = {cover}/>
             </View>
         )
     }

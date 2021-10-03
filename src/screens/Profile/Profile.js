@@ -6,7 +6,7 @@ import CustomInput from '../../components/CustomInput'
 import Button from '../../components/Button'
 
 import ProfileCover from '../../assets/wallpapers/screens/profile.jpg'
-import user from '../../assets/otherImages/user.jpg'
+import user from '../../assets/wallpapers/others/user.jpg'
 import edit from '../../assets/icons/edit.png'
 import notVisible from '../../assets/icons/notVisible.png'
 import visible from '../../assets/icons/visible.png'

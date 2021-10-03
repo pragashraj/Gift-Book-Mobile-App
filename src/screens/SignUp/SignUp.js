@@ -9,7 +9,7 @@ import nameIcon from '../../assets/icons/name.png'
 import emailIcon from '../../assets/icons/email.png'
 import keyIcon from '../../assets/icons/key.png'
 import confirmIcon from '../../assets/icons/confirm.png'
-import wallpaper from '../../assets/wallpapers/Signup.jpg'
+import wallpaper from '../../assets/wallpapers/screens/signup.jpg'
 
 import {styles} from './styles'
 

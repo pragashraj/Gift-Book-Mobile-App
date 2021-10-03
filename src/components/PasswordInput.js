@@ -20,7 +20,7 @@ const PasswordInput = ({
             onChangeText = {val => onChangeText(val, name)}
             secureTextEntry = {secureTextEntry}
             value = {value}
-            placeholderTextColor = "#fff"
+            placeholderTextColor = "#000"
         />
     )
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: "80%",
-        color: "#fff",
+        color: "#000",
         fontSize: 17
     },
     tinyLogo: {
