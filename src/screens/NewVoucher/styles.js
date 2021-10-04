@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
     headerTitle: {
         color: "#000",
         textTransform: "uppercase",
-        letterSpacing: 1.5
+        letterSpacing: 1.5,
     },
     row: {
         flexDirection: "row",
@@ -95,4 +95,78 @@ export const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 16,
     },
+    deliveryRoot: {
+        padding: 10,
+    },
+    deliveryHeaderBlock: {
+        marginTop: 15
+    },
+    senderBlock: {
+        marginTop: 20,
+        marginBottom: 10
+    },
+    subHeader: {
+        color: "#000",
+        textTransform: "uppercase",
+        letterSpacing: 1,
+        fontSize: 13
+    },
+    RecieverBlock: {
+        marginTop: 20,
+        marginBottom: 10
+    },
+    formRoot: {
+        marginTop: 10,
+        padding: 5
+    },
+    radioSelector: {
+        marginTop: 5,
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    inputForm: {
+        marginTop: 10,
+        borderTopWidth: 0.5,
+    },
+    input: {
+        width: "100%",
+        marginTop: 10
+    },
+    inputText: {
+        color: "grey"
+    },
+    paymentRoot: {
+        padding: 10,
+    },
+    infoRoot: {
+        marginTop: 10,
+    },
+    paymentBlock: {
+        marginTop: 20,
+        marginBottom: 10
+    },
+    detailContainer: {
+        marginTop: 15,
+        padding: 5
+    },
+    detailBlock: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    detailValue: {
+        fontWeight: "bold",
+        fontSize: 13,
+    },
+    totalText: {
+        fontSize: 20,
+        textTransform: "uppercase",
+        fontWeight: "bold"
+    },
+    totalValue: {
+        fontSize: 25,
+        textTransform: "uppercase",
+        fontWeight: "bold",
+    }
 })

@@ -6,6 +6,8 @@ import ItemPopup from '../../components/ItemPopup'
 import CustomButton from '../../components/CustomButton'
 import MerchantSelector from './MerchantSelector'
 import GiftSelector from './GiftSelector'
+import Delivery from './Delivery'
+import PaymentSlip from './PaymentSlip'
 
 import {styles} from './styles'
 import shirt from '../../assets/images/icons/shirt.png'
@@ -23,10 +25,16 @@ class NewVoucher extends Component {
         selectedMerchant: null,
         itemSearch: "",
         selectedItem: null,
-        openItemModal: false
+        openItemModal: false,
+        radioValue: "",
+        senderName: "",
+        senderAddress: "",
+        receiverName: "",
+        receiverAddress: "",
+        receiverDistrict: "Gampaha"
     }
 
-    footerText = ["Select a merchant", "Select a gift"]
+    footerText = ["Select a merchant", "Select a gift", "Delivery details", "Payment summary"]
 
     categories = [
         {id: "1", title: "Fashion", src: shirt},
@@ -58,6 +66,11 @@ class NewVoucher extends Component {
         {id: "5", title: "Burger", src: burger},
         {id: "6", title: "Burger", src: burger},
     ]
+
+    districts = [
+        {id: "1", label: "Gampaha", value: "Gampaha"},
+        {id: "2", label: "Colombo", value: "Colombo"},
+    ]
     
     handleMerchantOnSearch = () => {
 
@@ -81,6 +94,14 @@ class NewVoucher extends Component {
 
     handleItemOnPress = (item) => {
         this.setState({ selectedItem: item, openItemModal: true })
+    }
+
+    handleRadioOnPress = (value) => {
+        this.setState({ radioValue: this.state.radioValue ? "" : value })
+    }
+
+    handleOptionOnPress = (value) => {
+        this.setState({ receiverDistrict: value })
     }
 
     handleItemSelect = () => {
@@ -124,11 +145,36 @@ class NewVoucher extends Component {
                 <View style = {styles.footerContent}>
                     <Text style = {styles.footerText}>{this.footerText[idx]}</Text>
                     <View style = {styles.footerBtns}>
-                        <CustomButton text = "Previous" handleBtnOnClick = {this.handlePrevOnClick} btnType = "secondary"/>
-                        <CustomButton text = "Next" handleBtnOnClick = {this.handleNxtOnClick} btnType = "primary"/>
+                        <CustomButton 
+                            text = "Previous" 
+                            handleBtnOnClick = {this.handlePrevOnClick} 
+                            btnType = "secondary"
+                        />
+                        <CustomButton 
+                            text = { idx === 3 ? "Pay" : "Next"} 
+                            handleBtnOnClick = {this.handleNxtOnClick} 
+                            btnType = "primary"
+                        />
                     </View>
                 </View>
             </View>
+        )
+    }
+
+    renderPaymentSlip = () => {
+        return (
+            <PaymentSlip/>
+        )
+    }
+
+    renderDeliveryDetail = () => {
+        return (
+            <Delivery
+                values = {this.state}
+                options = {this.districts}
+                handleRadioOnPress = {this.handleRadioOnPress}
+                handleOptionOnPress = {this.handleOptionOnPress}
+            />
         )
     }
 
@@ -164,9 +210,15 @@ class NewVoucher extends Component {
     }
 
     renderMain = () => {
+        const idx = this.state.index
         return (
             <View style = {styles.mainRoot}>
-                { this.renderGiftSelector() }
+                { 
+                    idx === 0 ? this.renderMerchantSelector() :
+                    idx === 1 ? this.renderGiftSelector() :
+                    idx === 2 ? this.renderDeliveryDetail() :
+                    this.renderPaymentSlip()
+                }
             </View>
         )
     }
