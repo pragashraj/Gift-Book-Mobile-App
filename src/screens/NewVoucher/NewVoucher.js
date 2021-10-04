@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView } from 'react-native'
 
 import TopBar from '../../components/TopBar'
-import CustomButton from './CustomButton'
+import ItemPopup from '../../components/ItemPopup'
+import CustomButton from '../../components/CustomButton'
 import MerchantSelector from './MerchantSelector'
 import GiftSelector from './GiftSelector'
 
@@ -57,17 +58,17 @@ class NewVoucher extends Component {
         {id: "5", title: "Burger", src: burger},
         {id: "6", title: "Burger", src: burger},
     ]
-
-    handleOnChangeText = (value, name) => {
-        this.setState({ [name]: value })
-    }
-
+    
     handleMerchantOnSearch = () => {
 
     }
 
     handleItemOnSearch = () => {
 
+    }
+
+    handleOnChangeText = (value, name) => {
+        this.setState({ [name]: value })
     }
 
     handleCategoryOnPress = (title) => {
@@ -78,8 +79,16 @@ class NewVoucher extends Component {
         this.setState({ selectedMerchant: title })
     }
 
-    handleItemOnPress = (title) => {
-        this.setState({ selectedItem: title, openItemModal: true })
+    handleItemOnPress = (item) => {
+        this.setState({ selectedItem: item, openItemModal: true })
+    }
+
+    handleItemSelect = () => {
+        this.setState({ openItemModal: false })
+    }
+
+    handleModalClose = () => {
+        this.setState({ selectedItem: null, openItemModal: false })
     }
 
     handlePrevOnClick = () => {
@@ -96,6 +105,18 @@ class NewVoucher extends Component {
         }
     }
 
+    renderItemModal = (openItemModal, selectedItem) => {
+        return (
+            <ItemPopup 
+                open = {openItemModal} 
+                onClose = {this.handleModalClose}
+                selectedItem = {selectedItem}
+                handleCancel = {this.handleModalClose}
+                handleSelect = {this.handleItemSelect}
+            />
+        )
+    }
+
     renderFooter = () => {
         const idx = this.state.index
         return (
@@ -103,8 +124,8 @@ class NewVoucher extends Component {
                 <View style = {styles.footerContent}>
                     <Text style = {styles.footerText}>{this.footerText[idx]}</Text>
                     <View style = {styles.footerBtns}>
-                        <CustomButton text = "Previous" handleBtnOnClick = {this.handlePrevOnClick} btnType = "prev"/>
-                        <CustomButton text = "Next" handleBtnOnClick = {this.handleNxtOnClick} btnType = "nxt"/>
+                        <CustomButton text = "Previous" handleBtnOnClick = {this.handlePrevOnClick} btnType = "secondary"/>
+                        <CustomButton text = "Next" handleBtnOnClick = {this.handleNxtOnClick} btnType = "primary"/>
                     </View>
                 </View>
             </View>
@@ -151,6 +172,7 @@ class NewVoucher extends Component {
     }
 
     render() {
+        const {selectedItem, openItemModal} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "New Voucher" navigation = {this.props.navigation}/>
@@ -158,6 +180,7 @@ class NewVoucher extends Component {
                     { this.renderMain() }
                 </ScrollView>
                 { this.renderFooter() }
+                { openItemModal && selectedItem &&  this.renderItemModal(openItemModal, selectedItem ) }
             </SafeAreaView>
         )
     }

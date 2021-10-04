@@ -31,8 +31,8 @@ const GiftSelector = ({
                 <Item
                     title = {title}
                     source = {src}
-                    onPress = {() => handleItemOnPress(title)}
-                    onSelected = { selectedItem === title }
+                    onPress = {() => handleItemOnPress(item)}
+                    onSelected = { selectedItem && selectedItem.title === title }
                 />
             </View>
         )

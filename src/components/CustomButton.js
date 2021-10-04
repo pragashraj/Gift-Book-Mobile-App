@@ -2,13 +2,30 @@ import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 
 const CustomButton = ({text, handleBtnOnClick, btnType}) => {
-    return (
-        <TouchableOpacity onPress = {handleBtnOnClick}>
-            <View style = {[styles.btn, btnType === "prev" ? styles.btnPrev : styles.btnNxt]}>
-                <Text style = {[styles.text, btnType === "prev" ? styles.textPrev : styles.textNxt]}>
+
+    const renderPrimaryBtn = () => {
+        return (
+            <View style = {[styles.btn, styles.btnNxt]}>
+                <Text style = {[styles.text, styles.textNxt]}>
                     {text}
                 </Text>
             </View>
+        )
+    }
+
+    const renderSecondaryBtn = () => {
+        return (
+            <View style = {[styles.btn, styles.btnPrev]}>
+                <Text style = {[styles.text, styles.textPrev]}>
+                    {text}
+                </Text>
+            </View>
+        )
+    }
+
+    return (
+        <TouchableOpacity onPress = {handleBtnOnClick}>
+            { btnType === "primary" ? renderPrimaryBtn() : renderSecondaryBtn() }
         </TouchableOpacity>
     )
 }
@@ -25,7 +42,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     btnPrev: {
-        borderColor: "#EAECEE",
+        borderColor: "silver",
     },
     btnNxt: {
         borderColor: "#fff",
@@ -36,7 +53,7 @@ const styles = StyleSheet.create({
         textTransform: "uppercase"
     },
     textPrev: {
-        color: '#fff',
+        color: 'silver',
     },
     textNxt: {
         color: '#000',
