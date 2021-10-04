@@ -3,14 +3,13 @@ import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'rea
 
 import { DrawerItem } from '@react-navigation/drawer'
 
-import {primaryColor} from '../values/values'
-import DrawerHeader from '../assets/wallpapers/DrawerHead.jpg'
-import home from '../assets/icons/home.png'
-import profile from '../assets/icons/profile.png'
-import merchants from '../assets/icons/merchants.png'
-import newVoucher from '../assets/icons/new.png'
-import vouchers from '../assets/icons/vouchers.png'
-import payments from '../assets/icons/payments.png'
+import DrawerHeader from '../assets/images/screens/coverD.jpg'
+import home from '../assets/images/icons/home.png'
+import profile from '../assets/images/icons/profile.png'
+import merchants from '../assets/images/icons/merchants.png'
+import newVoucher from '../assets/images/icons/new.png'
+import vouchers from '../assets/images/icons/vouchers.png'
+import payments from '../assets/images/icons/payments.png'
 
 const screenHight = Dimensions.get('screen').height
 const screenWidth = Dimensions.get('screen').width
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
     },
     headerRoot: {
         width: "100%",
-        height: screenHight * 0.25,
+        height: screenHight * 0.3,
         marginTop: -5,
     },
     headerWallpaper: {
@@ -85,11 +84,14 @@ const styles = StyleSheet.create({
     },
     headerText:{
         position: "absolute",
-        color: "silver",
-        fontSize: 15,
-        right: 0,
-        marginRight: 45,
-        marginTop: 7
+        fontSize: 20,
+        bottom: 0,
+        marginBottom: 60,
+        marginTop: 7,
+        marginLeft: 20,
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        letterSpacing: 2
     },
     DrawerItemsRoot: {
         width: "100%",
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     drawerItemBlock: {
         width: "100%",
         height: "100%",
-        marginTop: -40,
+        marginTop: -60,
         borderRadius: 30,
         backgroundColor: "#fff",
         padding: 5,
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     drawerItemLabel: {
-        color: primaryColor, 
+        color: "#DC7633", 
         marginLeft: -10, 
         fontSize: 14,
         fontWeight: "bold",
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: primaryColor,
+        backgroundColor: "#DC7633",
     },
     footerText: {
         color: "#fff",
