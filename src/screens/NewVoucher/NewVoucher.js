@@ -21,7 +21,7 @@ import burger from '../../assets/images/categories/foods.jpg'
 
 class NewVoucher extends Component {
     state = {
-        index: 3,
+        index: 0,
         merchantSearch: "",
         selectedCategory: null,
         selectedMerchant: null,
