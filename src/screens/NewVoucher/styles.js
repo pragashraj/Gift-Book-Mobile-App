@@ -84,11 +84,6 @@ export const styles = StyleSheet.create({
         marginTop: 15,
         padding: 5
     },
-    detailBlock: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
     detailContent: {
         fontWeight: "bold",
         fontSize: 16,

@@ -35,7 +35,7 @@ class Merchants extends Component {
     ]
 
     componentDidMount() {
-        
+
     }
 
     fetchContents = async(value) => {
@@ -159,7 +159,7 @@ class Merchants extends Component {
     }
 
     render() {
-        const {loading, openMerchantPopup, selectedMerchant, openAlert, alertMessage,} = this.state
+        const {loading, openMerchantPopup, selectedMerchant, openAlert, alertMessage} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "Merchants" navigation = {this.props.navigation}/>
