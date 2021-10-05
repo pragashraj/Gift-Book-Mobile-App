@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
 
 import { DrawerItem } from '@react-navigation/drawer'
 
@@ -10,6 +10,8 @@ import merchants from '../assets/images/icons/merchants.png'
 import newVoucher from '../assets/images/icons/new.png'
 import vouchers from '../assets/images/icons/vouchers.png'
 import payments from '../assets/images/icons/payments.png'
+
+import {primaryColor} from '../values/values'
 
 const screenHight = Dimensions.get('screen').height
 const screenWidth = Dimensions.get('screen').width
@@ -46,22 +48,24 @@ const CustomDrawer = ({props}) => {
     )
 
     return (
-        <View style = {styles.container}>
+        <SafeAreaView style = {styles.container}>
             <View style = {styles.headerRoot}>
                 <Image style = {styles.headerWallpaper} source = {DrawerHeader}/>
                 <Text style = {styles.headerText}>Chris evans</Text>
             </View>
-            <View style = {styles.DrawerItemsRoot}>
-                <View style = {styles.drawerItemBlock}>
-                    { DrawerItems.slice(0, 2).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
-                    <View style = {styles.divider}/>
-                    { DrawerItems.slice(2, 6).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
+            <ScrollView style = {styles.scrollView}>
+                <View style = {styles.DrawerItemsRoot}>
+                    <View style = {styles.drawerItemBlock}>
+                        { DrawerItems.slice(0, 2).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
+                        <View style = {styles.divider}/>
+                        { DrawerItems.slice(2, 6).map(item =>renderDrawerItem(item.id, item.label, item.icon)) }
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
             <View style = {styles.footerRoot}>
                 { renderFooter() }
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -73,9 +77,13 @@ const styles = StyleSheet.create({
         width: "100%",
         height: screenHight * 0.88,
     },
+    scrollView: {
+        width: "100%",
+        height: "100%"
+    },
     headerRoot: {
         width: "100%",
-        height: screenHight * 0.3,
+        height: screenHight * 0.25,
         marginTop: -5,
     },
     headerWallpaper: {
@@ -86,7 +94,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         fontSize: 20,
         bottom: 0,
-        marginBottom: 60,
+        marginBottom: 20,
         marginTop: 7,
         marginLeft: 20,
         fontWeight: "bold",
@@ -102,7 +110,7 @@ const styles = StyleSheet.create({
     drawerItemBlock: {
         width: "100%",
         height: "100%",
-        marginTop: -60,
+        marginTop: 0,
         borderRadius: 30,
         backgroundColor: "#fff",
         padding: 5,
@@ -113,7 +121,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     drawerItemLabel: {
-        color: "#DC7633", 
+        color: primaryColor, 
         marginLeft: -10, 
         fontSize: 14,
         fontWeight: "bold",
@@ -131,13 +139,12 @@ const styles = StyleSheet.create({
         backgroundColor: "grey"
     },
     footerRoot: {
-        position: "absolute",
         height: screenHight * 0.08,
         width: "100%",
         bottom: 0,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#DC7633",
+        backgroundColor: primaryColor,
     },
     footerText: {
         color: "#fff",

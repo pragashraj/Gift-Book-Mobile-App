@@ -1,6 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 
+import {primaryColor} from '../values/values'
+
 const RadioButton = ({text, name, value, onPress}) => {
     return (
         <View style = {styles.container}>
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
 		width: 20,
 		borderRadius: 10,
 		borderWidth: 1.5,
-		borderColor: "#DC7633",
+		borderColor: primaryColor,
 		alignItems: 'center',
 		justifyContent: 'center',
         marginRight: 10
@@ -42,6 +44,6 @@ const styles = StyleSheet.create({
 		width: 10,
 		height: 10,
 		borderRadius: 5,
-		backgroundColor: "#DC7633",
+		backgroundColor: primaryColor,
     },
 })
