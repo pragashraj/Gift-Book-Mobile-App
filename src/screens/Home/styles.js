@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native'
 
+import {primaryColor} from '../../values/values'
+
 const screenHight = Dimensions.get('screen').height
 
 export const styles = StyleSheet.create({
@@ -35,7 +37,7 @@ export const styles = StyleSheet.create({
     },
     header: {
         fontSize: 16,
-        color: "#DC7633",
+        color: primaryColor,
         fontWeight: "bold",
         textTransform: "uppercase",
     },
@@ -125,7 +127,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderStyle: "dashed",
         padding: 10,
-        borderColor: "#DC7633"
+        borderColor: primaryColor
     },
     title: {
         fontSize: 15,
@@ -137,7 +139,7 @@ export const styles = StyleSheet.create({
     footer: {
         width: "100%",
         height: 60,
-        backgroundColor: "#DC7633",
+        backgroundColor: primaryColor,
         alignItems: "center",
         justifyContent: "center"
     },

@@ -5,6 +5,7 @@ import Input from '../../components/Input'
 import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
 import AlertSnackBar from '../../components/AlertSnackBar'
+import Loading from '../../components/Loading'
 
 import wallpaper from '../../assets/images/screens/forgotPassword.jpg'
 import emailIcon from '../../assets/images/icons/email.png'
@@ -27,6 +28,7 @@ class ForgotPassword extends Component {
         visibility: false,
         openAlert: false,
         alertMessage: "",
+        loading: false,
     }
 
     MessageText = [
@@ -71,11 +73,11 @@ class ForgotPassword extends Component {
                 this.handlePasswordChangeApi(data)
             }
             else {
-                this.setAlert("Passwords not matched")
+                this.setAlert(true, "Passwords not matched")
             }
         }
         else {
-            this.setAlert("Password or confirmPassword cannot be empty")
+            this.setAlert(true, "Password or confirmPassword cannot be empty")
         }
     }
 
@@ -85,7 +87,7 @@ class ForgotPassword extends Component {
             this.handleConfirmResetCodeApi(code)
         }
         else {
-            this.setAlert("Reset code cannot be empty")
+            this.setAlert(true, "Reset code cannot be empty")
         }
     }
 
@@ -93,14 +95,14 @@ class ForgotPassword extends Component {
         const {email} = this.state
         if (email) {
             if (!this.confirmEmail(email)) {
-                this.setAlert("Enter valid email address")
+                this.setAlert(true, "Enter valid email address")
             }
             else {
                 this.handleSendResetCodeApi(email)
             }
         } 
         else {
-            this.setAlert("Email cannot be empty")
+            this.setAlert(true, "Email cannot be empty")
         }
     }
 
@@ -136,11 +138,9 @@ class ForgotPassword extends Component {
         })
     }
 
-    setAlert = (message) => {
-        this.setState({
-            openAlert: true,
-            alertMessage: message
-        })
+    setAlert = (open, message) => {
+        this.setState({ openAlert: open, alertMessage: message })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
     }
 
     confirmEmail = (email) => {
@@ -227,7 +227,7 @@ class ForgotPassword extends Component {
     )
 
     render() {
-        const {openAlert, alertMessage} = this.state
+        const {openAlert, alertMessage, loading} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -243,6 +243,7 @@ class ForgotPassword extends Component {
                     { this.renderButton() }
                 </View>
                 { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { loading && <Loading open = {loading}/> }
             </View>
         )
     }

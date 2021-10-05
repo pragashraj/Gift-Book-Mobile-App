@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Modal, Image, Dimensions } from 'react-native'
 
 import CustomButton from './CustomButton'
 
-const ItemPopup = ({open, onClose, selectedItem, handleCancel, handleSelect}) => {
+const MerchantPopup = ({open, onClose, selectedItem, handleCancel}) => {
 
     const {title, src} = selectedItem
 
@@ -24,14 +24,9 @@ const ItemPopup = ({open, onClose, selectedItem, handleCancel, handleSelect}) =>
                                 back button on Android or the menu button on Apple TV.
                             </Text>
                         </View>
-                        <View style = {styles.price}>
-                            <Text style = {styles.priceText}>Price</Text>
-                            <Text style = {styles.priceValue}>Rs. 450</Text>
-                        </View>
                     </View>
                     <View style = {styles.footerBtn}>
                         <CustomButton text = "cancel" btnType = "secondary" handleBtnOnClick = {handleCancel}/>
-                        <CustomButton text = "select" btnType = "primary" handleBtnOnClick = {handleSelect}/>
                     </View>
                 </View>
             </View>
@@ -52,7 +47,7 @@ const ItemPopup = ({open, onClose, selectedItem, handleCancel, handleSelect}) =>
     )
 }
 
-export default ItemPopup
+export default MerchantPopup
 
 const screenHight = Dimensions.get('screen').height
 const screenWidth = Dimensions.get('screen').width
@@ -108,18 +103,6 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: "grey",
         textAlign: "center"
-    },
-    price: {
-        marginTop: 5,
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    priceText: {
-        textTransform: "uppercase",
-        fontSize: 16
-    },
-    priceValue: {
-        fontSize: 20
     },
     footerBtn: {
         width: "80%",

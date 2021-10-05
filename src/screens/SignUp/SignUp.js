@@ -4,6 +4,7 @@ import { View, Image, Text, TouchableOpacity } from 'react-native'
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import AlertSnackBar from '../../components/AlertSnackBar'
+import Loading from '../../components/Loading'
 
 import nameIcon from '../../assets/images/icons/name.png'
 import emailIcon from '../../assets/images/icons/email.png'
@@ -20,7 +21,8 @@ class SignUp extends Component {
         password: "",
         confirmPassword: "",
         openAlert: false,
-        alertMessage: ""
+        alertMessage: "",
+        loading: false,
     }
 
     INPUTS = [
@@ -42,10 +44,10 @@ class SignUp extends Component {
         const {name, email, password, confirmPassword} = this.state
         if (name && email && password && confirmPassword) {
             if (!this.confirmEmail(email)) {
-                this.setAlert("Enter valid email address")
+                this.setAlert(true, "Enter valid email address")
             }
             else if (password !== confirmPassword) {
-                this.setState({ openAlert: true, alertMessage: "Passwords not matched" })
+                this.setAlert(true, "Passwords not matched")
             }
             else {
                 const data = {name, email, password}
@@ -53,7 +55,7 @@ class SignUp extends Component {
             }
         } 
         else {
-            this.setState({ openAlert: true, alertMessage: "Fields cannot be empty" })
+            this.setAlert(true, "Fields cannot be empty")
         }
     }
 
@@ -68,6 +70,11 @@ class SignUp extends Component {
     confirmEmail = (email) => {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         return pattern.test(email)
+    }
+
+    setAlert = (open, message) => {
+        this.setState({ openAlert: open, alertMessage: message })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
     }
 
     renderInputFields = () => {
@@ -113,7 +120,7 @@ class SignUp extends Component {
     )
 
     render() {
-        const {openAlert, alertMessage} = this.state
+        const {openAlert, alertMessage, loading} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -129,6 +136,7 @@ class SignUp extends Component {
                     { this.renderFooter() }
                 </View>
                 { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { loading && <Loading open = {loading}/> }
             </View>
         )
     }
