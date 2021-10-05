@@ -7,7 +7,13 @@ import Selector from '../../components/Selector'
 
 import {styles} from './styles'
 
-const Delivery = ({values, options, handleOnChangeText, handleRadioOnPress, handleOptionOnPress}) => {
+const Delivery = ({
+    values, 
+    options, 
+    handleOnChangeText, 
+    handleRadioOnPress, 
+    handleOptionOnPress
+}) => {
 
     const renderSelector = (text) => {
         return (
@@ -60,7 +66,8 @@ const Delivery = ({values, options, handleOnChangeText, handleRadioOnPress, hand
                         onPress = {handleRadioOnPress}
                     />
                 </View>
-                { values["radioValue"] !== "anonymous" &&
+                { 
+                    values["radioValue"] !== "anonymous" &&
                     <View style = {styles.inputForm}>
                         { renderInput("Full Name", "Name", "senderName", null) }
                         { renderInput("Address", "Address", "senderAddress", null) }

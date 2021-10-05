@@ -10,10 +10,10 @@ const Selector = ({options, selectedValue, setSelectedValue}) => {
                     onValueChange = {(itemValue, itemIndex) => setSelectedValue(itemValue)}
                     style = {styles.picker}
                 >
-                    { options.map(item => {
+                    { options.map((item, idx) => {
                         const {label, value} = item
                         return (
-                            <Picker.Item label = {label} value = {value} />
+                            <Picker.Item label = {label} value = {value} key = {idx}/>
                         )
                     })}
                 </Picker>

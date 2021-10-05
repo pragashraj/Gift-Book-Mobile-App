@@ -10,6 +10,8 @@ const GiftSelector = ({
     itemSearch,
     items,
     selectedItem,
+    selectedCategory,
+    selectedMerchant,
     handleOnChangeText,
     handleSearchOnPress,
     handleItemOnPress
@@ -50,8 +52,8 @@ const GiftSelector = ({
             <View style = {styles.merchantBlock}>
                 <Text style = {styles.headerTitle}>Your selection</Text>
                 <View style = {styles.detailContainer}>
-                    { renderDetailContent("Category", "Food") }
-                    { renderDetailContent("Merchant", "ISSO") }
+                    { renderDetailContent("Category", selectedCategory && selectedCategory.title) }
+                    { renderDetailContent("Merchant", selectedMerchant && selectedMerchant.title) }
                 </View>
             </View>
             <View style = {styles.merchantBlock}>

@@ -1,10 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native'
 
-import {primaryColor} from '../../values/values'
-
-const screenHight = Dimensions.get('screen').height
-const screenWidth = Dimensions.get('screen').width
-
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -57,6 +52,7 @@ export const styles = StyleSheet.create({
         color: "#000",
         textTransform: "uppercase",
         letterSpacing: 1.5,
+        fontWeight: "bold"
     },
     row: {
         flexDirection: "row",
@@ -109,7 +105,8 @@ export const styles = StyleSheet.create({
         color: "#000",
         textTransform: "uppercase",
         letterSpacing: 1,
-        fontSize: 13
+        fontSize: 13,
+        fontWeight: "700"
     },
     RecieverBlock: {
         marginTop: 20,
@@ -155,18 +152,44 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between"
     },
+    detailContent: {
+        color: "#000"
+    },
     detailValue: {
-        fontWeight: "bold",
         fontSize: 13,
     },
     totalText: {
-        fontSize: 20,
-        textTransform: "uppercase",
-        fontWeight: "bold"
-    },
-    totalValue: {
-        fontSize: 25,
+        fontSize: 18,
         textTransform: "uppercase",
         fontWeight: "bold",
+    },
+    totalValue: {
+        fontSize: 22,
+        textTransform: "uppercase",
+        fontWeight: "bold",
+        color: "#DC7633",
+    },
+    paymentHeaderBlock: {
+        marginTop: 15,
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    headerImage: {
+        width: 25,
+        height: 25,
+        marginRight: 15,
+        marginLeft: 5
+    },
+    taotalValueRoot: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    priceImage: {
+        width: 35,
+        height: 35
+    },
+    cardBlock: {
+        marginTop: 20,
+        marginBottom: 10
     }
 })

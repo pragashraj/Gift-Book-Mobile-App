@@ -26,8 +26,8 @@ const MerchantSelector = ({
                 <Merchant
                     title = {title}
                     source = {src}
-                    onPress = {() => handleMerchantOnPress(title)}
-                    onSelected = { selectedMerchant === title }
+                    onPress = {() => handleMerchantOnPress(item)}
+                    onSelected = { selectedMerchant && selectedMerchant.title === title }
                 />
             </View>
         )
@@ -39,8 +39,8 @@ const MerchantSelector = ({
             <View style = {styles.category} key = {id}>
                 <CategoryItem 
                     source = {src} 
-                    onPress = {() => handleCategoryOnPress(title)} 
-                    onSelected = { selectedCategory === title }
+                    onPress = {() => handleCategoryOnPress(item)} 
+                    onSelected = { selectedCategory && selectedCategory.title === title }
                 />
                 <Text style = {styles.categoryText}>{title}</Text>
             </View>

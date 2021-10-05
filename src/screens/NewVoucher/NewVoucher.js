@@ -4,6 +4,8 @@ import { Text, View, SafeAreaView, ScrollView } from 'react-native'
 import TopBar from '../../components/TopBar'
 import ItemPopup from '../../components/ItemPopup'
 import CustomButton from '../../components/CustomButton'
+import AlertSnackBar from '../../components/AlertSnackBar'
+import ConfirmPopup from '../../components/ConfirmPopup'
 import MerchantSelector from './MerchantSelector'
 import GiftSelector from './GiftSelector'
 import Delivery from './Delivery'
@@ -19,9 +21,9 @@ import burger from '../../assets/images/categories/foods.jpg'
 
 class NewVoucher extends Component {
     state = {
-        index: 0,
+        index: 3,
         merchantSearch: "",
-        selectedCategory: "Fashion",
+        selectedCategory: null,
         selectedMerchant: null,
         itemSearch: "",
         selectedItem: null,
@@ -31,7 +33,10 @@ class NewVoucher extends Component {
         senderAddress: "",
         receiverName: "",
         receiverAddress: "",
-        receiverDistrict: "Gampaha"
+        receiverDistrict: "Gampaha",
+        openAlert: false,
+        alertMessage: "",
+        openConfirmPopup: false
     }
 
     footerText = ["Select a merchant", "Select a gift", "Delivery details", "Payment summary"]
@@ -71,25 +76,81 @@ class NewVoucher extends Component {
         {id: "1", label: "Gampaha", value: "Gampaha"},
         {id: "2", label: "Colombo", value: "Colombo"},
     ]
+
+    componentDidMount() {
+        this.setState({ selectedCategory: this.categories[0] })
+    }
+
+    fetchMerchantApi = async() => {
+        try {
+
+        } catch (e) {
+
+        }
+    }
+
+    searchMerchantApi = async(value) => {
+        try {
+            
+        } catch (e) {
+
+        }
+    }
+
+    searchItemApi = async(data) => {
+        try {
+
+        } catch (e) {
+
+        }
+    }
+
+    paymentApi = async(data) => {
+        try {
+
+        } catch (e) {
+
+        }
+    }
     
     handleMerchantOnSearch = () => {
-
+        const merchantSearch = this.state.merchantSearch
+        if (merchantSearch) {
+            this.searchMerchantApi(merchantSearch)
+        }
+        else {
+            this.setAlertBar(true, "Please enter a value")
+        }
     }
 
     handleItemOnSearch = () => {
-
+        const {itemSearch, selectedMerchant} = this.state
+        if (itemSearch) {
+            const data = {
+                merchant: selectedMerchant.title,
+                item: itemSearch
+            }
+            this.searchItemApi(data)
+        }
+        else {
+            this.setAlertBar(true, "Please enter a value")
+        }
     }
 
     handleOnChangeText = (value, name) => {
         this.setState({ [name]: value })
     }
 
-    handleCategoryOnPress = (title) => {
-        this.setState({ selectedCategory: title, selectedMerchant: null })
+    handlePayOnPress = () => {
+        this.handleConfirmPopup()
     }
 
-    handleMerchantOnPress = (title) => {
-        this.setState({ selectedMerchant: title })
+    handleCategoryOnPress = (item) => {
+        this.setState({ selectedCategory: item, selectedMerchant: null, openAlert: false })
+    }
+
+    handleMerchantOnPress = (item) => {
+        this.setState({ selectedMerchant: item, openAlert: false })
     }
 
     handleItemOnPress = (item) => {
@@ -112,6 +173,10 @@ class NewVoucher extends Component {
         this.setState({ selectedItem: null, openItemModal: false })
     }
 
+    handleConfirmPopup = () => {
+        this.setState({ openConfirmPopup: !this.state.openConfirmPopup })
+    }
+
     handlePrevOnClick = () => {
         const idx = this.state.index
         if (idx !== 0) {
@@ -120,10 +185,67 @@ class NewVoucher extends Component {
     }
 
     handleNxtOnClick = () => {
-        const idx = this.state.index
-        if (idx !== 3) {
-            this.setState({ index: idx + 1 })
+        const {
+            index, 
+            selectedMerchant, 
+            selectedItem, 
+            radioValue,
+            senderName,
+            senderAddress,
+            receiverName,
+            receiverAddress,
+            receiverDistrict 
+        } = this.state
+
+        let idx = index
+
+        if (index === 0) {
+            if (selectedMerchant) { 
+                idx = index + 1 
+            }
+            else {
+                this.setAlertBar(true, "Please select a merchant")
+            }
         }
+        else if (index === 1) {
+            if (selectedItem) {
+                idx = index + 1 
+            }
+            else this.setAlertBar(true, "Please select an item")
+        }
+        else if (index === 2) {
+            let receiverDetail = receiverName && receiverAddress && receiverDistrict
+            let senderDetail = senderName && senderAddress
+            if (radioValue === "anonymous" && receiverDetail) {
+                idx = index + 1
+            }
+            else if (radioValue !== "anonymous" && senderDetail && receiverDetail) {
+                idx = index + 1
+            }
+            else {
+                this.setAlertBar(true, "Fields cannot be empty")
+            }
+        }
+        else {
+            this.setState({ openConfirmPopup: true })
+        }
+        this.setState({ index: idx })
+    }
+
+    setAlertBar = (open, message) => {
+        this.setState({ openAlert: open, alertMessage: message })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
+    }
+
+    renderConfirmModal = (openConfirmPopup) => {
+        return (
+            <ConfirmPopup 
+                open = {openConfirmPopup} 
+                onClose = {this.handleConfirmPopup}
+                handleCancel = {this.handleConfirmPopup}
+                handleSelect = {this.handlePayOnPress}
+            />
+        )
     }
 
     renderItemModal = (openItemModal, selectedItem) => {
@@ -151,7 +273,7 @@ class NewVoucher extends Component {
                             btnType = "secondary"
                         />
                         <CustomButton 
-                            text = { idx === 3 ? "Pay" : "Next"} 
+                            text = { idx === 3 ? "Confirm" : "Next"} 
                             handleBtnOnClick = {this.handleNxtOnClick} 
                             btnType = "primary"
                         />
@@ -163,7 +285,9 @@ class NewVoucher extends Component {
 
     renderPaymentSlip = () => {
         return (
-            <PaymentSlip/>
+            <PaymentSlip
+                values = {this.state}
+            />
         )
     }
 
@@ -174,17 +298,20 @@ class NewVoucher extends Component {
                 options = {this.districts}
                 handleRadioOnPress = {this.handleRadioOnPress}
                 handleOptionOnPress = {this.handleOptionOnPress}
+                handleOnChangeText = {this.handleOnChangeText}
             />
         )
     }
 
     renderGiftSelector = () => {
-        const {itemSearch, selectedItem} = this.state
+        const {itemSearch, selectedItem, selectedCategory, selectedMerchant} = this.state
         return (
             <GiftSelector
                 itemSearch = {itemSearch}
                 items = {this.items}
                 selectedItem = {selectedItem}
+                selectedCategory = {selectedCategory}
+                selectedMerchant = {selectedMerchant}
                 handleOnChangeText = {this.handleOnChangeText}
                 handleSearchOnPress = {this.handleItemOnSearch}
                 handleItemOnPress = {this.handleItemOnPress}
@@ -214,9 +341,12 @@ class NewVoucher extends Component {
         return (
             <View style = {styles.mainRoot}>
                 { 
-                    idx === 0 ? this.renderMerchantSelector() :
-                    idx === 1 ? this.renderGiftSelector() :
-                    idx === 2 ? this.renderDeliveryDetail() :
+                    idx === 0 ? this.renderMerchantSelector() 
+                    :
+                    idx === 1 ? this.renderGiftSelector() 
+                    :
+                    idx === 2 ? this.renderDeliveryDetail() 
+                    :
                     this.renderPaymentSlip()
                 }
             </View>
@@ -224,7 +354,7 @@ class NewVoucher extends Component {
     }
 
     render() {
-        const {selectedItem, openItemModal} = this.state
+        const {selectedItem, openItemModal, openAlert, alertMessage, openConfirmPopup} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "New Voucher" navigation = {this.props.navigation}/>
@@ -233,6 +363,8 @@ class NewVoucher extends Component {
                 </ScrollView>
                 { this.renderFooter() }
                 { openItemModal && selectedItem &&  this.renderItemModal(openItemModal, selectedItem ) }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { openConfirmPopup && this.renderConfirmModal(openConfirmPopup) }
             </SafeAreaView>
         )
     }
