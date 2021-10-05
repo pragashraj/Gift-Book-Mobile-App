@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingHorizontal: 10,
         elevation: 1,
-        backgroundColor: "#DC7633"
+        backgroundColor: primaryColor
     },
     root: {
         flex: 1,

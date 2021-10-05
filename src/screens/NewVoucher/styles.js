@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native'
 
+import {primaryColor} from '../../values/values'
+
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -17,7 +19,7 @@ export const styles = StyleSheet.create({
         bottom: 0,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#DC7633",
+        backgroundColor: primaryColor,
         padding: 10,
     },
     footerContent: {
@@ -167,7 +169,7 @@ export const styles = StyleSheet.create({
         fontSize: 22,
         textTransform: "uppercase",
         fontWeight: "bold",
-        color: "#DC7633",
+        color: primaryColor,
     },
     paymentHeaderBlock: {
         marginTop: 15,

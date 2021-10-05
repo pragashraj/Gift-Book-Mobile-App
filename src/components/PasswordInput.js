@@ -1,6 +1,8 @@
 import React from 'react'
 import { View, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native'
 
+import {primaryColor} from '../values/values'
+
 const PasswordInput = ({
     placeholder, 
     secureTextEntry, 
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
     },
     inputRoot: {
         borderRadius: 20,
-        borderColor: "#DC7633",
+        borderColor: primaryColor,
         flex: 1,
         flexDirection: "row",
         alignItems: "center",

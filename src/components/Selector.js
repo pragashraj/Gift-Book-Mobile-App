@@ -1,5 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Picker } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+
+import {Picker} from '@react-native-picker/picker'
 
 const Selector = ({options, selectedValue, setSelectedValue}) => {
     return (
@@ -15,7 +17,7 @@ const Selector = ({options, selectedValue, setSelectedValue}) => {
                         return (
                             <Picker.Item label = {label} value = {value} key = {idx}/>
                         )
-                    })}
+                    }) }
                 </Picker>
             </View>
         </View>
