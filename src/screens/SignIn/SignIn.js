@@ -5,6 +5,7 @@ import Input from '../../components/Input'
 import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
 import AlertSnackBar from '../../components/AlertSnackBar'
+import Loading from '../../components/Loading'
 
 import emailIcon from '../../assets/images/icons/email.png'
 import notVisible from '../../assets/images/icons/notVisible.png'
@@ -20,7 +21,8 @@ class SignIn extends Component {
         password: "",
         openAlert: false,
         alertMessage: "",
-        visibility: false
+        visibility: false,
+        loading: false,
     }
 
     handleSignInApi = async(data) => {
@@ -35,7 +37,7 @@ class SignIn extends Component {
         const {email, password} = this.state
         if (email && password) {
             if (!this.confirmEmail(email)) {
-                this.setAlert("Enter valid email address")
+                this.setAlert(true, "Enter valid email address")
             }
             else {
                 const data = {email, password}
@@ -43,7 +45,7 @@ class SignIn extends Component {
             }
         } 
         else {
-            this.setState({ openAlert: true, alertMessage: "Fields cannot be empty" })
+            this.setAlert(true, "Fields cannot be empty")
         }
     }
 
@@ -66,6 +68,11 @@ class SignIn extends Component {
     confirmEmail = (email) => {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         return pattern.test(email)
+    }
+
+    setAlert = (open, message) => {
+        this.setState({ openAlert: open, alertMessage: message })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
     }
 
     renderEmailInputField = () => {
@@ -130,7 +137,7 @@ class SignIn extends Component {
     )
 
     render() {
-        const {openAlert, alertMessage} = this.state
+        const {openAlert, alertMessage, loading} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -146,6 +153,7 @@ class SignIn extends Component {
                     { this.renderFooter() }
                 </View>
                 { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { loading && <Loading open = {loading}/> }
             </View>
         )
     }
