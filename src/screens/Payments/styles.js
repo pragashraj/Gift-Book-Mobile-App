@@ -74,5 +74,15 @@ export const styles = StyleSheet.create({
     icon: {
         width: 25,
         height: 25
-    }
+    },
+    listBlock: {
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10
+    },
+    list: {
+        marginTop: 20,
+        alignItems: "center",
+    },
 })

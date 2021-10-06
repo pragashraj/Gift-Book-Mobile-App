@@ -54,6 +54,17 @@ class MyPayments extends Component {
         )
     }
 
+    renderPaymentList = () => {
+        return (
+            <View style = {styles.listBlock}>
+                <Text style = {styles.headerTitle}>Checkout your payment history</Text>
+                <View style = {styles.list}>
+                    
+                </View>
+            </View>
+        )
+    }
+
     renderDateFilter = () => {
         const {startDate, endDate} = this.state
         return (
@@ -92,6 +103,7 @@ class MyPayments extends Component {
                 <ScrollView style = {styles.scrollView} indicatorStyle = "white">
                     <View style = {styles.mainRoot}>
                         { this.renderDateFilter() }
+                        { this.renderPaymentList() }
                     </View>
                 </ScrollView>
                 { loading && <Loading open = {loading}/> }
