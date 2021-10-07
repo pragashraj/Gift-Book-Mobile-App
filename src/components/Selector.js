@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native'
 
 import {Picker} from '@react-native-picker/picker'
 
+import {primaryColor} from '../values/values'
+
 const Selector = ({options, selectedValue, setSelectedValue}) => {
     return (
         <View style = {styles.container}>
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
         height: 65,
     },
     inputRoot: {
-        borderColor: "#DC7633",
+        borderColor: primaryColor,
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
@@ -43,6 +45,6 @@ const styles = StyleSheet.create({
     },
     picker: {
         height: "100%", 
-        width: "100%" 
-    }
+        width: "100%",
+    },
 })
