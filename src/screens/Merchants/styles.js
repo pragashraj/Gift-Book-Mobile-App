@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
     container: {
@@ -51,9 +51,7 @@ export const styles = StyleSheet.create({
         color: "#000"
     },
     merchantsBlock: {
-        backgroundColor: "#fff",
-        borderRadius: 10,
-        padding: 10,
+        padding: 5,
         marginTop: 10
     },
     merchantList: {

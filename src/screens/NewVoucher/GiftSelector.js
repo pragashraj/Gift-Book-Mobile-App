@@ -29,12 +29,13 @@ const GiftSelector = ({
     const renderItem = (item) => {
         const {id, title, src} = item
         return (
-            <View style = {styles.merchant} key = {id}>
+            <View style = {styles.giftItem} key = {id}>
                 <Item
                     title = {title}
                     source = {src}
                     onPress = {() => handleItemOnPress(item)}
                     onSelected = { selectedItem && selectedItem.title === title }
+                    itemType = "item"
                 />
             </View>
         )
@@ -49,7 +50,7 @@ const GiftSelector = ({
                 name = "itemSearch"
                 onPress = {handleSearchOnPress}
             />
-            <View style = {styles.merchantBlock}>
+            <View style = {styles.giftSelectorTopBlock}>
                 <Text style = {styles.headerTitle}>Your selection</Text>
                 <View style = {styles.detailContainer}>
                     { renderDetailContent("Category", selectedCategory && selectedCategory.title) }
