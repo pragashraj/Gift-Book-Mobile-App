@@ -4,6 +4,10 @@ import { Text, SafeAreaView, ScrollView, Image, View, TouchableOpacity } from 'r
 import TopBar from '../../components/TopBar'
 import CustomInput from '../../components/CustomInput'
 import Button from '../../components/Button'
+import ProfileEditor from './ProfileEditor'
+import PaymentCard from './PaymentCard'
+import AlertSnackBar from '../../components/AlertSnackBar'
+import Loading from '../../components/Loading'
 
 import ProfileCover from '../../assets/images/screens/coverD.jpg'
 import user from '../../assets/images/others/user.jpg'
@@ -18,7 +22,19 @@ class Profile extends Component {
         currentPasssword: "",
         newPassword: "",
         confirmPasssword: "",
-        passwordVisible: false
+        passwordVisible: false,
+        openProfileEditor: false,
+        name: "",
+        email: "",
+        address: "",
+        district: "",
+        contact: "",
+        cardType: "",
+        cardNo: "",
+        openCardEditor: false,
+        openAlert: false,
+        loading: false,
+        alertMessage: ""
     }
 
     stat = [
@@ -40,8 +56,77 @@ class Profile extends Component {
         {id: "2", content: "Card No", value: "12348975615"},
     ]
 
-    handlePasswordChange = () => {
+    componentDidMount() {
+        
+    }
 
+    passwordChangeApi = async(data) => {
+        try {
+
+        } catch (e) {
+
+        }
+    }
+
+    profileUpdateApi = async(data) => {
+        try {
+
+        } catch (e) {
+
+        }
+    }
+
+    paymentCardUpdateApi = async(data) => {
+        try {
+
+        } catch (e) {
+
+        }
+    }
+
+    handlePasswordChange = () => {
+        const {currentPasssword, newPassword, confirmPasssword} = this.state
+        if (currentPasssword && newPassword && confirmPasssword) {
+            if (currentPasssword !== newPassword) {
+                if (newPassword === confirmPasssword) {
+
+                }
+                else {
+                    this.setAlert(true, "New, Confirm passwords not matched")
+                }
+            }
+            else {
+                this.setAlert(true, "New password cannot be same as old")
+            }
+        } 
+        else {
+            this.setAlert(true, "Fields cannot be empty")
+        }
+    }
+
+    handleUpdateOnPress = () => {
+        const {name, email, address, district, contact} = this.state
+        if (name && email && address && district && contact) {
+            if (this.confirmEmail(email)) {
+
+            }
+            else {
+                this.setAlert(true, "Enter valid email address")
+            }
+        } 
+        else {
+            this.setAlert(true, "Fields cannot be empty")
+        }
+    }
+
+    handleCardUpdateOnPress = () => {
+        const {cardNo, cardType} = this.state
+        if (cardNo && cardType) {
+
+        }
+        else {
+            this.setAlert(true, "Fields cannot be empty")
+        }
     }
 
     handleOnChangeText = (value, name) => {
@@ -49,11 +134,67 @@ class Profile extends Component {
     }
 
     handleEditOnClick = (tag) => {
-        
+        if (tag === "Profile") {
+            this.setState({ openProfileEditor: true })
+        }
+        else if(tag === "Payment") {
+            this.setState({ openCardEditor: true })
+        }
+    }
+
+    handleProfileEditorOnClose = () => {
+        this.setState({ 
+            openProfileEditor: false,
+            name: "",
+            email: "",
+            address: "",
+            district: "",
+            contact: "",
+        })
+    }
+
+    handleCardEditorOnClose = () => {
+        this.setState({ openCardEditor: false, cardType: "", cardNo: "" })
     }
 
     visibilityIconPress = () => {
         this.setState({passwordVisible: !this.state.passwordVisible})
+    }
+
+    confirmEmail = (email) => {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return pattern.test(email)
+    }
+
+    setAlert = (open, message) => {
+        this.setState({ openAlert: open, alertMessage: message })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
+    }
+
+    renderPaymentCardEditor = (open) => {
+        return (
+            <PaymentCard
+                open = {open}
+                values = {this.state}
+                onClose = {this.handleCardEditorOnClose}
+                handleCancel = {this.handleCardEditorOnClose}
+                handleUpdateOnPress = {this.handleCardUpdateOnPress}
+                handleOnChangeText = {this.handleOnChangeText}
+            />
+        )
+    }
+
+    renderProfileEditor = (open) => {
+        return (
+            <ProfileEditor
+                open = {open}
+                values = {this.state}
+                onClose = {this.handleProfileEditorOnClose}
+                handleCancel = {this.handleProfileEditorOnClose}
+                handleUpdateOnPress = {this.handleUpdateOnPress}
+                handleOnChangeText = {this.handleOnChangeText}
+            />
+        )
     }
 
     renderInput = (placeholder, secure, name, icon) => {
@@ -85,7 +226,7 @@ class Profile extends Component {
         return (
             <View style = {styles.profileDetails}>
                 <View style = {styles.contentHeader}>
-                    <Text style = {styles.contentHeaderText}>Change Password</Text>
+                    <Text style = {styles.headerTitle}>Change Password</Text>
                 </View>
                 <View style = {styles.detailContainer}>
                     { this.renderInput("Current password", true, "currentPassword", null) }
@@ -101,7 +242,7 @@ class Profile extends Component {
         return (
             <View style = {styles.profileDetails}>
                 <View style = {styles.contentHeader}>
-                    <Text style = {styles.contentHeaderText}>Payment Details</Text>
+                    <Text style = {styles.headerTitle}>Payment Details</Text>
                     <TouchableOpacity onPress = {() => this.handleEditOnClick("Payment")}>
                         <Image style = {styles.contentHeaderImage} source = {edit}/>
                     </TouchableOpacity>
@@ -117,7 +258,7 @@ class Profile extends Component {
         return (
             <View style = {styles.profileDetails}>
                 <View style = {styles.contentHeader}>
-                    <Text style = {styles.contentHeaderText}>Profile Details</Text>
+                    <Text style = {styles.headerTitle}>Profile Details</Text>
                     <TouchableOpacity onPress = {() => this.handleEditOnClick("Profile")}>
                         <Image style = {styles.contentHeaderImage} source = {edit}/>
                     </TouchableOpacity>
@@ -129,29 +270,21 @@ class Profile extends Component {
         )
     }
 
-    renderStat = () => {
+    renderVoucherStat = () => {
         return (
-            <View style = {styles.vouchers}>
-                { this.stat.map(item => {
-                    const {id, count, label} = item 
-                    return (
-                        <View style = {styles.countRoot} key = {id}>
-                            <Text style = {styles.vouchersCount}>{count}</Text>
-                            <Text style = {styles.voucherText}>{label}</Text>
-                        </View>
-                    )
-                }) }
-            </View>
-        )
-    }
-
-    renderMainRoot = () => {
-        return (
-            <View style = {styles.mainRoot}>
-                { this.renderStat() }
-                { this.renderprofileDetails() }
-                { this.renderPaymentDetails() }
-                { this.renderChangepassword() }
+            <View style = {styles.voucherStatRoot}>
+                <Text style = {styles.headerTitle}>My vouchers</Text>
+                <View style = {styles.vouchers}>
+                    { this.stat.map(item => {
+                        const {id, count, label} = item 
+                        return (
+                            <View key = {id}>
+                                <Text style = {styles.vouchersCount}>{count}</Text>
+                                <Text style = {styles.voucherText}>{label}</Text>
+                            </View>
+                        )
+                    }) }
+                </View>
             </View>
         )
     }
@@ -172,6 +305,18 @@ class Profile extends Component {
         )
     }
 
+    renderMain = () => {
+        return (
+            <View style = {styles.mainContainer}>
+                { this.renderProfiler() }
+                { this.renderVoucherStat() }
+                { this.renderprofileDetails() }
+                { this.renderPaymentDetails() }
+                { this.renderChangepassword() }
+            </View>
+        )
+    }
+
     renderProfileCover = () => {
         return (
             <View style = {styles.profileCoverRoot}>
@@ -181,14 +326,18 @@ class Profile extends Component {
     }
 
     render() {
+        const {openProfileEditor, openCardEditor, openAlert, alertMessage, loading} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Profile" navigation = {this.props.navigation}/>
                 <ScrollView style = {styles.scrollView} indicatorStyle = "white">
                     { this.renderProfileCover() }
-                    { this.renderProfiler() }
-                    { this.renderMainRoot() }
+                    { this.renderMain() }
                 </ScrollView>
+                { openProfileEditor && this.renderProfileEditor(openProfileEditor) }
+                { openCardEditor && this.renderPaymentCardEditor(openCardEditor) }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { loading && <Loading open = {loading}/> }
             </SafeAreaView>
         )
     }

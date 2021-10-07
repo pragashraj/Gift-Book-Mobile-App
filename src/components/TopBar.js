@@ -2,11 +2,15 @@ import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 
 import menuIcon from '../assets/images/icons/menu.png'
-import user from '../assets/images/icons/user.png'
+import profile from '../assets/images/icons/pro.png'
 
 import {primaryColor} from '../values/values'
 
 const TopBar = ({title, navigation}) => {
+
+    const profileOnPress = () => {
+        navigation.navigate("Profile")
+    }
 
     const menuOnPress = () => {
         navigation.openDrawer()
@@ -21,8 +25,8 @@ const TopBar = ({title, navigation}) => {
                     </TouchableOpacity>
                     <Text style = {styles.title}>{title}</Text>
                 </View>
-                <TouchableOpacity>
-                    <Image source = {user} style = {styles.icon}/>
+                <TouchableOpacity onPress = {profileOnPress}>
+                    <Image source = {profile} style = {styles.proIcon}/>
                 </TouchableOpacity>
             </View>
         </View>
@@ -59,5 +63,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         textTransform: "uppercase",
         color: "#fff"
+    },
+    proIcon: {
+        height: 25,
+        width: 25
     }
 })

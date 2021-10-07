@@ -4,6 +4,8 @@ import { Text, View, Image } from 'react-native'
 import {styles} from './styles'
 import paymentSrc from '../../assets/images/icons/payment.png'
 import priceSrc from '../../assets/images/icons/price.png'
+import invoice from '../../assets/images/others/invoice.png'
+import invoiceFooter from '../../assets/images/others/invoiceFooter.png'
 
 const PaymentSlip = ({values}) => {
     const selectedMerchant = values["selectedMerchant"]
@@ -137,6 +139,9 @@ const PaymentSlip = ({values}) => {
                 <Image style = {styles.headerImage} source = {paymentSrc}/>
                 <Text style = {styles.headerTitle}>Payment Summary</Text>
             </View>
+            <View style = {styles.invoiceHeader}>
+                <Image style = {styles.invoiceImg} source = {invoice}/>
+            </View>
             <View style = {styles.senderBlock}>
                 <Text style = {styles.subHeader}>Sender</Text>
                 { renderSenderBlock() }
@@ -152,6 +157,9 @@ const PaymentSlip = ({values}) => {
             <View style = {styles.paymentBlock}>
                 <Text style = {styles.subHeader}>Payment</Text>
                 { renderPaymentBlock() }
+            </View>
+            <View style = {styles.invoiceFooter}>
+                <Image style = {styles.invoiceFooterImg} source = {invoiceFooter}/>
             </View>
         </View>
     )
