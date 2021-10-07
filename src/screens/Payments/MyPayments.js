@@ -23,6 +23,10 @@ class MyPayments extends Component {
         {id: 1,category: "Food",merchant: "ISSO",item: "Burger",quantity: 2,date: "07-10-2021",sender: "Anonymous",receiver: "Peter",payment: "600"}
     ]
 
+    componentDidMount() {
+        
+    }
+
     handleDateOnChange = (event) => {
         if (event.type === "set") {
             const date = value.nativeEvent.timestamp
