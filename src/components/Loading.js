@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, ActivityIndicator } from 'react-native'
 
 import {primaryColor} from '../values/values'
 

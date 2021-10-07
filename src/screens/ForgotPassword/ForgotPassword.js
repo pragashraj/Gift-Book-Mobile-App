@@ -58,10 +58,10 @@ class ForgotPassword extends Component {
 
     handleSendResetCodeApi = async(email) => {
         try {
-
-        } catch (e) {
             const {index} = this.state
             this.setContentState(index + 1)
+        } catch (e) {
+
         }
     }
 
@@ -202,8 +202,10 @@ class ForgotPassword extends Component {
         return (
             <View style = {styles.main}>
                 {
-                    index === 0 ? this.renderEmailprovider() :
-                    index === 1 ? this.renderResetCodeProvider() :
+                    index === 0 ? this.renderEmailprovider() 
+                    :
+                    index === 1 ? this.renderResetCodeProvider() 
+                    :
                     index === 2 && this.renderChangePassword()
                 }
             </View>
