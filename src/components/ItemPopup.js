@@ -9,7 +9,7 @@ const ItemPopup = ({open, onClose, selectedItem, handleCancel, handleSelect}) =>
 
     const renderModalContent = () => {
         return (
-            <View style = {styles.centeredView}>
+            <View style = {[styles.centeredView, styles.background]}>
                 <View style = {styles.modalView}>
                     <View style = {styles.headerBlock}>
                         <Text style = {styles.headerTitle}>{title}</Text>
@@ -65,6 +65,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    background: {
+        backgroundColor: "rgba(0, 0, 0, 0.4)"
     },
     modalView: {
         margin: 10,

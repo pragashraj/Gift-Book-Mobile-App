@@ -26,17 +26,20 @@ class MyVouchers extends Component {
 
     vouchers = [
         {price: "400", merchant: "ISSO", item: "Burger", date: "04-10-2021", status: "Active"},
-        {price: "150", merchant: "Allude", item: "Pants", date: "22-05-2021", status: "Expired"},
-        {price: "1000", merchant: "S&S", item: "T-shirt", date: "15-08-2021", status: "Active"},
     ]
 
-    handleDateOnChange = (value) => {
-        const date = value.nativeEvent.timestamp
-        if (this.state.dateTag === "Start") {
-            this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
+    handleDateOnChange = (event) => {
+        if (event.type === "set") {
+            const date = value.nativeEvent.timestamp
+            if (this.state.dateTag === "Start") {
+                this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
+            }
+            else {
+                this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
+            }
         }
-        else {
-            this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
+        else if (event.type === "dismissed") {
+            this.setState({ openDatePicker: false, dateTag: "" })
         }
     }
 
@@ -82,6 +85,24 @@ class MyVouchers extends Component {
                 <Text style = {styles.dateText}>{text}</Text>
                 <Image style = {styles.calendarImg} source = {calendar}/>
             </TouchableOpacity>
+        )
+    }
+
+    renderSelectedDate = (startDate, endDate) => {
+        return (
+            <View style = {styles.selectedDateRoot}>
+                <View style = {styles.selectedDate}>
+                    <View style = {styles.row}>
+                        <Text>{startDate.toDateString()}</Text>
+                        <Text>{endDate.toDateString()}</Text>
+                    </View>
+                </View>
+                <View style = {styles.clearBtnRoot}>
+                    <TouchableOpacity onPress = {this.handleDateClearOnPress}>
+                        <Image style = {styles.icon} source = {close}/>
+                    </TouchableOpacity>
+                </View>
+            </View>
         )
     }
 
@@ -145,21 +166,7 @@ class MyVouchers extends Component {
                         { this.renderDate("End") }
                     </View>
                 </View>
-                { startDate && endDate &&
-                    <View style = {styles.selectedDateRoot}>
-                        <View style = {styles.selectedDate}>
-                            <View style = {styles.row}>
-                                <Text>{startDate.toDateString()}</Text>
-                                <Text>{endDate.toDateString()}</Text>
-                            </View>
-                        </View>
-                        <View style = {styles.clearBtnRoot}>
-                            <TouchableOpacity onPress = {this.handleDateClearOnPress}>
-                                <Image style = {styles.icon} source = {close}/>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                }
+                { startDate && endDate && this.renderSelectedDate(startDate, endDate) }
             </View>
         )
     }

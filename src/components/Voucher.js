@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
 
-import voucherTemplate01 from '../assets/images/others/voucherTemplate01.png'
+import voucherTemplate01 from '../assets/images/others/voucherTemplate.png'
 
 const Voucher = ({voucherItem}) => {
     const {price, merchant, item} = voucherItem

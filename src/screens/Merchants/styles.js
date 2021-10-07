@@ -51,9 +51,7 @@ export const styles = StyleSheet.create({
         color: "#000"
     },
     merchantsBlock: {
-        backgroundColor: "#fff",
-        borderRadius: 10,
-        padding: 10,
+        padding: 5,
         marginTop: 10
     },
     merchantList: {

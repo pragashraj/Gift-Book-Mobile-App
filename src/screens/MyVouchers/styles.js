@@ -41,7 +41,6 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
     listBlock: {
-        backgroundColor: "#fff",
         borderRadius: 10,
         padding: 10,
         marginBottom: 10

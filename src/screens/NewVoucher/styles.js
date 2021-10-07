@@ -72,12 +72,12 @@ export const styles = StyleSheet.create({
         fontSize: 10
     },
     merchantBlock: {
-        padding: 10
+        padding: 5,
+        backgroundColor: "#EAECEE"
     },
     merchant: {
         alignItems: "center",
         justifyContent: "center",
-        marginHorizontal: 2,
         marginVertical: 5,
     },
     detailContainer: {
@@ -188,5 +188,13 @@ export const styles = StyleSheet.create({
     cardBlock: {
         marginTop: 20,
         marginBottom: 10
+    },
+    giftSelectorTopBlock: {
+        padding: 10
+    },
+    giftItem: {
+        // alignItems: "center",
+        // justifyContent: "center",
+        marginVertical: 5,
     }
 })

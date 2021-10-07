@@ -72,17 +72,72 @@ export const styles = StyleSheet.create({
         justifyContent: "center"
     },
     icon: {
-        width: 25,
-        height: 25
+        width: 22,
+        height: 22
     },
     listBlock: {
-        backgroundColor: "#fff",
         borderRadius: 10,
-        padding: 10,
-        marginBottom: 10
+        marginTop: 10
     },
     list: {
         marginTop: 20,
         alignItems: "center",
     },
+    PaymentCard: {
+        flex: 1,
+        width: "100%",
+        height: "100%",
+        elevation: 5,
+        backgroundColor: "#fff",
+        marginVertical: 5,
+        borderRadius: 15,
+        padding: 15,
+        minHeight: 170
+    },
+    cardBackground: {
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        resizeMode: "stretch",
+        borderRadius: 20
+    },
+    card: {
+        width: "100%",
+        height: "100%"
+    },
+    cardFooter: {
+        width: "100%",
+        height: 40,
+        padding: 0,
+        backgroundColor: "#F9EBEA",
+        justifyContent: "center",
+        padding: 5
+    },
+    cardContent: {
+        textTransform: "uppercase",
+        fontSize: 12,
+        letterSpacing: 1,
+        fontWeight: "bold"
+    },
+    cardValue: {
+        fontWeight: "bold"
+    },
+    iconRoot: {
+        marginVertical: 5,
+    },
+    moreIconRoot: {
+        flexDirection: "row"
+    },
+    moreText: {
+        marginRight: 5,
+        color: primaryColor,
+        fontWeight: "bold"
+    },
+    moreIcon: {
+        width: 22,
+        height: 22,
+        backgroundColor: "#F9EBEA",
+        borderRadius: 20,
+        padding: 12
+    }
 })

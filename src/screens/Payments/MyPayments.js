@@ -4,6 +4,7 @@ import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'r
 import TopBar from '../../components/TopBar'
 import Loading from '../../components/Loading'
 import DatePicker from '../../components/DatePicker'
+import PaymentCard from './PaymentCard'
 
 import {styles} from './styles'
 import calendar from '../../assets/images/icons/calendar.png'
@@ -18,13 +19,22 @@ class MyPayments extends Component {
         openDatePicker: false,
     }
 
-    handleDateOnChange = (value) => {
-        const date = value.nativeEvent.timestamp
-        if (this.state.dateTag === "Start") {
-            this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
+    paymentItems = [
+        {id: 1,category: "Food",merchant: "ISSO",item: "Burger",quantity: 2,date: "07-10-2021",sender: "Anonymous",receiver: "Peter",payment: "600"}
+    ]
+
+    handleDateOnChange = (event) => {
+        if (event.type === "set") {
+            const date = value.nativeEvent.timestamp
+            if (this.state.dateTag === "Start") {
+                this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
+            }
+            else {
+                this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
+            }
         }
-        else {
-            this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
+        else if (event.type === "dismissed") {
+            this.setState({ openDatePicker: false, dateTag: "" })
         }
     }
 
@@ -33,7 +43,7 @@ class MyPayments extends Component {
     }
 
     handleDateClearOnPress = () => {
-        this.setState({ startDate: new Date(), endDate: new Date() })
+        this.setState({ startDate: new Date(), endDate: new Date(), openDatePicker: false })
     }
 
     renderDate = (text) => {
@@ -42,6 +52,24 @@ class MyPayments extends Component {
                 <Text style = {styles.dateText}>{text}</Text>
                 <Image style = {styles.calendarImg} source = {calendar}/>
             </TouchableOpacity>
+        )
+    }
+
+    renderSelectedDate = (startDate, endDate) => {
+        return (
+            <View style = {styles.selectedDateRoot}>
+                <View style = {styles.selectedDate}>
+                    <View style = {styles.row}>
+                        <Text>{startDate.toDateString()}</Text>
+                        <Text>{endDate.toDateString()}</Text>
+                    </View>
+                </View>
+                <View style = {styles.clearBtnRoot}>
+                    <TouchableOpacity onPress = {this.handleDateClearOnPress}>
+                        <Image style = {styles.icon} source = {close}/>
+                    </TouchableOpacity>
+                </View>
+            </View>
         )
     }
 
@@ -59,7 +87,7 @@ class MyPayments extends Component {
             <View style = {styles.listBlock}>
                 <Text style = {styles.headerTitle}>Checkout your payment history</Text>
                 <View style = {styles.list}>
-                    
+                    { this.paymentItems.map((item, idx) => <PaymentCard paymentItem = {item} key = {idx}/>) }
                 </View>
             </View>
         )
@@ -76,21 +104,7 @@ class MyPayments extends Component {
                         { this.renderDate("End") }
                     </View>
                 </View>
-                { startDate && endDate &&
-                    <View style = {styles.selectedDateRoot}>
-                        <View style = {styles.selectedDate}>
-                            <View style = {styles.row}>
-                                <Text>{startDate.toDateString()}</Text>
-                                <Text>{endDate.toDateString()}</Text>
-                            </View>
-                        </View>
-                        <View style = {styles.clearBtnRoot}>
-                            <TouchableOpacity onPress = {this.handleDateClearOnPress}>
-                                <Image style = {styles.icon} source = {close}/>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                }
+                { startDate && endDate && this.renderSelectedDate(startDate, endDate) }
             </View>
         )
     }
