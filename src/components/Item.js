@@ -1,11 +1,11 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 
-const Item = ({source, title, onPress, onSelected}) => {
+const Item = ({source, title, onPress, onSelected, itemType}) => {
     return (
-        <View style = {[styles.container, onSelected && styles.selcted]}>
+        <View style = {[ itemType === "item" ? styles.itemContainer: styles.container, onSelected && styles.selcted]}>
             <TouchableOpacity style = {styles.content} onPress = {onPress}>
-                <Image style = {styles.image} source = {source}/>
+                <Image style = {itemType === "item" ? styles.itemImage : styles.image} source = {source}/>
                 <Text style = {styles.title}>{title}</Text>
             </TouchableOpacity>
         </View>
@@ -16,8 +16,18 @@ export default Item
 
 const styles = StyleSheet.create({
     container: {
-        width: 100,
+        width: 160,
         height: 100,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#fff",
+        elevation: 5,
+        padding: 2,
+    },
+    itemContainer: {
+        width: 160,
+        height: 130,
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
@@ -41,6 +51,13 @@ const styles = StyleSheet.create({
     },
     image: {
         width: 100,
-        height: 60,
+        height: 55,
+        resizeMode: "stretch",
+    },
+    itemImage: {
+        width: 150,
+        height: 100,
+        resizeMode: "stretch",
+        borderRadius: 10
     }
 })

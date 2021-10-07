@@ -1,37 +1,40 @@
 import React from 'react'
-import { StyleSheet, Text, View, Modal, Image, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Modal, Dimensions } from 'react-native'
 
 import CustomButton from './CustomButton'
+import Voucher from './Voucher'
 
-const ItemPopup = ({open, onClose, selectedItem, handleCancel, handleSelect}) => {
+const VoucherPopup = ({open, onClose, selectedItem, handleCancel, handleShare}) => {
+    const {price, merchant, item, status, date} = selectedItem
 
-    const {title, src} = selectedItem
+    const renderDetailContent = (content, value) => {
+        return (
+            <View style = {styles.detailBlock}>
+                <Text>{content}</Text>
+                <Text>{value}</Text>
+            </View>
+        )
+    }
 
     const renderModalContent = () => {
         return (
             <View style = {[styles.centeredView, styles.background]}>
                 <View style = {styles.modalView}>
                     <View style = {styles.headerBlock}>
-                        <Text style = {styles.headerTitle}>{title}</Text>
+                        <Text style = {styles.headerTitle}>Gift voucher for {item}</Text>
                     </View>
-                    <View style = {styles.imageBlock}>
-                        <Image style = {styles.image} source = {src}/>
+                    <View style = {styles.voucher}>
+                        <Voucher voucherItem = {selectedItem}/>
                     </View>
                     <View style = {styles.descriptiveBlock}>
-                        <View style = {styles.description}>
-                            <Text style = {styles.descriptionText}>
-                                The onRequestClose callback is called when the user taps the hardware 
-                                back button on Android or the menu button on Apple TV.
-                            </Text>
-                        </View>
-                        <View style = {styles.price}>
-                            <Text style = {styles.priceText}>Price</Text>
-                            <Text style = {styles.priceValue}>Rs. 450</Text>
-                        </View>
+                        { renderDetailContent("Merchant", merchant) }
+                        { renderDetailContent("Price", price) }
+                        { renderDetailContent("Status", status) }
+                        { renderDetailContent("Date", date) }
                     </View>
                     <View style = {styles.footerBtn}>
                         <CustomButton text = "cancel" btnType = "secondary" handleBtnOnClick = {handleCancel}/>
-                        <CustomButton text = "select" btnType = "primary" handleBtnOnClick = {handleSelect}/>
+                        <CustomButton text = "Share" btnType = "primary" handleBtnOnClick = {handleShare}/>
                     </View>
                 </View>
             </View>
@@ -52,7 +55,7 @@ const ItemPopup = ({open, onClose, selectedItem, handleCancel, handleSelect}) =>
     )
 }
 
-export default ItemPopup
+export default VoucherPopup
 
 const screenHight = Dimensions.get('screen').height
 const screenWidth = Dimensions.get('screen').width
@@ -82,7 +85,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 6
+        elevation: 6,
+        width: "90%"
     },
     headerBlock: {
         padding: 10,
@@ -100,34 +104,26 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%"
     },
-    descriptiveBlock: {
-        marginTop: 10
-    },
-    description: {
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    descriptionText: {
-        fontSize: 13,
-        color: "grey",
-        textAlign: "center"
-    },
-    price: {
-        marginTop: 5,
-        flexDirection: "row",
-        justifyContent: "space-between"
-    },
-    priceText: {
-        textTransform: "uppercase",
-        fontSize: 16
-    },
-    priceValue: {
-        fontSize: 20
-    },
     footerBtn: {
         width: "80%",
         marginTop: 5,
         flexDirection: "row",
         justifyContent: "space-evenly",
-    }
+    },
+    voucher: {
+        marginVertical: 5,
+        backgroundColor: "#fff",
+    },
+    descriptiveBlock: {
+        marginTop: 10,
+        marginBottom: 10,
+        width: "100%"
+    },
+    detailBlock: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    detailValue: {
+        fontSize: 13,
+    },
 })

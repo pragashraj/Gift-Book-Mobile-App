@@ -9,7 +9,7 @@ const MerchantPopup = ({open, onClose, selectedItem, handleCancel}) => {
 
     const renderModalContent = () => {
         return (
-            <View style = {styles.centeredView}>
+            <View style = {[styles.centeredView, styles.background]}>
                 <View style = {styles.modalView}>
                     <View style = {styles.headerBlock}>
                         <Text style = {styles.headerTitle}>{title}</Text>
@@ -61,6 +61,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    background: {
+        backgroundColor: "rgba(0, 0, 0, 0.4)"
+    },
     modalView: {
         margin: 10,
         backgroundColor: "white",
@@ -90,7 +93,8 @@ const styles = StyleSheet.create({
     },
     image: {
         width: "100%",
-        height: "100%"
+        height: "100%",
+        resizeMode: "stretch",
     },
     descriptiveBlock: {
         marginTop: 10
