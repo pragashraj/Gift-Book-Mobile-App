@@ -10,6 +10,7 @@ import MerchantSelector from './MerchantSelector'
 import GiftSelector from './GiftSelector'
 import Delivery from './Delivery'
 import PaymentSlip from './PaymentSlip'
+import Loading from '../../components/Loading'
 
 import {styles} from './styles'
 import shirt from '../../assets/images/icons/shirt.png'
@@ -36,7 +37,8 @@ class NewVoucher extends Component {
         receiverDistrict: "Gampaha",
         openAlert: false,
         alertMessage: "",
-        openConfirmPopup: false
+        openConfirmPopup: false,
+        loading: false
     }
 
     footerText = ["Select a merchant", "Select a gift", "Delivery details", "Payment summary"]
@@ -354,7 +356,7 @@ class NewVoucher extends Component {
     }
 
     render() {
-        const {selectedItem, openItemModal, openAlert, alertMessage, openConfirmPopup} = this.state
+        const {selectedItem, openItemModal, openAlert, alertMessage, openConfirmPopup, loading} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "New Voucher" navigation = {this.props.navigation}/>
@@ -365,6 +367,7 @@ class NewVoucher extends Component {
                 { openItemModal && selectedItem &&  this.renderItemModal(openItemModal, selectedItem ) }
                 { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
                 { openConfirmPopup && this.renderConfirmModal(openConfirmPopup) }
+                { loading && <Loading open = {loading}/> }
             </SafeAreaView>
         )
     }

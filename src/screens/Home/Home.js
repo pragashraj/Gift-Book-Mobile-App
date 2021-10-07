@@ -3,6 +3,7 @@ import { Text, SafeAreaView, ScrollView, Image, View, TouchableOpacity } from 'r
 
 import TopBar from '../../components/TopBar'
 import ImageCarousel from '../../components/ImageCarousel'
+import Loading from '../../components/Loading'
 
 import care from '../../assets/images/carousels/care.png'
 import fashion from '../../assets/images/carousels/fashion.png'
@@ -32,6 +33,9 @@ import eVoucher from '../../assets/images/icons/eVoucher.png'
 import {styles} from './styles'
 
 class Home extends Component {
+    state = {
+        loading: false,
+    }
 
     carouselData = [
         {src: care, title: "Care"},
@@ -61,6 +65,10 @@ class Home extends Component {
         {id: "7", src: watch, title: "Wearables"},
         {id: "8", src: hotels, title: "Hotels"},
     ]
+
+    componentDidMount() {
+
+    }
 
     renderAttribute = (source, title) => {
         return (
@@ -162,6 +170,7 @@ class Home extends Component {
     )
 
     render() {
+        const {loading} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "Home" navigation = {this.props.navigation}/>
@@ -173,6 +182,7 @@ class Home extends Component {
                     { this.renderFeaturetBlock() }
                     { this.renderFooter() }
                 </ScrollView>
+                { loading && <Loading open = {loading}/> }
             </SafeAreaView>
         )
     }

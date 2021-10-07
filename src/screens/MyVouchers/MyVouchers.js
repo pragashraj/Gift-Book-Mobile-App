@@ -28,6 +28,10 @@ class MyVouchers extends Component {
         {price: "400", merchant: "ISSO", item: "Burger", date: "04-10-2021", status: "Active"},
     ]
 
+    componentDidMount() {
+        
+    }
+
     handleDateOnChange = (event) => {
         if (event.type === "set") {
             const date = value.nativeEvent.timestamp
