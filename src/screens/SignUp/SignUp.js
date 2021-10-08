@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 
+import {signUp} from '../../api/auth'
+
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import AlertSnackBar from '../../components/AlertSnackBar'
@@ -34,9 +36,17 @@ class SignUp extends Component {
 
     handleSignUpApi = async(data) => {
         try {
+            this.setState({ loading: true })
+
+            const response = await signUp(data)
+            if (response.success) {
+
+            }
+
+            this.setState({ loading: false })
 
         } catch (e) {
-
+            
         }
     }
 

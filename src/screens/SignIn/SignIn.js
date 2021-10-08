@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 
+import {signIn} from '../../api/auth'
+
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
@@ -27,6 +29,14 @@ class SignIn extends Component {
 
     handleSignInApi = async(data) => {
         try {
+            this.setState({ loading: true })
+
+            const response = await signIn(data)
+            if (response.success) {
+
+            }
+
+            this.setState({ loading: false })
 
         } catch (e) {
             
