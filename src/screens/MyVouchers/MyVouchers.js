@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native'
 
+import {getVouchers, filterVouchersByDate, filterVouchersByStatus} from '../../api/voucher'
+
 import TopBar from '../../components/TopBar'
 import Loading from '../../components/Loading'
 import RadioButton from '../../components/RadioButton'
 import Voucher from '../../components/Voucher'
 import DatePicker from '../../components/DatePicker'
 import VoucherPopup from '../../components/VoucherPopup'
+import AlertSnackBar from '../../components/AlertSnackBar'
 
 import {styles} from './styles'
 import calendar from '../../assets/images/icons/calendar.png'
@@ -21,7 +24,11 @@ class MyVouchers extends Component {
         startDate: new Date(),
         endDate: new Date(),
         openVoucherPopup: false,
-        selectedVoucher: null
+        selectedVoucher: null,
+        openAlert: false,
+        alertMessage: "",
+        alertAction: '',
+        vouchersData: []
     }
 
     vouchers = [
@@ -32,14 +39,61 @@ class MyVouchers extends Component {
         
     }
 
+    getVouchersApi = async(page) => {
+        try {
+            this.setState({ loading: true })
+            const token = null
+            const vouchersData = await getVouchers(page, token)
+            this.setState({ loading: false, vouchersData })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
+
+    filterVouchersByDateApi = async(start, end, page) => {
+        try {
+            this.setState({ loading: true })
+            const token = null
+            const vouchersData = await filterVouchersByDate(start, end, page, token)
+            this.setState({ loading: false, vouchersData })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
+
+    filterVouchersByStatusApi = async(status, page) => {
+        try {
+            this.setState({ loading: true })
+            const token = null
+            const vouchersData = await filterVouchersByStatus(status, page, token)
+            this.setState({ loading: false, vouchersData })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
+
     handleDateOnChange = (event) => {
         if (event.type === "set") {
             const date = value.nativeEvent.timestamp
-            if (this.state.dateTag === "Start") {
+            const {startDate, endDate, dateTag} = this.state
+            if (dateTag === "Start") {
                 this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
+
+                const today = new Date()
+                if (endDate && endDate !== today) {
+                    this.filterVouchersByDateApi(date, endDate, 0)
+                }
             }
             else {
                 this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
+
+                const today = new Date()
+                if (startDate && startDate !== today) {
+                    this.filterVouchersByDateApi(startDate, date, 0)
+                }
             }
         }
         else if (event.type === "dismissed") {
@@ -69,6 +123,15 @@ class MyVouchers extends Component {
 
     handleVoucherShare = () => {
         this.handleVoucherPopupClose()
+    }
+
+    setErrorSnack = (message) => {
+        this.setAlert(message, 'Error')
+    }
+
+    setAlert = (message, action) => {
+        this.setState({ openAlert: true, alertMessage: message, alertAction: action })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
     renderVoucherPopup = (openVoucherPopup, selectedVoucher) => {
@@ -176,7 +239,7 @@ class MyVouchers extends Component {
     }
 
     render() {
-        const {loading, openDatePicker, dateTag, startDate, endDate, openVoucherPopup, selectedVoucher} = this.state
+        const {loading, openDatePicker, dateTag, startDate, endDate, openVoucherPopup, selectedVoucher, openAlert, alertMessage, alertAction} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Vouchers" navigation = {this.props.navigation}/>
@@ -190,6 +253,7 @@ class MyVouchers extends Component {
                 { loading && <Loading open = {loading}/> }
                 { openDatePicker && <DatePicker date = { dateTag === "Start" ? startDate : endDate} onChange = {this.handleDateOnChange}/>}
                 { openVoucherPopup && selectedVoucher && this.renderVoucherPopup(openVoucherPopup, selectedVoucher) }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
             </SafeAreaView>
         )
     }

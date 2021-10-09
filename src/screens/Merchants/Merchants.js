@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
 
+import {getMerchants, getMerchantsByCategory, getMerchantByName, getMerchantCategories} from '../../api/merchant'
+
 import TopBar from '../../components/TopBar'
 import Loading from '../../components/Loading'
 import Merchant from '../../components/Item'
@@ -21,9 +23,12 @@ class Merchants extends Component {
         openMerchantPopup: false,
         openAlert: false,
         alertMessage: "",
+        alertAction: '',
+        categoriesData: [],
+        merchantsData: []
     }
 
-    categories = ["Fashion", "Food", "Accessories", "Baby", "Books", "Groceries", "Health", "Homeware", "Hotels", "Valentine"]
+    categories = ["All", "Fashion", "Food", "Accessories", "Baby", "Books", "Groceries", "Health", "Homeware", "Hotels", "Valentine"]
 
     merchants = [
         {id: "1", title: "Allude", src: allude},
@@ -38,29 +43,70 @@ class Merchants extends Component {
 
     }
 
-    fetchContents = async(value) => {
+    getMerchantsApi = async(page) => {
         try {
-
+            this.setState({ loading: true })
+            const token = null
+            const merchantsData = await getMerchants(page, token)
+            this.setState({ loading: false, merchantsData })
         } catch (e) {
-
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
-    searchApi = async(value) => {
+    getMerchantCategoriesApi = async() => {
         try {
-
+            this.setState({ loading: true })
+            const token = null
+            const categoriesData = await getMerchantCategories(token)
+            this.setState({ loading: false, categoriesData })
         } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
 
+    searchApi = async(value, page) => {
+        try {
+            this.setState({ loading: true })
+            const token = null
+            const merchantsData = await getMerchantByName(value, page, token)
+            this.setState({ loading: false, merchantsData })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
+
+    getMerchantsByCategoryApi = async(value, page) => {
+        try {
+            this.setState({ loading: true })
+            const token = null
+            const merchantsData = await getMerchantsByCategory(value, page, token)
+            this.setState({ loading: false, merchantsData })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
+
+    handleCategoryOnPress = (item) => {
+        if (item === "All") {
+            this.getMerchantsApi(0)
+        }
+        else {
+            this.getMerchantsByCategoryApi(item, 0)
         }
     }
 
     handleSearchOnPress = () => {
         const {searchValue} = this.state
         if (searchValue) {
-            this.searchApi(searchValue)
+            this.searchApi(searchValue, 0)
         }
         else {
-            this.setAlertBar(true, "Fields cannot be empty")
+            this.setErrorSnack("Fields cannot be empty")
         }
     }
 
@@ -76,9 +122,13 @@ class Merchants extends Component {
         this.setState({ [name]: value })
     }
 
-    setAlertBar = (open, message) => {
-        this.setState({ openAlert: open, alertMessage: message })
-        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
+    setErrorSnack = (message) => {
+        this.setAlert(message, 'Error')
+    }
+
+    setAlert = (message, action) => {
+        this.setState({ openAlert: true, alertMessage: message, alertAction: action })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
     renderMerchantPopup = (openMerchantPopup, selectedMerchant) => {
@@ -109,7 +159,7 @@ class Merchants extends Component {
     renderFilterItem = (item, idx) => {
         return (
             <View style = {styles.filterItem} key = {idx}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress = {() => this.handleCategoryOnPress(item)}>
                     <Text style = {styles.filterItemText}>{item}</Text>
                 </TouchableOpacity>
             </View>
@@ -159,7 +209,7 @@ class Merchants extends Component {
     }
 
     render() {
-        const {loading, openMerchantPopup, selectedMerchant, openAlert, alertMessage} = this.state
+        const {loading, openMerchantPopup, selectedMerchant, openAlert, alertMessage, alertAction} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "Merchants" navigation = {this.props.navigation}/>
@@ -171,7 +221,7 @@ class Merchants extends Component {
                     </View>
                 </ScrollView>
                 { openMerchantPopup && selectedMerchant && this.renderMerchantPopup(openMerchantPopup, selectedMerchant) }
-                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
                 { loading && <Loading open = {loading}/> }
             </SafeAreaView>
         )

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Text, SafeAreaView, ScrollView, Image, View, TouchableOpacity } from 'react-native'
 
+import {getProfileDetails, updateProfileDetails, updatePaymentCardDetails, changePassword} from '../../api/user'
+
 import TopBar from '../../components/TopBar'
 import CustomInput from '../../components/CustomInput'
 import Button from '../../components/Button'
@@ -34,7 +36,9 @@ class Profile extends Component {
         openCardEditor: false,
         openAlert: false,
         loading: false,
-        alertMessage: ""
+        alertMessage: "",
+        alertAction: '',
+        profileData: null
     }
 
     stat = [
@@ -60,27 +64,60 @@ class Profile extends Component {
         
     }
 
-    passwordChangeApi = async(data) => {
+    getProfileDetailsApi = async(email) => {
         try {
-
+            this.setState({ loading: true })
+            const token = null
+            const data = await getProfileDetails(email, token)
+            this.setState({ loading: false, profileData: data })
         } catch (e) {
-
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
-    profileUpdateApi = async(data) => {
+    changePasswordApi = async(data) => {
         try {
-
+            this.setState({ loading: true })
+            const token = null
+            const response = await changePassword(data, token)
+            if (response.success) {
+                this.setSuccessSnack(response.message)
+            }
+            this.setState({ loading: false })
         } catch (e) {
-
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
-    paymentCardUpdateApi = async(data) => {
+    updateProfileDetailsApi = async(data) => {
         try {
-
+            this.setState({ loading: true })
+            const token = null
+            const response = await updateProfileDetails(data, token)
+            if (response.success) {
+                this.setSuccessSnack(response.message)
+            }
+            this.setState({ loading: false })
         } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
 
+    updatePaymentCardDetailsApi = async(data) => {
+        try {
+            this.setState({ loading: true })
+            const token = null
+            const response = await updatePaymentCardDetails(data, token)
+            if (response.success) {
+                this.setSuccessSnack(response.message)
+            }
+            this.setState({ loading: false })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
@@ -89,18 +126,20 @@ class Profile extends Component {
         if (currentPasssword && newPassword && confirmPasssword) {
             if (currentPasssword !== newPassword) {
                 if (newPassword === confirmPasssword) {
-
+                    const email = ""
+                    const data = {email, oldPassword: currentPasssword, newPassword}
+                    this.changePasswordApi(data)
                 }
                 else {
-                    this.setAlert(true, "New, Confirm passwords not matched")
+                    this.setErrorSnack("New, Confirm passwords not matched")
                 }
             }
             else {
-                this.setAlert(true, "New password cannot be same as old")
+                this.setErrorSnack("New password cannot be same as old")
             }
         } 
         else {
-            this.setAlert(true, "Fields cannot be empty")
+            this.setErrorSnack("Fields cannot be empty")
         }
     }
 
@@ -108,24 +147,27 @@ class Profile extends Component {
         const {name, email, address, district, contact} = this.state
         if (name && email && address && district && contact) {
             if (this.confirmEmail(email)) {
-
+                const data = {email, name, address, district, contact}
+                this.updateProfileDetailsApi(data)
             }
             else {
-                this.setAlert(true, "Enter valid email address")
+                this.setErrorSnack("Enter valid email address")
             }
         } 
         else {
-            this.setAlert(true, "Fields cannot be empty")
+            this.setErrorSnack("Fields cannot be empty")
         }
     }
 
     handleCardUpdateOnPress = () => {
         const {cardNo, cardType} = this.state
         if (cardNo && cardType) {
-
+            const email = ""
+            const data = {email, cardType, cardNo}
+            this.updatePaymentCardDetailsApi(data)
         }
         else {
-            this.setAlert(true, "Fields cannot be empty")
+            this.setErrorSnack("Fields cannot be empty")
         }
     }
 
@@ -166,9 +208,17 @@ class Profile extends Component {
         return pattern.test(email)
     }
 
-    setAlert = (open, message) => {
-        this.setState({ openAlert: open, alertMessage: message })
-        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
+    setSuccessSnack = (message) => {
+        this.setAlert(message, 'Success')
+    }
+
+    setErrorSnack = (message) => {
+        this.setAlert(message, 'Error')
+    }
+
+    setAlert = (message, action) => {
+        this.setState({ openAlert: true, alertMessage: message, alertAction: action })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
     renderPaymentCardEditor = (open) => {
@@ -326,7 +376,7 @@ class Profile extends Component {
     }
 
     render() {
-        const {openProfileEditor, openCardEditor, openAlert, alertMessage, loading} = this.state
+        const {openProfileEditor, openCardEditor, openAlert, alertMessage, loading, alertAction} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Profile" navigation = {this.props.navigation}/>
@@ -336,7 +386,7 @@ class Profile extends Component {
                 </ScrollView>
                 { openProfileEditor && this.renderProfileEditor(openProfileEditor) }
                 { openCardEditor && this.renderPaymentCardEditor(openCardEditor) }
-                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
                 { loading && <Loading open = {loading}/> }
             </SafeAreaView>
         )
