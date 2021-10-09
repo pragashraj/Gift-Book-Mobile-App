@@ -1,5 +1,8 @@
 import React from 'react'
 
+import {Provider} from 'react-redux'
+import store from './src/redux/store'
+
 import {createStackNavigator} from '@react-navigation/stack'
 import {NavigationContainer} from '@react-navigation/native'
 import {createDrawerNavigator, DrawerContentScrollView} from '@react-navigation/drawer'
@@ -78,4 +81,10 @@ const App = () => {
   )
 }
 
-export default App
+export default () => {
+  return(
+    <Provider store = {store}>
+      <App/>
+    </Provider>
+  )
+}
