@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native"
 
 import Snackbar from 'react-native-snackbar'
 
-const AlertSnackBar = ({message}) => {
+const AlertSnackBar = ({message, action}) => {
     return (
         <View style = {styles.container}>
             {
@@ -11,8 +11,8 @@ const AlertSnackBar = ({message}) => {
                     text: message,
                     duration: Snackbar.LENGTH_SHORT,
                     action: {
-                        text: 'Error',
-                        textColor: 'red',
+                        text: action,
+                        textColor: action === 'Error' ? 'red' : 'Green',
                     },
                 })
             }

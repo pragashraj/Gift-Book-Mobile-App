@@ -38,7 +38,8 @@ class NewVoucher extends Component {
         openAlert: false,
         alertMessage: "",
         openConfirmPopup: false,
-        loading: false
+        loading: false,
+        alertAction: ''
     }
 
     footerText = ["Select a merchant", "Select a gift", "Delivery details", "Payment summary"]
@@ -121,7 +122,7 @@ class NewVoucher extends Component {
             this.searchMerchantApi(merchantSearch)
         }
         else {
-            this.setAlertBar(true, "Please enter a value")
+            this.setErrorSnack("Please enter a value")
         }
     }
 
@@ -135,7 +136,7 @@ class NewVoucher extends Component {
             this.searchItemApi(data)
         }
         else {
-            this.setAlertBar(true, "Please enter a value")
+            this.setErrorSnack("Please enter a value")
         }
     }
 
@@ -206,14 +207,14 @@ class NewVoucher extends Component {
                 idx = index + 1 
             }
             else {
-                this.setAlertBar(true, "Please select a merchant")
+                this.setErrorSnack("Please select a merchant")
             }
         }
         else if (index === 1) {
             if (selectedItem) {
                 idx = index + 1 
             }
-            else this.setAlertBar(true, "Please select an item")
+            else this.setErrorSnack("Please select an item")
         }
         else if (index === 2) {
             let receiverDetail = receiverName && receiverAddress && receiverDistrict
@@ -225,7 +226,7 @@ class NewVoucher extends Component {
                 idx = index + 1
             }
             else {
-                this.setAlertBar(true, "Fields cannot be empty")
+                this.setErrorSnack("Fields cannot be empty")
             }
         }
         else {
@@ -234,9 +235,17 @@ class NewVoucher extends Component {
         this.setState({ index: idx })
     }
 
-    setAlertBar = (open, message) => {
-        this.setState({ openAlert: open, alertMessage: message })
-        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
+    setSuccessSnack = (message) => {
+        this.setAlert(message, 'Success')
+    }
+
+    setErrorSnack = (message) => {
+        this.setAlert(message, 'Error')
+    }
+
+    setAlert = (message, action) => {
+        this.setState({ openAlert: true, alertMessage: message, alertAction: action })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
     renderConfirmModal = (openConfirmPopup) => {
@@ -356,7 +365,7 @@ class NewVoucher extends Component {
     }
 
     render() {
-        const {selectedItem, openItemModal, openAlert, alertMessage, openConfirmPopup, loading} = this.state
+        const {selectedItem, openItemModal, openAlert, alertMessage, openConfirmPopup, loading, alertAction} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "New Voucher" navigation = {this.props.navigation}/>
@@ -365,7 +374,7 @@ class NewVoucher extends Component {
                 </ScrollView>
                 { this.renderFooter() }
                 { openItemModal && selectedItem &&  this.renderItemModal(openItemModal, selectedItem ) }
-                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
                 { openConfirmPopup && this.renderConfirmModal(openConfirmPopup) }
                 { loading && <Loading open = {loading}/> }
             </SafeAreaView>

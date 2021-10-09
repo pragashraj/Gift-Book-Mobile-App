@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 
+import {signIn} from '../../api/auth'
+
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
@@ -23,13 +25,19 @@ class SignIn extends Component {
         alertMessage: "",
         visibility: false,
         loading: false,
+        alertAction: ''
     }
 
     handleSignInApi = async(data) => {
         try {
-
+            this.setState({ loading: true })
+            const response = await signIn(data)
+            this.setSuccessSnack("Login Successful")
+            this.props.navigation.navigate("Home")
+            this.setState({ loading: false })
         } catch (e) {
-            
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
@@ -37,7 +45,7 @@ class SignIn extends Component {
         const {email, password} = this.state
         if (email && password) {
             if (!this.confirmEmail(email)) {
-                this.setAlert(true, "Enter valid email address")
+                this.setErrorSnack("Enter valid email address")
             }
             else {
                 const data = {email, password}
@@ -45,7 +53,7 @@ class SignIn extends Component {
             }
         } 
         else {
-            this.setAlert(true, "Fields cannot be empty")
+            this.setErrorSnack("Fields cannot be empty")
         }
     }
 
@@ -70,9 +78,17 @@ class SignIn extends Component {
         return pattern.test(email)
     }
 
-    setAlert = (open, message) => {
-        this.setState({ openAlert: open, alertMessage: message })
-        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
+    setSuccessSnack = (message) => {
+        this.setAlert(message, 'Success')
+    }
+
+    setErrorSnack = (message) => {
+        this.setAlert(message, 'Error')
+    }
+
+    setAlert = (message, action) => {
+        this.setState({ openAlert: true, alertMessage: message, alertAction: action })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
     renderEmailInputField = () => {
@@ -137,7 +153,7 @@ class SignIn extends Component {
     )
 
     render() {
-        const {openAlert, alertMessage, loading} = this.state
+        const {openAlert, alertMessage, loading, alertAction} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -152,7 +168,7 @@ class SignIn extends Component {
                 <View style = {styles.footerRoot}>
                     { this.renderFooter() }
                 </View>
-                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
                 { loading && <Loading open = {loading}/> }
             </View>
         )
