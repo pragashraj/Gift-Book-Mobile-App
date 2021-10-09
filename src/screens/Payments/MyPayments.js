@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native'
 
+import {getPayments, filterPaymentsByDate} from '../../api/payment'
+
 import TopBar from '../../components/TopBar'
 import Loading from '../../components/Loading'
 import DatePicker from '../../components/DatePicker'
 import PaymentCard from './PaymentCard'
+import AlertSnackBar from '../../components/AlertSnackBar'
 
 import {styles} from './styles'
 import calendar from '../../assets/images/icons/calendar.png'
@@ -17,6 +20,10 @@ class MyPayments extends Component {
         endDate: new Date(),
         dateTag: "",
         openDatePicker: false,
+        paymentsData: [],
+        openAlert: false,
+        alertMessage: "",
+        alertAction: '',
     }
 
     paymentItems = [
@@ -27,14 +34,49 @@ class MyPayments extends Component {
         
     }
 
+    getPaymentsApi = async(page) => {
+        try {
+            this.setState({ loading: true })
+            const token = null
+            const paymentsData = await getPayments(page, token)
+            this.setState({ loading: false, paymentsData })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
+
+    filterPaymentsByDateApi = async(start, end, page) => {
+        try {
+            this.setState({ loading: true })
+            const token = null
+            const paymentsData = await filterPaymentsByDate(start, end, page, token)
+            this.setState({ loading: false, paymentsData })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
+
     handleDateOnChange = (event) => {
         if (event.type === "set") {
             const date = value.nativeEvent.timestamp
-            if (this.state.dateTag === "Start") {
+            const {startDate, endDate, dateTag} = this.state
+            if (dateTag === "Start") {
                 this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
+
+                const today = new Date()
+                if (endDate && endDate !== today) {
+                    this.filterPaymentsByDateApi(date, endDate, 0)
+                }
             }
             else {
                 this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
+
+                const today = new Date()
+                if (startDate && startDate !== today) {
+                    this.filterPaymentsByDateApi(startDate, date, 0)
+                }
             }
         }
         else if (event.type === "dismissed") {
@@ -57,6 +99,15 @@ class MyPayments extends Component {
                 <Image style = {styles.calendarImg} source = {calendar}/>
             </TouchableOpacity>
         )
+    }
+
+    setErrorSnack = (message) => {
+        this.setAlert(message, 'Error')
+    }
+
+    setAlert = (message, action) => {
+        this.setState({ openAlert: true, alertMessage: message, alertAction: action })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
     renderSelectedDate = (startDate, endDate) => {
@@ -114,7 +165,7 @@ class MyPayments extends Component {
     }
 
     render() {
-        const {loading, openDatePicker, dateTag, startDate, endDate} = this.state
+        const {loading, openDatePicker, dateTag, startDate, endDate, openAlert, alertMessage, alertAction} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Payments" navigation = {this.props.navigation}/>
@@ -126,6 +177,7 @@ class MyPayments extends Component {
                 </ScrollView>
                 { loading && <Loading open = {loading}/> }
                 { openDatePicker && this.renderDatePicker(dateTag, startDate, endDate) }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
             </SafeAreaView>
         )
     }

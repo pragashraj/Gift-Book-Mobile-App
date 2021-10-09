@@ -376,7 +376,7 @@ class Profile extends Component {
     }
 
     render() {
-        const {openProfileEditor, openCardEditor, openAlert, alertMessage, loading} = this.state
+        const {openProfileEditor, openCardEditor, openAlert, alertMessage, loading, alertAction} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Profile" navigation = {this.props.navigation}/>
@@ -386,7 +386,7 @@ class Profile extends Component {
                 </ScrollView>
                 { openProfileEditor && this.renderProfileEditor(openProfileEditor) }
                 { openCardEditor && this.renderPaymentCardEditor(openCardEditor) }
-                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
                 { loading && <Loading open = {loading}/> }
             </SafeAreaView>
         )
