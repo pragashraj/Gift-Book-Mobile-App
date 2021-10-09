@@ -40,13 +40,14 @@ class SignUp extends Component {
 
             const response = await signUp(data)
             if (response.success) {
-
+                
             }
 
             this.setState({ loading: false })
 
         } catch (e) {
-            
+            this.setState({ loading: false })
+            this.setAlert(true, e.response.data.message)
         }
     }
 

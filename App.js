@@ -55,7 +55,7 @@ function DrawerFlow() {
 }
 
 const App = () => {
-  const auth = true
+  const auth = false
 
   const createStackScreen = (name, component) => (
     <stack.Screen

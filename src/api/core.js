@@ -1,31 +1,25 @@
 import axios from 'axios'
 
-export const POST = (endpoint, requestBody = {}, authorization = null) => {
+export const POST = async(endpoint, requestBody = {}, authorization = null) => {
     const instance = createInstance(authorization, 'application/json')
 
-    instance.post(endpoint, requestBody).then(response => {
-        return response
-    })
-    .catch(error => {
-        console.log(error) 
-    })
+    const response = await instance.post(endpoint, requestBody)
+
+    return response.data
 }
 
-export const GET = (endpoint, authorization = null) => {
+export const GET = async(endpoint, authorization = null) => {
     const instance = createInstance(authorization, 'application/json')
-
-    instance.get(endpoint).then(response => {
-        return response
-    })
-    .catch(error => {
-        console.log(error) 
-    })
+        
+    const response = await instance.get(endpoint)
+    
+    return response.data
 }
 
 
 const createInstance = (authorization, contentType) => {
     const instance = axios.create({
-        baseURL: "http://localhost:9000/api/"
+        baseURL: "http://192.168.8.103:9000/api/"
     })
       
     if (authorization) {

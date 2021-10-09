@@ -32,14 +32,12 @@ class SignIn extends Component {
             this.setState({ loading: true })
 
             const response = await signIn(data)
-            if (response.success) {
-
-            }
 
             this.setState({ loading: false })
 
         } catch (e) {
-            
+            this.setState({ loading: false })
+            this.setAlert(true, e.response.data.message)
         }
     }
 

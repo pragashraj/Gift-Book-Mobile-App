@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, Image } from 'react-native'
 
+import {sendResetCode, confirmResetCode, changePassword} from '../../api/auth'
+
 import Input from '../../components/Input'
 import Button from '../../components/Button'
 import PasswordInput from '../../components/PasswordInput'
@@ -39,29 +41,53 @@ class ForgotPassword extends Component {
 
     ButtonText = ["SEND", "CONFIRM", "RESET"]
 
-    handlePasswordChangeApi = async(data) => {
+    handlePasswordChangeApi = async(email, password) => {
         try {
-            this.setContentState(0)
-        } catch (e) {
+            this.setState({ loading: true })
 
+            const response = await changePassword(email, password)
+            if (response.success) {
+                this.setContentState(0)
+            }
+
+            this.setState({ loading: false })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setAlert(true, e.response.data.message)
         }
     }
 
-    handleConfirmResetCodeApi = async(code) => {
+    handleConfirmResetCodeApi = async(email, code) => {
         try {
+            this.setState({ loading: true })
             const {index} = this.state
-            this.setContentState(index + 1)
-        } catch (e) {
             
+            const response = await confirmResetCode(email, code)
+            if (response.success) {
+                this.setContentState(index + 1)
+            }
+
+            this.setState({ loading: false })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setAlert(true, e.response.data.message)
         }
     }
 
     handleSendResetCodeApi = async(email) => {
         try {
+            this.setState({ loading: true })
             const {index} = this.state
-            this.setContentState(index + 1)
-        } catch (e) {
 
+            const response = await sendResetCode(email)
+            if (response.success) {
+                this.setContentState(index + 1)
+            }
+
+            this.setState({ loading: false })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setAlert(true, e.response.data.message)
         }
     }
 
@@ -69,8 +95,7 @@ class ForgotPassword extends Component {
         const {password, confirmPassword, email} = this.state
         if (password && confirmPassword) {
             if (password === confirmPassword) {
-                const data = {email, password}
-                this.handlePasswordChangeApi(data)
+                this.handlePasswordChangeApi(email, password)
             }
             else {
                 this.setAlert(true, "Passwords not matched")
@@ -82,9 +107,9 @@ class ForgotPassword extends Component {
     }
 
     handleConfirmResetCode = () => {
-        const {code} = this.state
+        const {code, email} = this.state
         if (code) {
-            this.handleConfirmResetCodeApi(code)
+            this.handleConfirmResetCodeApi(email, code)
         }
         else {
             this.setAlert(true, "Reset code cannot be empty")
