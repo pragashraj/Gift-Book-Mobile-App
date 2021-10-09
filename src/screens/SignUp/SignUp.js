@@ -25,6 +25,7 @@ class SignUp extends Component {
         openAlert: false,
         alertMessage: "",
         loading: false,
+        alertAction: ''
     }
 
     INPUTS = [
@@ -37,17 +38,20 @@ class SignUp extends Component {
     handleSignUpApi = async(data) => {
         try {
             this.setState({ loading: true })
-
             const response = await signUp(data)
             if (response.success) {
-                
+                this.setSuccessSnack(response.message)
             }
-
-            this.setState({ loading: false })
-
+            this.setState({ 
+                loading: false,
+                name: "",
+                email: "",
+                password: "",
+                confirmPassword: "", 
+            })
         } catch (e) {
             this.setState({ loading: false })
-            this.setAlert(true, e.response.data.message)
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
@@ -55,10 +59,10 @@ class SignUp extends Component {
         const {name, email, password, confirmPassword} = this.state
         if (name && email && password && confirmPassword) {
             if (!this.confirmEmail(email)) {
-                this.setAlert(true, "Enter valid email address")
+                this.setErrorSnack("Enter valid email address")
             }
             else if (password !== confirmPassword) {
-                this.setAlert(true, "Passwords not matched")
+                this.setErrorSnack("Passwords not matched")
             }
             else {
                 const data = {name, email, password}
@@ -66,7 +70,7 @@ class SignUp extends Component {
             }
         } 
         else {
-            this.setAlert(true, "Fields cannot be empty")
+            this.setErrorSnack("Fields cannot be empty")
         }
     }
 
@@ -83,9 +87,17 @@ class SignUp extends Component {
         return pattern.test(email)
     }
 
-    setAlert = (open, message) => {
-        this.setState({ openAlert: open, alertMessage: message })
-        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
+    setSuccessSnack = (message) => {
+        this.setAlert(message, 'Success')
+    }
+
+    setErrorSnack = (message) => {
+        this.setAlert(message, 'Error')
+    }
+
+    setAlert = (message, action) => {
+        this.setState({ openAlert: true, alertMessage: message, alertAction: action })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
     renderInputFields = () => {
@@ -131,7 +143,7 @@ class SignUp extends Component {
     )
 
     render() {
-        const {openAlert, alertMessage, loading} = this.state
+        const {openAlert, alertMessage, loading, alertAction} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -146,7 +158,7 @@ class SignUp extends Component {
                 <View style = {styles.footerRoot}>
                     { this.renderFooter() }
                 </View>
-                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
                 { loading && <Loading open = {loading}/> }
             </View>
         )

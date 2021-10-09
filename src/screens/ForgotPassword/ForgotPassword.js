@@ -31,6 +31,7 @@ class ForgotPassword extends Component {
         openAlert: false,
         alertMessage: "",
         loading: false,
+        alertAction: ''
     }
 
     MessageText = [
@@ -48,12 +49,13 @@ class ForgotPassword extends Component {
             const response = await changePassword(email, password)
             if (response.success) {
                 this.setContentState(0)
+                this.setSuccessSnack(response.message)
             }
 
             this.setState({ loading: false })
         } catch (e) {
             this.setState({ loading: false })
-            this.setAlert(true, e.response.data.message)
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
@@ -65,12 +67,13 @@ class ForgotPassword extends Component {
             const response = await confirmResetCode(email, code)
             if (response.success) {
                 this.setContentState(index + 1)
+                this.setSuccessSnack(response.message)
             }
 
             this.setState({ loading: false })
         } catch (e) {
             this.setState({ loading: false })
-            this.setAlert(true, e.response.data.message)
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
@@ -82,12 +85,13 @@ class ForgotPassword extends Component {
             const response = await sendResetCode(email)
             if (response.success) {
                 this.setContentState(index + 1)
+                this.setSuccessSnack(response.message)
             }
 
             this.setState({ loading: false })
         } catch (e) {
             this.setState({ loading: false })
-            this.setAlert(true, e.response.data.message)
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
@@ -98,11 +102,11 @@ class ForgotPassword extends Component {
                 this.handlePasswordChangeApi(email, password)
             }
             else {
-                this.setAlert(true, "Passwords not matched")
+                this.setErrorSnack("Passwords not matched")
             }
         }
         else {
-            this.setAlert(true, "Password or confirmPassword cannot be empty")
+            this.setErrorSnack("Password or confirmPassword cannot be empty")
         }
     }
 
@@ -112,7 +116,7 @@ class ForgotPassword extends Component {
             this.handleConfirmResetCodeApi(email, code)
         }
         else {
-            this.setAlert(true, "Reset code cannot be empty")
+            this.setErrorSnack("Reset code cannot be empty")
         }
     }
 
@@ -120,14 +124,14 @@ class ForgotPassword extends Component {
         const {email} = this.state
         if (email) {
             if (!this.confirmEmail(email)) {
-                this.setAlert(true, "Enter valid email address")
+                this.setErrorSnack("Enter valid email address")
             }
             else {
                 this.handleSendResetCodeApi(email)
             }
         } 
         else {
-            this.setAlert(true, "Email cannot be empty")
+            this.setErrorSnack("Email cannot be empty")
         }
     }
 
@@ -163,9 +167,17 @@ class ForgotPassword extends Component {
         })
     }
 
-    setAlert = (open, message) => {
-        this.setState({ openAlert: open, alertMessage: message })
-        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "" }) }, 3000)
+    setSuccessSnack = (message) => {
+        this.setAlert(message, 'Success')
+    }
+
+    setErrorSnack = (message) => {
+        this.setAlert(message, 'Error')
+    }
+
+    setAlert = (message, action) => {
+        this.setState({ openAlert: true, alertMessage: message, alertAction: action })
+        setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
     confirmEmail = (email) => {
@@ -254,7 +266,7 @@ class ForgotPassword extends Component {
     )
 
     render() {
-        const {openAlert, alertMessage, loading} = this.state
+        const {openAlert, alertMessage, loading, alertAction} = this.state
         return (
             <View style = {styles.container}>
                 <View style = {styles.imageRoot}>
@@ -269,7 +281,7 @@ class ForgotPassword extends Component {
                 <View style = {styles.btnRoot}>
                     { this.renderButton() }
                 </View>
-                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage}/> }
+                { openAlert && alertMessage && <AlertSnackBar message = {alertMessage} action = {alertAction}/> }
                 { loading && <Loading open = {loading}/> }
             </View>
         )
