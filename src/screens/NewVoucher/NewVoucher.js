@@ -19,12 +19,6 @@ import PaymentSlip from './PaymentSlip'
 import Loading from '../../components/Loading'
 
 import {styles} from './styles'
-import shirt from '../../assets/images/icons/shirt.png'
-import food from '../../assets/images/icons/food-tray.png'
-import allude from '../../assets/images/merchants/allude.png'
-import spring from '../../assets/images/merchants/spring-and-summer.png'
-import factory from '../../assets/images/merchants/the-factory-oulet.png'
-import burger from '../../assets/images/categories/foods.jpg'
 
 class NewVoucher extends Component {
     state = {
@@ -58,44 +52,12 @@ class NewVoucher extends Component {
 
     footerText = ["Select a merchant", "Select a gift", "Delivery details", "Payment summary"]
 
-    categories = [
-        {id: "1", title: "Fashion", src: shirt},
-        {id: "2", title: "Food", src: food},
-        {id: "3", title: "Accessories", src: food},
-        {id: "4", title: "Baby", src: food},
-        {id: "5", title: "Books", src: food},
-        {id: "6", title: "Groceries", src: food},
-        {id: "7", title: "Health", src: food},
-        {id: "8", title: "Homeware", src: food},
-        {id: "9", title: "Hotels", src: food},
-        {id: "10", title: "Valentine", src: food},
-    ]
-
-    merchants = [
-        {id: "1", title: "Allude", src: allude},
-        {id: "2", title: "Spring & Summer", src: spring},
-        {id: "3", title: "Factory outlet", src: factory},
-        {id: "4", title: "Spring & Summer", src: spring},
-        {id: "5", title: "Factory outlet", src: factory},
-        {id: "6", title: "Allude", src: allude},
-    ]
-
-    items = [
-        {id: "1", title: "Burger", src: burger},
-        {id: "2", title: "Burger", src: burger},
-        {id: "3", title: "Burger", src: burger},
-        {id: "4", title: "Burger", src: burger},
-        {id: "5", title: "Burger", src: burger},
-        {id: "6", title: "Burger", src: burger},
-    ]
-
     districts = [
         {id: "1", label: "Gampaha", value: "Gampaha"},
         {id: "2", label: "Colombo", value: "Colombo"},
     ]
 
     componentDidMount() {
-        this.setState({ selectedCategory: this.categories[0] })
         this.getMerchantCategoriesApi()
         this.getMerchantsApi(0)
     }

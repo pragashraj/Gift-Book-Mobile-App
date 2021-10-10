@@ -14,7 +14,6 @@ import AlertSnackBar from '../../components/AlertSnackBar'
 import Pagination from '../../components/Pagination'
 
 import {styles} from './styles'
-import spring from '../../assets/images/merchants/spring-and-summer.png'
 
 class Merchants extends Component {
     state = {
@@ -159,12 +158,12 @@ class Merchants extends Component {
     }
 
     renderMerchantItem = (item, id) => {
-        const {name} = item
+        const {name, src} = item
         return (
             <View style = {styles.merchant} key = {id}>
                 <Merchant
                     title = {name}
-                    source = {spring}
+                    source = {src}
                     onPress = {() => this.handleMerchantOnPress(item)}
                     onSelected = { false }
                 />
