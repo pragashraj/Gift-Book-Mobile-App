@@ -2,6 +2,10 @@ import React from 'react'
 import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
 
 import { DrawerItem } from '@react-navigation/drawer'
+import {connect} from 'react-redux'
+
+import {primaryColor} from '../values/values'
+import {logout} from '../redux/actions/authAction'
 
 import DrawerHeader from '../assets/images/screens/coverD.jpg'
 import home from '../assets/images/icons/home.png'
@@ -11,14 +15,7 @@ import newVoucher from '../assets/images/icons/new.png'
 import vouchers from '../assets/images/icons/vouchers.png'
 import payments from '../assets/images/icons/payments.png'
 
-import {primaryColor} from '../values/values'
-
-const screenHight = Dimensions.get('screen').height
-const screenWidth = Dimensions.get('screen').width
-
-const CustomDrawer = ({props}) => {
-    const width = screenWidth * 0.3
-
+const CustomDrawer = ({props, user, logout}) => {
     const DrawerItems = [
         {id: "1", label: "Home", icon: home},
         {id: "2", label: "Profile", icon: profile},
@@ -28,9 +25,13 @@ const CustomDrawer = ({props}) => {
         {id: "6", label: "My Payments", icon: payments},
     ]
 
+    const handleLogout = () => {
+        logout()
+    }
+
     const renderFooter = () => (
         <View style = {styles.footer}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress = {handleLogout}>
                 <Text style = {styles.footerText}>Log out</Text>
             </TouchableOpacity>
         </View>
@@ -51,7 +52,8 @@ const CustomDrawer = ({props}) => {
         <SafeAreaView style = {styles.container}>
             <View style = {styles.headerRoot}>
                 <Image style = {styles.headerWallpaper} source = {DrawerHeader}/>
-                <Text style = {styles.headerText}>Chris evans</Text>
+                <Text style = {styles.headerText}>{user && user.name ? user.name : "Anonymous"}</Text>
+                <Text style = {styles.headerEmail}>{user && user.email ? user.email : "Anonymous@gmail.com"}</Text>
             </View>
             <ScrollView style = {styles.scrollView}>
                 <View style = {styles.DrawerItemsRoot}>
@@ -69,7 +71,20 @@ const CustomDrawer = ({props}) => {
     )
 }
 
-export default CustomDrawer
+const mapStateToProps = state => ({
+    user: state.auth.user,
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+        logout: () => { dispatch(logout()) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomDrawer)
+
+const screenHight = Dimensions.get('screen').height
+const screenWidth = Dimensions.get('screen').width
 
 const styles = StyleSheet.create({
     container: {
@@ -100,6 +115,15 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textTransform: "uppercase",
         letterSpacing: 2
+    },
+    headerEmail: {
+        position: "absolute",
+        fontSize: 15,
+        bottom: 0,
+        marginBottom: 5,
+        marginTop: 7,
+        marginLeft: 20,
+        letterSpacing: 1.5
     },
     DrawerItemsRoot: {
         width: "100%",

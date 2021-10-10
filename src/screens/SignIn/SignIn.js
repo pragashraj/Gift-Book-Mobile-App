@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 
+import  {connect} from 'react-redux'
+
 import {signIn} from '../../api/auth'
+import {storeLoginResponse} from '../../redux/actions/authAction'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
@@ -32,8 +35,10 @@ class SignIn extends Component {
         try {
             this.setState({ loading: true })
             const response = await signIn(data)
+            const {email, name, token, expiration} = response
+            const loginResponse = { email, name, token, expiration }
+            this.props.storeLoginResponse(loginResponse)
             this.setSuccessSnack("Login Successful")
-            this.props.navigation.navigate("Home")
             this.setState({ loading: false })
         } catch (e) {
             this.setState({ loading: false })
@@ -175,4 +180,14 @@ class SignIn extends Component {
     }
 }
 
-export default SignIn
+const mapStateToProps = state => ({
+    user: state.auth.user,
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+        storeLoginResponse: data => { dispatch(storeLoginResponse(data)) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn)
