@@ -4,6 +4,7 @@ import { View, Text } from 'react-native'
 import CategoryItem from '../../components/CategoryItem'
 import Merchant from '../../components/Item'
 import Search from '../../components/Search'
+import Pagination from '../../components/Pagination'
 
 import {styles} from './styles'
 
@@ -16,8 +17,27 @@ const MerchantSelector = ({
     handleOnChangeText, 
     handleSearchOnPress, 
     handleCategoryOnPress,
-    handleMerchantOnPress
+    handleMerchantOnPress,
+    total,
+    current,
+    handlePagination
 }) => {
+
+    const renderNodataAvailable = () => {
+        return (
+            <View style = {styles.noDataAvailableRoot}>
+                <Text style = {styles.noDataAvailable}>Currently no data available</Text>
+            </View>
+        )
+    }
+
+    const renderPagination = () => {
+        return (
+            <View style = {styles.paginationRoot}>
+                <Pagination total = {total} current = {current} handlePaginationNumberOnPress = {handlePagination}/>
+            </View>
+        )
+    }
 
     const renderMerchantItem = (item) => {
         const {id, title, src} = item
@@ -65,8 +85,13 @@ const MerchantSelector = ({
             <View style = {styles.merchantBlock}>
                 <Text style = {styles.headerTitle}>Merchants</Text>
                 <View style = {styles.row}>
-                    { merchants.map(item => renderMerchantItem(item)) }
+                    { 
+                        merchants.length > 0 ? merchants.map(item => renderMerchantItem(item)) 
+                        :
+                        renderNodataAvailable()
+                    }
                 </View>
+                { total > 0 && renderPagination() }
             </View>
         </View>
     )

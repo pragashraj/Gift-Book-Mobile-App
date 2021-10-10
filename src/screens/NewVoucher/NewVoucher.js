@@ -4,7 +4,7 @@ import { Text, View, SafeAreaView, ScrollView } from 'react-native'
 import {connect} from 'react-redux'
 
 import {getMerchants, getMerchantsByCategory, getMerchantByName, getMerchantCategories} from '../../api/merchant'
-import {getItemsByMerchant, getItemByName} from '../../api/item'
+import {getItemsByMerchant, getItemByName} from '../../api/Item'
 import {create} from '../../api/payment'
 
 import TopBar from '../../components/TopBar'
@@ -105,7 +105,7 @@ class NewVoucher extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getMerchants(page, token)
-            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -129,7 +129,7 @@ class NewVoucher extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getMerchantByName(value, page, token)
-            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -141,7 +141,7 @@ class NewVoucher extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getMerchantsByCategory(value, page, token)
-            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -153,7 +153,7 @@ class NewVoucher extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getItemsByMerchant(merchant, page, token)
-            this.setState({ loading: false, itemsData: data.itemList, itemTotal: data.total, itemCurrent: data.current })
+            this.setState({ loading: false, itemsData: data.itemList, itemTotal: data.total, itemCurrent: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -165,7 +165,7 @@ class NewVoucher extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getItemByName(name, merchant, page, token)
-            this.setState({ loading: false, itemsData: data.itemList, itemTotal: data.total, itemCurrent: data.current })
+            this.setState({ loading: false, itemsData: data.itemList, itemTotal: data.total, itemCurrent: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -339,6 +339,10 @@ class NewVoucher extends Component {
         this.setState({ index: idx })
     }
 
+    handlePagination = (no) => {
+        this.setState({ current: no})
+    }
+
     setSuccessSnack = (message) => {
         this.setAlert(message, 'Success')
     }
@@ -420,7 +424,7 @@ class NewVoucher extends Component {
     }
 
     renderGiftSelector = () => {
-        const {itemSearch, selectedItem, selectedCategory, selectedMerchant, itemsData} = this.state
+        const {itemSearch, selectedItem, selectedCategory, selectedMerchant, itemsData, itemTotal, itemCurrent} = this.state
         return (
             <GiftSelector
                 itemSearch = {itemSearch}
@@ -431,12 +435,15 @@ class NewVoucher extends Component {
                 handleOnChangeText = {this.handleOnChangeText}
                 handleSearchOnPress = {this.handleItemOnSearch}
                 handleItemOnPress = {this.handleItemOnPress}
+                total = {itemTotal}
+                current = {itemCurrent}
+                handlePagination = {this.handlePagination}
             />
         )
     }
 
     renderMerchantSelector = () => {
-        const {merchantSearch, selectedCategory, selectedMerchant, merchantsData, categoriesData} = this.state
+        const {merchantSearch, selectedCategory, selectedMerchant, merchantsData, categoriesData, total, current} = this.state
         return (
             <MerchantSelector 
                 merchantSearch = {merchantSearch}
@@ -448,6 +455,9 @@ class NewVoucher extends Component {
                 handleSearchOnPress = {this.handleMerchantOnSearch}
                 handleCategoryOnPress = {this.handleCategoryOnPress}
                 handleMerchantOnPress = {this.handleMerchantOnPress}
+                total = {total}
+                current = {current}
+                handlePagination = {this.handlePagination}
             />
         ) 
     }

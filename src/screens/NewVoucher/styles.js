@@ -213,4 +213,21 @@ export const styles = StyleSheet.create({
         width: "100%",
         height: "100%"
     },
+    paginationRoot: {
+        marginTop: 10,
+        backgroundColor: "#fff"
+    },
+    noDataAvailableRoot: {
+        flex: 1,
+        width: "100%",
+        height: screenHight * 0.2,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    noDataAvailable: {
+        textTransform: "uppercase",
+        fontWeight: "700",
+        letterSpacing: 1.2
+    }
 })

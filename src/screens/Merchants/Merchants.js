@@ -11,6 +11,7 @@ import Merchant from '../../components/Item'
 import Search from '../../components/Search'
 import MerchantPopup from '../../components/MerchantPopup'
 import AlertSnackBar from '../../components/AlertSnackBar'
+import Pagination from '../../components/Pagination'
 
 import {styles} from './styles'
 import spring from '../../assets/images/merchants/spring-and-summer.png'
@@ -41,7 +42,7 @@ class Merchants extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getMerchants(page, token)
-            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -65,7 +66,7 @@ class Merchants extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getMerchantByName(value, page, token)
-            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -77,7 +78,7 @@ class Merchants extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getMerchantsByCategory(value, page, token)
-            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -116,6 +117,11 @@ class Merchants extends Component {
         this.setState({ [name]: value })
     }
 
+    handlePagination = (no) => {
+        this.setState({ current: no})
+        this.getMerchantsApi(no - 1)
+    }
+
     setErrorSnack = (message) => {
         this.setAlert(message, 'Error')
     }
@@ -123,6 +129,22 @@ class Merchants extends Component {
     setAlert = (message, action) => {
         this.setState({ openAlert: true, alertMessage: message, alertAction: action })
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
+    }
+
+    renderNodataAvailable = () => {
+        return (
+            <View style = {styles.noDataAvailableRoot}>
+                <Text style = {styles.noDataAvailable}>Currently no data available</Text>
+            </View>
+        )
+    }
+
+    renderPagination = (total, current) => {
+        return (
+            <View style = {styles.paginationRoot}>
+                <Pagination total = {total} current = {current} handlePaginationNumberOnPress = {this.handlePagination}/>
+            </View>
+        )
     }
 
     renderMerchantPopup = (openMerchantPopup, selectedMerchant) => {
@@ -169,7 +191,12 @@ class Merchants extends Component {
                 <Text style = {styles.headerTitle}>Explore our merchants</Text>
                 <View style = {styles.merchantList}>
                     <View style = {styles.row}>
-                        { merchantsData.map((item, idx) => this.renderMerchantItem(item, idx)) }
+                        { 
+                            merchantsData.length > 0 ?
+                            merchantsData.map((item, idx) => this.renderMerchantItem(item, idx)) 
+                            :
+                            this.renderNodataAvailable()
+                        }
                     </View>
                 </View>
             </View>
@@ -208,7 +235,7 @@ class Merchants extends Component {
     }
 
     render() {
-        const {loading, openMerchantPopup, selectedMerchant, openAlert, alertMessage, alertAction} = this.state
+        const {loading, openMerchantPopup, selectedMerchant, openAlert, alertMessage, alertAction, total, current} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "Merchants" navigation = {this.props.navigation}/>
@@ -217,6 +244,7 @@ class Merchants extends Component {
                         { this.renderSearch() }
                         { this.renderFilters() }
                         { this.renderMerchants() }
+                        { total > 0 && this.renderPagination(total, current) }
                     </View>
                 </ScrollView>
                 { openMerchantPopup && selectedMerchant && this.renderMerchantPopup(openMerchantPopup, selectedMerchant) }

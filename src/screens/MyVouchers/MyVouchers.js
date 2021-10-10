@@ -12,6 +12,7 @@ import Voucher from '../../components/Voucher'
 import DatePicker from '../../components/DatePicker'
 import VoucherPopup from '../../components/VoucherPopup'
 import AlertSnackBar from '../../components/AlertSnackBar'
+import Pagination from '../../components/Pagination'
 
 import {styles} from './styles'
 import calendar from '../../assets/images/icons/calendar.png'
@@ -44,7 +45,7 @@ class MyVouchers extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getVouchers(page, token)
-            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current })
+            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -56,7 +57,7 @@ class MyVouchers extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await filterVouchersByDate(start, end, page, token)
-            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current })
+            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -68,7 +69,7 @@ class MyVouchers extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await filterVouchersByStatus(status, page, token)
-            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current })
+            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -125,6 +126,11 @@ class MyVouchers extends Component {
         this.handleVoucherPopupClose()
     }
 
+    handlePagination = (no) => {
+        this.setState({ current: no})
+        this.getVouchersApi(no - 1)
+    }
+
     setErrorSnack = (message) => {
         this.setAlert(message, 'Error')
     }
@@ -132,6 +138,22 @@ class MyVouchers extends Component {
     setAlert = (message, action) => {
         this.setState({ openAlert: true, alertMessage: message, alertAction: action })
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
+    }
+
+    renderNodataAvailable = () => {
+        return (
+            <View style = {styles.noDataAvailableRoot}>
+                <Text style = {styles.noDataAvailable}>Currently no data available</Text>
+            </View>
+        )
+    }
+
+    renderPagination = (total, current) => {
+        return (
+            <View style = {styles.paginationRoot}>
+                <Pagination total = {total} current = {current} handlePaginationNumberOnPress = {this.handlePagination}/>
+            </View>
+        )
     }
 
     renderVoucherPopup = (openVoucherPopup, selectedVoucher) => {
@@ -201,7 +223,12 @@ class MyVouchers extends Component {
             <View style = {styles.listBlock}>
                 <Text style = {styles.headerTitle}>Checkout your vouchers & gifts</Text>
                 <View style = {styles.list}>
-                    { vouchersData.map((item, idx) => this.renderVoucher(item, idx)) }
+                    { 
+                        vouchersData.length > 0 ?
+                        vouchersData.map((item, idx) => this.renderVoucher(item, idx))
+                        :
+                        this.renderNodataAvailable() 
+                    }
                 </View>
             </View>
         )
@@ -240,7 +267,11 @@ class MyVouchers extends Component {
     }
 
     render() {
-        const {loading, openDatePicker, dateTag, startDate, endDate, openVoucherPopup, selectedVoucher, openAlert, alertMessage, alertAction} = this.state
+        const {
+            loading, openDatePicker, dateTag, startDate, endDate, 
+            openVoucherPopup, selectedVoucher, openAlert, alertMessage, alertAction,
+            total, current
+        } = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Vouchers" navigation = {this.props.navigation}/>
@@ -249,6 +280,7 @@ class MyVouchers extends Component {
                         { this.renderDateFilter() }
                         { this.renderStatusFilter() }
                         { this.renderVouchers() }
+                        { total > 0 && this.renderPagination(total, current) }
                     </View>
                 </ScrollView>
                 { loading && <Loading open = {loading}/> }

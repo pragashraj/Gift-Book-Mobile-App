@@ -3,6 +3,7 @@ import { Text, View } from 'react-native'
 
 import Search from '../../components/Search'
 import Item from '../../components/Item'
+import Pagination from '../../components/Pagination'
 
 import {styles} from './styles'
 
@@ -14,8 +15,27 @@ const GiftSelector = ({
     selectedMerchant,
     handleOnChangeText,
     handleSearchOnPress,
-    handleItemOnPress
+    handleItemOnPress,
+    total,
+    current,
+    handlePagination
 }) => {
+
+    const renderNodataAvailable = () => {
+        return (
+            <View style = {styles.noDataAvailableRoot}>
+                <Text style = {styles.noDataAvailable}>Currently no data available</Text>
+            </View>
+        )
+    }
+
+    const renderPagination = () => {
+        return (
+            <View style = {styles.paginationRoot}>
+                <Pagination total = {total} current = {current} handlePaginationNumberOnPress = {handlePagination}/>
+            </View>
+        )
+    }
 
     const renderDetailContent = (content, value) => {
         return (
@@ -60,8 +80,13 @@ const GiftSelector = ({
             <View style = {styles.merchantBlock}>
                 <Text style = {styles.headerTitle}>Popular  Items</Text>
                 <View style = {styles.row}>
-                    { items.map(item => renderItem(item)) }
+                    { 
+                        items.length > 0 ? items.map(item => renderItem(item)) 
+                        :
+                        renderNodataAvailable()
+                    }
                 </View>
+                { total > 0 && renderPagination() }
             </View>
         </View>
     )
