@@ -4,7 +4,7 @@ import { Text, SafeAreaView, ScrollView, Image, View, TouchableOpacity } from 'r
 import {connect} from 'react-redux'
 
 import {getProfileDetails, updateProfileDetails, updatePaymentCardDetails, changePassword} from '../../api/user'
-import {storeLoginResponse} from '../../redux/actions/authAction'
+import {storeProfileDetails} from '../../redux/actions/userAction'
 
 import TopBar from '../../components/TopBar'
 import CustomInput from '../../components/CustomInput'
@@ -67,6 +67,7 @@ class Profile extends Component {
             if (data) {
                 this.setProfileDetails(data)
                 this.setPaymentCardDetails(data)
+                this.props.storeProfileDetails(data)
             }
             this.setState({ loading: false, profileData: data })
         } catch (e) {
@@ -428,8 +429,14 @@ class Profile extends Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     user: state.auth.user,
 })
 
-export default connect(mapStateToProps)(Profile)
+const mapDispatchToProps = dispatch => {
+    return {
+        storeProfileDetails: data => { dispatch(storeProfileDetails(data)) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

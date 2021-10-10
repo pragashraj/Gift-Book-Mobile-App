@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 
 import {getMerchants, getMerchantsByCategory, getMerchantByName, getMerchantCategories} from '../../api/merchant'
 import {getItemsByMerchant, getItemByName} from '../../api/item'
+import {create} from '../../api/payment'
 
 import TopBar from '../../components/TopBar'
 import ItemPopup from '../../components/ItemPopup'
@@ -37,6 +38,7 @@ class NewVoucher extends Component {
         radioValue: "",
         senderName: "",
         senderAddress: "",
+        senderContact: "",
         receiverName: "",
         receiverAddress: "",
         receiverDistrict: "Gampaha",
@@ -94,8 +96,8 @@ class NewVoucher extends Component {
 
     componentDidMount() {
         this.setState({ selectedCategory: this.categories[0] })
-        this.getMerchantsApi(0)
         this.getMerchantCategoriesApi()
+        this.getMerchantsApi(0)
     }
 
     getMerchantsApi = async(page) => {
@@ -170,11 +172,33 @@ class NewVoucher extends Component {
         }
     }
 
-    paymentApi = async(data) => {
+    createNewPaymentApi = async(data) => {
         try {
-
+            this.setState({ loading: true })
+            const token = this.props.user.token
+            const response = await create(data, token)
+            if (response.success) {
+                this.setSuccessSnack(response.message)
+            }
+            this.setState({ 
+                loading: false,
+                index: 0,
+                merchantSearch: "",
+                selectedCategory: null,
+                selectedMerchant: null,
+                itemSearch: "",
+                selectedItem: null,
+                radioValue: "",
+                senderName: "",
+                senderAddress: "",
+                senderContact: "",
+                receiverName: "",
+                receiverAddress: "",
+                receiverDistrict: "Gampaha",
+            })
         } catch (e) {
-
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
     
@@ -191,7 +215,7 @@ class NewVoucher extends Component {
     handleItemOnSearch = () => {
         const {itemSearch, selectedMerchant} = this.state
         if (itemSearch) {
-            this.searchItemApi(itemSearch,selectedMerchant.title, 0)
+            this.searchItemApi(itemSearch, selectedMerchant.title, 0)
         }
         else {
             this.setErrorSnack("Please enter a value")
@@ -204,10 +228,29 @@ class NewVoucher extends Component {
 
     handlePayOnPress = () => {
         this.handleConfirmPopup()
+        const {
+            selectedMerchant, selectedItem, radioValue, senderName, 
+            senderAddress, receiverName, receiverAddress, receiverDistrict
+        } = this.state
+        const data = {
+            email: this.props.user.email,
+            value: selectedItem.price,
+            senderType: radioValue ? "Anonymous" : "Own",
+            merchantName: selectedMerchant.title,
+            itemName: selectedItem.title,
+            receiverName,
+            receiverAddress,
+            receiverDistrict,
+            senderName,
+            senderAddress,
+            senderContact
+        }
+        this.createNewPaymentApi(data)
     }
 
     handleCategoryOnPress = (item) => {
         this.setState({ selectedCategory: item, selectedMerchant: null, openAlert: false })
+        this.getMerchantsByCategoryApi(item.title, 0)
     }
 
     handleMerchantOnPress = (item) => {
@@ -255,14 +298,16 @@ class NewVoucher extends Component {
             senderAddress,
             receiverName,
             receiverAddress,
-            receiverDistrict 
+            receiverDistrict,
+            senderContact 
         } = this.state
 
         let idx = index
 
         if (index === 0) {
             if (selectedMerchant) { 
-                idx = index + 1 
+                idx = index + 1
+                this.getItemsByMerchantApi(selectedMerchant.title, 0) 
             }
             else {
                 this.setErrorSnack("Please select a merchant")
@@ -276,7 +321,7 @@ class NewVoucher extends Component {
         }
         else if (index === 2) {
             let receiverDetail = receiverName && receiverAddress && receiverDistrict
-            let senderDetail = senderName && senderAddress
+            let senderDetail = senderName && senderAddress && senderContact
             if (radioValue === "anonymous" && receiverDetail) {
                 idx = index + 1
             }
@@ -290,6 +335,7 @@ class NewVoucher extends Component {
         else {
             this.setState({ openConfirmPopup: true })
         }
+
         this.setState({ index: idx })
     }
 
@@ -356,6 +402,7 @@ class NewVoucher extends Component {
         return (
             <PaymentSlip
                 values = {this.state}
+                profile = {this.props.profile}
             />
         )
     }
@@ -373,11 +420,11 @@ class NewVoucher extends Component {
     }
 
     renderGiftSelector = () => {
-        const {itemSearch, selectedItem, selectedCategory, selectedMerchant} = this.state
+        const {itemSearch, selectedItem, selectedCategory, selectedMerchant, itemsData} = this.state
         return (
             <GiftSelector
                 itemSearch = {itemSearch}
-                items = {this.items}
+                items = {itemsData}
                 selectedItem = {selectedItem}
                 selectedCategory = {selectedCategory}
                 selectedMerchant = {selectedMerchant}
@@ -389,14 +436,14 @@ class NewVoucher extends Component {
     }
 
     renderMerchantSelector = () => {
-        const {merchantSearch, selectedCategory, selectedMerchant} = this.state
+        const {merchantSearch, selectedCategory, selectedMerchant, merchantsData, categoriesData} = this.state
         return (
             <MerchantSelector 
                 merchantSearch = {merchantSearch}
                 selectedCategory = {selectedCategory}
                 selectedMerchant = {selectedMerchant}
-                categories = {this.categories}
-                merchants = {this.merchants}
+                categories = {categoriesData}
+                merchants = {merchantsData}
                 handleOnChangeText = {this.handleOnChangeText}
                 handleSearchOnPress = {this.handleMerchantOnSearch}
                 handleCategoryOnPress = {this.handleCategoryOnPress}
@@ -442,6 +489,7 @@ class NewVoucher extends Component {
 
 const mapStateToProps = state => ({
     user: state.auth.user,
+    profile: state.profile.profile
 })
 
 export default connect(mapStateToProps)(NewVoucher)
