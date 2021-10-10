@@ -8,7 +8,7 @@ import up from '../../assets/images/icons/up.png'
 const PaymentCard = ({paymentItem}) => {
     const [open, setOpen] = useState({id: 0})
 
-    const {id, category, merchant, item, quantity, date, sender, receiver, payment} = paymentItem
+    const {id, paymentAt, value, senderType, merchantName, itemName, receiver, paymentCard} = paymentItem
 
     const handleMoreOrLessOnPress = (id) => {
         let idx = open.id === id ? 0 : id
@@ -41,10 +41,10 @@ const PaymentCard = ({paymentItem}) => {
     const renderMoreDetail = () => {
         return (
             <View>
-                { renderDetail("Item Quantity", quantity) }
-                { renderDetail("Payment Date", date) }
-                { renderDetail("Sender", sender) }
-                { renderDetail("Receiver", receiver) }
+                { renderDetail("Payment By", paymentCard.cardNo) }
+                { renderDetail("Payment Date", paymentAt) }
+                { renderDetail("Sender", senderType) }
+                { renderDetail("Receiver", receiver.name) }
             </View>
         )
     }
@@ -52,13 +52,12 @@ const PaymentCard = ({paymentItem}) => {
     return (
         <View style = {styles.PaymentCard}>
             <View style = {styles.card}>
-                { renderDetail("Category", category) }
-                { renderDetail("Merchant", merchant) }
-                { renderDetail("Item", item) }
+                { renderDetail("Merchant", merchantName) }
+                { renderDetail("Item", itemName) }
                 { open.id === id && renderMoreDetail() }
                 { renderMoreOrLess() }
                 <View style = {styles.cardFooter}>
-                    { renderDetail("Payment", `Rs.${payment}`) }
+                    { renderDetail("Payment", `Rs.${value}`) }
                 </View>
             </View>
         </View>

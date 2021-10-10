@@ -12,7 +12,7 @@ const AlertSnackBar = ({message, action}) => {
                     duration: Snackbar.LENGTH_SHORT,
                     action: {
                         text: action,
-                        textColor: action === 'Error' ? 'red' : 'Green',
+                        textColor: action === 'Error' ? 'red' : 'green',
                     },
                 })
             }

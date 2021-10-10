@@ -59,8 +59,7 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
     },
     profilerFN: {
-        fontSize: 16,
-        textTransform: "uppercase",
+        fontSize: 14,
     },
     profilerLN: {
         fontSize: 24,

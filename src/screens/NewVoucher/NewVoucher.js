@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView } from 'react-native'
 
+import {connect} from 'react-redux'
+
+import {getMerchants, getMerchantsByCategory, getMerchantByName, getMerchantCategories} from '../../api/merchant'
+import {getItemsByMerchant, getItemByName} from '../../api/item'
+import {create} from '../../api/payment'
+
 import TopBar from '../../components/TopBar'
 import ItemPopup from '../../components/ItemPopup'
 import CustomButton from '../../components/CustomButton'
@@ -32,6 +38,7 @@ class NewVoucher extends Component {
         radioValue: "",
         senderName: "",
         senderAddress: "",
+        senderContact: "",
         receiverName: "",
         receiverAddress: "",
         receiverDistrict: "Gampaha",
@@ -39,7 +46,14 @@ class NewVoucher extends Component {
         alertMessage: "",
         openConfirmPopup: false,
         loading: false,
-        alertAction: ''
+        alertAction: '',
+        merchantsData: [],
+        total: 0,
+        current: 0,
+        categoriesData: [],
+        itemsData: [],
+        itemTotal: 0,
+        itemCurrent: 0,
     }
 
     footerText = ["Select a merchant", "Select a gift", "Delivery details", "Payment summary"]
@@ -82,44 +96,116 @@ class NewVoucher extends Component {
 
     componentDidMount() {
         this.setState({ selectedCategory: this.categories[0] })
+        this.getMerchantCategoriesApi()
+        this.getMerchantsApi(0)
     }
 
-    fetchMerchantApi = async() => {
+    getMerchantsApi = async(page) => {
         try {
-
+            this.setState({ loading: true })
+            const token = this.props.user.token
+            const data = await getMerchants(page, token)
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
         } catch (e) {
-
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
-    searchMerchantApi = async(value) => {
+    getMerchantCategoriesApi = async() => {
         try {
-            
+            this.setState({ loading: true })
+            const token = this.props.user.token
+            const categoriesData = await getMerchantCategories(token)
+            this.setState({ loading: false, categoriesData })
         } catch (e) {
-
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
-    searchItemApi = async(data) => {
+    searchMerchantApi = async(value, page) => {
         try {
-
+            this.setState({ loading: true })
+            const token = this.props.user.token
+            const data = await getMerchantByName(value, page, token)
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
         } catch (e) {
-
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
 
-    paymentApi = async(data) => {
+    getMerchantsByCategoryApi = async(value, page) => {
         try {
-
+            this.setState({ loading: true })
+            const token = this.props.user.token
+            const data = await getMerchantsByCategory(value, page, token)
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
         } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
 
+    getItemsByMerchantApi = async(merchant, page) => {
+        try {
+            this.setState({ loading: true })
+            const token = this.props.user.token
+            const data = await getItemsByMerchant(merchant, page, token)
+            this.setState({ loading: false, itemsData: data.itemList, itemTotal: data.total, itemCurrent: data.current })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    } 
+
+    searchItemApi = async(name, merchant, page) => {
+        try {
+            this.setState({ loading: true })
+            const token = this.props.user.token
+            const data = await getItemByName(name, merchant, page, token)
+            this.setState({ loading: false, itemsData: data.itemList, itemTotal: data.total, itemCurrent: data.current })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
+        }
+    }
+
+    createNewPaymentApi = async(data) => {
+        try {
+            this.setState({ loading: true })
+            const token = this.props.user.token
+            const response = await create(data, token)
+            if (response.success) {
+                this.setSuccessSnack(response.message)
+            }
+            this.setState({ 
+                loading: false,
+                index: 0,
+                merchantSearch: "",
+                selectedCategory: null,
+                selectedMerchant: null,
+                itemSearch: "",
+                selectedItem: null,
+                radioValue: "",
+                senderName: "",
+                senderAddress: "",
+                senderContact: "",
+                receiverName: "",
+                receiverAddress: "",
+                receiverDistrict: "Gampaha",
+            })
+        } catch (e) {
+            this.setState({ loading: false })
+            this.setErrorSnack(e.response.data.message)
         }
     }
     
     handleMerchantOnSearch = () => {
         const merchantSearch = this.state.merchantSearch
         if (merchantSearch) {
-            this.searchMerchantApi(merchantSearch)
+            this.searchMerchantApi(merchantSearch, 0)
         }
         else {
             this.setErrorSnack("Please enter a value")
@@ -129,11 +215,7 @@ class NewVoucher extends Component {
     handleItemOnSearch = () => {
         const {itemSearch, selectedMerchant} = this.state
         if (itemSearch) {
-            const data = {
-                merchant: selectedMerchant.title,
-                item: itemSearch
-            }
-            this.searchItemApi(data)
+            this.searchItemApi(itemSearch, selectedMerchant.title, 0)
         }
         else {
             this.setErrorSnack("Please enter a value")
@@ -146,10 +228,29 @@ class NewVoucher extends Component {
 
     handlePayOnPress = () => {
         this.handleConfirmPopup()
+        const {
+            selectedMerchant, selectedItem, radioValue, senderName, 
+            senderAddress, receiverName, receiverAddress, receiverDistrict
+        } = this.state
+        const data = {
+            email: this.props.user.email,
+            value: selectedItem.price,
+            senderType: radioValue ? "Anonymous" : "Own",
+            merchantName: selectedMerchant.title,
+            itemName: selectedItem.title,
+            receiverName,
+            receiverAddress,
+            receiverDistrict,
+            senderName,
+            senderAddress,
+            senderContact
+        }
+        this.createNewPaymentApi(data)
     }
 
     handleCategoryOnPress = (item) => {
         this.setState({ selectedCategory: item, selectedMerchant: null, openAlert: false })
+        this.getMerchantsByCategoryApi(item.title, 0)
     }
 
     handleMerchantOnPress = (item) => {
@@ -197,14 +298,16 @@ class NewVoucher extends Component {
             senderAddress,
             receiverName,
             receiverAddress,
-            receiverDistrict 
+            receiverDistrict,
+            senderContact 
         } = this.state
 
         let idx = index
 
         if (index === 0) {
             if (selectedMerchant) { 
-                idx = index + 1 
+                idx = index + 1
+                this.getItemsByMerchantApi(selectedMerchant.title, 0) 
             }
             else {
                 this.setErrorSnack("Please select a merchant")
@@ -218,7 +321,7 @@ class NewVoucher extends Component {
         }
         else if (index === 2) {
             let receiverDetail = receiverName && receiverAddress && receiverDistrict
-            let senderDetail = senderName && senderAddress
+            let senderDetail = senderName && senderAddress && senderContact
             if (radioValue === "anonymous" && receiverDetail) {
                 idx = index + 1
             }
@@ -232,6 +335,7 @@ class NewVoucher extends Component {
         else {
             this.setState({ openConfirmPopup: true })
         }
+
         this.setState({ index: idx })
     }
 
@@ -298,6 +402,7 @@ class NewVoucher extends Component {
         return (
             <PaymentSlip
                 values = {this.state}
+                profile = {this.props.profile}
             />
         )
     }
@@ -315,11 +420,11 @@ class NewVoucher extends Component {
     }
 
     renderGiftSelector = () => {
-        const {itemSearch, selectedItem, selectedCategory, selectedMerchant} = this.state
+        const {itemSearch, selectedItem, selectedCategory, selectedMerchant, itemsData} = this.state
         return (
             <GiftSelector
                 itemSearch = {itemSearch}
-                items = {this.items}
+                items = {itemsData}
                 selectedItem = {selectedItem}
                 selectedCategory = {selectedCategory}
                 selectedMerchant = {selectedMerchant}
@@ -331,14 +436,14 @@ class NewVoucher extends Component {
     }
 
     renderMerchantSelector = () => {
-        const {merchantSearch, selectedCategory, selectedMerchant} = this.state
+        const {merchantSearch, selectedCategory, selectedMerchant, merchantsData, categoriesData} = this.state
         return (
             <MerchantSelector 
                 merchantSearch = {merchantSearch}
                 selectedCategory = {selectedCategory}
                 selectedMerchant = {selectedMerchant}
-                categories = {this.categories}
-                merchants = {this.merchants}
+                categories = {categoriesData}
+                merchants = {merchantsData}
                 handleOnChangeText = {this.handleOnChangeText}
                 handleSearchOnPress = {this.handleMerchantOnSearch}
                 handleCategoryOnPress = {this.handleCategoryOnPress}
@@ -382,5 +487,9 @@ class NewVoucher extends Component {
     }
 }
 
+const mapStateToProps = state => ({
+    user: state.auth.user,
+    profile: state.profile.profile
+})
 
-export default NewVoucher
+export default connect(mapStateToProps)(NewVoucher)

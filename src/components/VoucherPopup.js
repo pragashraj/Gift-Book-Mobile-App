@@ -5,7 +5,8 @@ import CustomButton from './CustomButton'
 import Voucher from './Voucher'
 
 const VoucherPopup = ({open, onClose, selectedItem, handleCancel, handleShare}) => {
-    const {price, merchant, item, status, date} = selectedItem
+
+    const {value, merchantName, itemName, status, createdAt, owner, description} = selectedItem
 
     const renderDetailContent = (content, value) => {
         return (
@@ -21,16 +22,18 @@ const VoucherPopup = ({open, onClose, selectedItem, handleCancel, handleShare}) 
             <View style = {[styles.centeredView, styles.background]}>
                 <View style = {styles.modalView}>
                     <View style = {styles.headerBlock}>
-                        <Text style = {styles.headerTitle}>Gift voucher for {item}</Text>
+                        <Text style = {styles.headerTitle}>Gift voucher for {itemName}</Text>
                     </View>
                     <View style = {styles.voucher}>
                         <Voucher voucherItem = {selectedItem}/>
                     </View>
                     <View style = {styles.descriptiveBlock}>
-                        { renderDetailContent("Merchant", merchant) }
-                        { renderDetailContent("Price", price) }
+                        { renderDetailContent("Merchant", merchantName) }
+                        { renderDetailContent("Price", value) }
                         { renderDetailContent("Status", status) }
-                        { renderDetailContent("Date", date) }
+                        { renderDetailContent("Date", createdAt) }
+                        { renderDetailContent("Owned By", owner) }
+                        { renderDetailContent("Description", description) }
                     </View>
                     <View style = {styles.footerBtn}>
                         <CustomButton text = "cancel" btnType = "secondary" handleBtnOnClick = {handleCancel}/>

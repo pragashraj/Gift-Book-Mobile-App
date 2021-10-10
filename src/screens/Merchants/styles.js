@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { primaryColor } from '../../values/values'
 
 export const styles = StyleSheet.create({
     container: {
@@ -46,9 +47,19 @@ export const styles = StyleSheet.create({
         margin: 5,
         borderRadius: 15
     },
+    filterItemSelected: {
+        backgroundColor: primaryColor,
+        padding: 10,
+        margin: 5,
+        borderRadius: 15
+    },
     filterItemText: {
         fontSize: 12,
         color: "#000"
+    },
+    filterItemTextSelected: {
+        fontSize: 12,
+        color: "#ffff"
     },
     merchantsBlock: {
         padding: 5,

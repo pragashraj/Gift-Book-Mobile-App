@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 
+import  {connect} from 'react-redux'
+
 import {signIn} from '../../api/auth'
+import {storeLoginResponse} from '../../redux/actions/authAction'
 
 import Input from '../../components/Input'
 import Button from '../../components/Button'
@@ -19,8 +22,8 @@ import {styles} from './styles'
 
 class SignIn extends Component {
     state = {
-        email: "",
-        password: "",
+        email: "spr@gmail.com",
+        password: "123456",
         openAlert: false,
         alertMessage: "",
         visibility: false,
@@ -32,9 +35,10 @@ class SignIn extends Component {
         try {
             this.setState({ loading: true })
             const response = await signIn(data)
-            this.setSuccessSnack("Login Successful")
-            this.props.navigation.navigate("Home")
+            const {email, name, token, expiration} = response
+            const loginResponse = { email, name, token, expiration }
             this.setState({ loading: false })
+            setTimeout(() => { this.props.storeLoginResponse(loginResponse) }, 1000)
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -175,4 +179,14 @@ class SignIn extends Component {
     }
 }
 
-export default SignIn
+const mapStateToProps = state => ({
+    user: state.auth.user,
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+        storeLoginResponse: data => { dispatch(storeLoginResponse(data)) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn)
