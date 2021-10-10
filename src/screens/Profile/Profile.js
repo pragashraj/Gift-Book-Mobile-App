@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { Text, SafeAreaView, ScrollView, Image, View, TouchableOpacity } from 'react-native'
 
+import {connect} from 'react-redux'
+
 import {getProfileDetails, updateProfileDetails, updatePaymentCardDetails, changePassword} from '../../api/user'
+import {storeProfileDetails} from '../../redux/actions/userAction'
 
 import TopBar from '../../components/TopBar'
 import CustomInput from '../../components/CustomInput'
@@ -21,9 +24,9 @@ import {styles} from './styles'
 
 class Profile extends Component {
     state = {
-        currentPasssword: "",
+        currentPassword: "",
         newPassword: "",
-        confirmPasssword: "",
+        confirmPassword: "",
         passwordVisible: false,
         openProfileEditor: false,
         name: "",
@@ -38,7 +41,9 @@ class Profile extends Component {
         loading: false,
         alertMessage: "",
         alertAction: '',
-        profileData: null
+        profileData: null,
+        profileDetailsData: [],
+        paymentCardData: []
     }
 
     stat = [
@@ -47,28 +52,23 @@ class Profile extends Component {
         {id: "3", count: 0, label: "Expired"},
     ]
 
-    proDetail = [
-        {id: "1", content: "Name", value: "Chris evans"},
-        {id: "2", content: "Email", value: "steveRogers@gmail.com"},
-        {id: "3", content: "Address", value: "22/A, Brooklyn"},
-        {id: "4", content: "District", value: "Colombo"},
-        {id: "5", content: "Contact", value: "07724****6"},
-    ]
-
-    payDetail = [
-        {id: "1", content: "Card", value: "Master"},
-        {id: "2", content: "Card No", value: "12348975615"},
-    ]
-
     componentDidMount() {
-        
+        const authenticatedEmail = this.props.user && this.props.user.email
+        if (authenticatedEmail) {
+            this.getProfileDetailsApi(authenticatedEmail)
+        }
     }
 
     getProfileDetailsApi = async(email) => {
         try {
             this.setState({ loading: true })
-            const token = null
+            const token = this.props.user.token
             const data = await getProfileDetails(email, token)
+            if (data) {
+                this.setProfileDetails(data)
+                this.setPaymentCardDetails(data)
+                this.props.storeProfileDetails(data)
+            }
             this.setState({ loading: false, profileData: data })
         } catch (e) {
             this.setState({ loading: false })
@@ -79,12 +79,12 @@ class Profile extends Component {
     changePasswordApi = async(data) => {
         try {
             this.setState({ loading: true })
-            const token = null
+            const token = this.props.user.token
             const response = await changePassword(data, token)
             if (response.success) {
                 this.setSuccessSnack(response.message)
             }
-            this.setState({ loading: false })
+            this.setState({ loading: false, currentPassword: "", newPassword: "", confirmPassword: "" })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -94,12 +94,12 @@ class Profile extends Component {
     updateProfileDetailsApi = async(data) => {
         try {
             this.setState({ loading: true })
-            const token = null
+            const token = this.props.user.token
             const response = await updateProfileDetails(data, token)
             if (response.success) {
                 this.setSuccessSnack(response.message)
             }
-            this.setState({ loading: false })
+            this.setState({ loading: false, openProfileEditor: false })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -109,12 +109,12 @@ class Profile extends Component {
     updatePaymentCardDetailsApi = async(data) => {
         try {
             this.setState({ loading: true })
-            const token = null
+            const token = this.props.user.token
             const response = await updatePaymentCardDetails(data, token)
             if (response.success) {
                 this.setSuccessSnack(response.message)
             }
-            this.setState({ loading: false })
+            this.setState({ loading: false, openCardEditor: false })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -122,12 +122,12 @@ class Profile extends Component {
     }
 
     handlePasswordChange = () => {
-        const {currentPasssword, newPassword, confirmPasssword} = this.state
-        if (currentPasssword && newPassword && confirmPasssword) {
-            if (currentPasssword !== newPassword) {
-                if (newPassword === confirmPasssword) {
-                    const email = ""
-                    const data = {email, oldPassword: currentPasssword, newPassword}
+        const {currentPassword, newPassword, confirmPassword} = this.state
+        if (currentPassword && newPassword && confirmPassword) {
+            if (currentPassword !== newPassword) {
+                if (newPassword === confirmPassword) {
+                    const email = this.props.user.email
+                    const data = {email, oldPassword: currentPassword, newPassword}
                     this.changePasswordApi(data)
                 }
                 else {
@@ -162,7 +162,7 @@ class Profile extends Component {
     handleCardUpdateOnPress = () => {
         const {cardNo, cardType} = this.state
         if (cardNo && cardType) {
-            const email = ""
+            const email = this.props.user.email
             const data = {email, cardType, cardNo}
             this.updatePaymentCardDetailsApi(data)
         }
@@ -185,18 +185,20 @@ class Profile extends Component {
     }
 
     handleProfileEditorOnClose = () => {
+        const data = this.state.profileData
         this.setState({ 
             openProfileEditor: false,
-            name: "",
-            email: "",
-            address: "",
-            district: "",
-            contact: "",
+            name: data.name,
+            email: data.email,
+            address: data.address,
+            district: data.district,
+            contact: data.contact
         })
     }
 
     handleCardEditorOnClose = () => {
-        this.setState({ openCardEditor: false, cardType: "", cardNo: "" })
+        const data = this.state.profileData
+        this.setState({ openCardEditor: false, cardType: data.cardType, cardNo: data.cardNo })
     }
 
     visibilityIconPress = () => {
@@ -206,6 +208,37 @@ class Profile extends Component {
     confirmEmail = (email) => {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         return pattern.test(email)
+    }
+
+    createContent = (content, value) => {
+        const item = {content: content, value: value}
+        return item
+    }
+
+    setProfileDetails = (data) => {
+        let profileDetailsData = []
+        profileDetailsData.push(this.createContent("Email", data.email))
+        profileDetailsData.push(this.createContent("Name", data.name))
+        profileDetailsData.push(this.createContent("Address", data.address))
+        profileDetailsData.push(this.createContent("District", data.district))
+        profileDetailsData.push(this.createContent("Contact", data.contact))
+
+        this.setState({ 
+            profileDetailsData,
+            name: data.name,
+            email: data.email,
+            address: data.address,
+            district: data.district,
+            contact: data.contact
+        })
+    }
+
+    setPaymentCardDetails = (data) => {
+        let paymentCardData = []
+        paymentCardData.push(this.createContent("CardType", data.cardNo))
+        paymentCardData.push(this.createContent("CardNo", data.cardType))
+
+        this.setState({ paymentCardData, cardNo: data.cardNo, cardType: data.cardType })
     }
 
     setSuccessSnack = (message) => {
@@ -261,8 +294,8 @@ class Profile extends Component {
         )
     }
 
-    renderDetailContent = (item) => {
-        const {id, content, value} = item
+    renderDetailContent = (item, id) => {
+        const {content, value} = item
         return (
             <View style = {styles.detailBlock} key = {id}>
                 <Text style = {styles.detailContent}>{content}</Text>
@@ -289,6 +322,7 @@ class Profile extends Component {
     }
 
     renderPaymentDetails = () => {
+        const {paymentCardData} = this.state
         return (
             <View style = {styles.profileDetails}>
                 <View style = {styles.contentHeader}>
@@ -298,13 +332,14 @@ class Profile extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style = {styles.detailContainer}>
-                    { this.payDetail.map(item => this.renderDetailContent(item) ) }
+                    { paymentCardData.map((item, idx) => this.renderDetailContent(item, idx) ) }
                 </View>
             </View>
         )
     }
 
     renderprofileDetails = () => {
+        const {profileDetailsData} = this.state
         return (
             <View style = {styles.profileDetails}>
                 <View style = {styles.contentHeader}>
@@ -314,7 +349,7 @@ class Profile extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style = {styles.detailContainer}>
-                    { this.proDetail.map(item => this.renderDetailContent(item) ) }
+                    { profileDetailsData.map((item, idx) => this.renderDetailContent(item, idx) ) }
                 </View>
             </View>
         )
@@ -340,6 +375,7 @@ class Profile extends Component {
     }
 
     renderProfiler = () => {
+        const authUser = this.props.user
         return (
             <View style = {styles.profileRoot}>
                 <View style = {styles.personal}>
@@ -347,8 +383,8 @@ class Profile extends Component {
                         <Image style = {styles.profileImage} source = {user}/>
                     </View>
                     <View style = {styles.profilerBlock}>
-                        <Text style = {styles.profilerFN}>Chris</Text>
-                        <Text style = {styles.profilerLN}>Evans</Text>
+                        <Text style = {styles.profilerFN}>{authUser && authUser.email}</Text>
+                        <Text style = {styles.profilerLN}>{authUser && authUser.name}</Text>
                     </View>
                 </View>
             </View>
@@ -393,4 +429,14 @@ class Profile extends Component {
     }
 }
 
-export default Profile
+const mapStateToProps = (state) => ({
+    user: state.auth.user,
+})
+
+const mapDispatchToProps = dispatch => {
+    return {
+        storeProfileDetails: data => { dispatch(storeProfileDetails(data)) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

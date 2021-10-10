@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native'
 
+import {connect} from 'react-redux'
+
 import {getPayments, filterPaymentsByDate} from '../../api/payment'
 
 import TopBar from '../../components/TopBar'
@@ -24,22 +26,20 @@ class MyPayments extends Component {
         openAlert: false,
         alertMessage: "",
         alertAction: '',
+        total: 0,
+        current: 0,
     }
 
-    paymentItems = [
-        {id: 1,category: "Food",merchant: "ISSO",item: "Burger",quantity: 2,date: "07-10-2021",sender: "Anonymous",receiver: "Peter",payment: "600"}
-    ]
-
     componentDidMount() {
-        
+        this.getPaymentsApi(0)
     }
 
     getPaymentsApi = async(page) => {
         try {
             this.setState({ loading: true })
-            const token = null
-            const paymentsData = await getPayments(page, token)
-            this.setState({ loading: false, paymentsData })
+            const token = this.props.user.token
+            const data = await getPayments(page, token)
+            this.setState({ loading: false, paymentsData: data.paymentList, total: data.total, current: data.current })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -49,9 +49,9 @@ class MyPayments extends Component {
     filterPaymentsByDateApi = async(start, end, page) => {
         try {
             this.setState({ loading: true })
-            const token = null
-            const paymentsData = await filterPaymentsByDate(start, end, page, token)
-            this.setState({ loading: false, paymentsData })
+            const token = this.props.user.token
+            const data = await filterPaymentsByDate(start, end, page, token)
+            this.setState({ loading: false, paymentsData: data.paymentList, total: data.total, current: data.current })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -138,11 +138,12 @@ class MyPayments extends Component {
     }
 
     renderPaymentList = () => {
+        const {paymentsData} = this.state
         return (
             <View style = {styles.listBlock}>
                 <Text style = {styles.headerTitle}>Checkout your payment history</Text>
                 <View style = {styles.list}>
-                    { this.paymentItems.map((item, idx) => <PaymentCard paymentItem = {item} key = {idx}/>) }
+                    { paymentsData.map((item, idx) => <PaymentCard paymentItem = {item} key = {idx}/>) }
                 </View>
             </View>
         )
@@ -183,4 +184,8 @@ class MyPayments extends Component {
     }
 }
 
-export default MyPayments
+const mapStateToProps = state => ({
+    user: state.auth.user,
+})
+
+export default connect(mapStateToProps)(MyPayments)

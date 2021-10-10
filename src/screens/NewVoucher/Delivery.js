@@ -71,6 +71,7 @@ const Delivery = ({
                     <View style = {styles.inputForm}>
                         { renderInput("Full Name", "Name", "senderName", null) }
                         { renderInput("Address", "Address", "senderAddress", null) }
+                        { renderInput("Contact", "Contact", "senderContact", null) }
                     </View>
                 }
             </View>

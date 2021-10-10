@@ -7,7 +7,7 @@ import priceSrc from '../../assets/images/icons/price.png'
 import invoice from '../../assets/images/others/invoice.png'
 import invoiceFooter from '../../assets/images/others/invoiceFooter.png'
 
-const PaymentSlip = ({values}) => {
+const PaymentSlip = ({values, profile}) => {
     const selectedMerchant = values["selectedMerchant"]
     const selectedItem = values["selectedItem"]
     const radioValue = values["radioValue"]
@@ -21,6 +21,9 @@ const PaymentSlip = ({values}) => {
     const [receiver, setReceiver] = useState([])
     const [payment, setPayment] = useState([])
     const [card, setCard] = useState([])
+
+    const deliveryCharge = 100
+    const platformCharge = 50
 
     useEffect(() => {
         createSender()
@@ -54,17 +57,17 @@ const PaymentSlip = ({values}) => {
         let payment = []
         payment.push(createContent("Merchant", selectedMerchant && selectedMerchant.title))
         payment.push(createContent("Item", selectedItem && selectedItem.title))
-        payment.push(createContent("Price", "Rs 500"))
-        payment.push(createContent("Delivery Charge", "Rs 100"))
-        payment.push(createContent("Platform Charge", "Rs 50"))
+        payment.push(createContent("Price", `Rs. ${selectedItem && selectedItem.price}`))
+        payment.push(createContent("Delivery Charge", `Rs. ${deliveryCharge}`))
+        payment.push(createContent("Platform Charge", `Rs. ${platformCharge}`))
 
         setPayment(payment)
     }
 
     const createCard = () => {
         let card = []
-        card.push(createContent("Type", "Master"))
-        card.push(createContent("Card number", "1564fsf61fs"))
+        card.push(createContent("Type", profile && profile.cardType))
+        card.push(createContent("Card number", profile && profile.cardNo))
 
         setCard(card)
     }
@@ -72,6 +75,11 @@ const PaymentSlip = ({values}) => {
     const createContent = (content, value) => {
         const item = {content: content, value: value}
         return item
+    }
+
+    const getTotal = () => {
+        const price = selectedItem && selectedItem.price ? selectedItem.price : 0
+        return price + deliveryCharge + platformCharge
     }
 
     const renderDetailContent = (item, id) => {
@@ -95,7 +103,7 @@ const PaymentSlip = ({values}) => {
                         <Text style = {styles.totalText}>Total</Text>
                         <View style = {styles.taotalValueRoot}>
                             <Image style = {styles.priceImage} source = {priceSrc}/>
-                            <Text style = {styles.totalValue}>Rs 600</Text>
+                            <Text style = {styles.totalValue}>Rs {getTotal}</Text>
                         </View>
                     </View>
                 </View>

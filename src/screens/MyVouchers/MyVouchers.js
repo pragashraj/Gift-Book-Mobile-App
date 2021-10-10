@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native'
 
+import {connect} from 'react-redux'
+
 import {getVouchers, filterVouchersByDate, filterVouchersByStatus} from '../../api/voucher'
 
 import TopBar from '../../components/TopBar'
@@ -28,23 +30,21 @@ class MyVouchers extends Component {
         openAlert: false,
         alertMessage: "",
         alertAction: '',
-        vouchersData: []
+        vouchersData: [],
+        total: 0,
+        current: 0,
     }
 
-    vouchers = [
-        {price: "400", merchant: "ISSO", item: "Burger", date: "04-10-2021", status: "Active"},
-    ]
-
     componentDidMount() {
-        
+        this.getVouchersApi(0)
     }
 
     getVouchersApi = async(page) => {
         try {
             this.setState({ loading: true })
-            const token = null
-            const vouchersData = await getVouchers(page, token)
-            this.setState({ loading: false, vouchersData })
+            const token = this.props.user.token
+            const data = await getVouchers(page, token)
+            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -54,9 +54,9 @@ class MyVouchers extends Component {
     filterVouchersByDateApi = async(start, end, page) => {
         try {
             this.setState({ loading: true })
-            const token = null
-            const vouchersData = await filterVouchersByDate(start, end, page, token)
-            this.setState({ loading: false, vouchersData })
+            const token = this.props.user.token
+            const data = await filterVouchersByDate(start, end, page, token)
+            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -66,9 +66,9 @@ class MyVouchers extends Component {
     filterVouchersByStatusApi = async(status, page) => {
         try {
             this.setState({ loading: true })
-            const token = null
-            const vouchersData = await filterVouchersByStatus(status, page, token)
-            this.setState({ loading: false, vouchersData })
+            const token = this.props.user.token
+            const data = await filterVouchersByStatus(status, page, token)
+            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -196,11 +196,12 @@ class MyVouchers extends Component {
     }
 
     renderVouchers = () => {
+        const {vouchersData} = this.state
         return (
             <View style = {styles.listBlock}>
                 <Text style = {styles.headerTitle}>Checkout your vouchers & gifts</Text>
                 <View style = {styles.list}>
-                    { this.vouchers.map((item, idx) => this.renderVoucher(item, idx)) }
+                    { vouchersData.map((item, idx) => this.renderVoucher(item, idx)) }
                 </View>
             </View>
         )
@@ -259,4 +260,8 @@ class MyVouchers extends Component {
     }
 }
 
-export default MyVouchers
+const mapStateToProps = state => ({
+    user: state.auth.user,
+})
+
+export default connect(mapStateToProps)(MyVouchers)
