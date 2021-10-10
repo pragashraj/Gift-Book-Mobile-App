@@ -10,6 +10,7 @@ import Loading from '../../components/Loading'
 import DatePicker from '../../components/DatePicker'
 import PaymentCard from './PaymentCard'
 import AlertSnackBar from '../../components/AlertSnackBar'
+import Pagination from '../../components/Pagination'
 
 import {styles} from './styles'
 import calendar from '../../assets/images/icons/calendar.png'
@@ -39,7 +40,7 @@ class MyPayments extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getPayments(page, token)
-            this.setState({ loading: false, paymentsData: data.paymentList, total: data.total, current: data.current })
+            this.setState({ loading: false, paymentsData: data.paymentList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -51,7 +52,7 @@ class MyPayments extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await filterPaymentsByDate(start, end, page, token)
-            this.setState({ loading: false, paymentsData: data.paymentList, total: data.total, current: data.current })
+            this.setState({ loading: false, paymentsData: data.paymentList, total: data.total, current: data.current + 1 })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -92,15 +93,11 @@ class MyPayments extends Component {
         this.setState({ startDate: new Date(), endDate: new Date(), openDatePicker: false })
     }
 
-    renderDate = (text) => {
-        return (
-            <TouchableOpacity style = {styles.date} onPress = {() => this.handleDateOnClick(text)}>
-                <Text style = {styles.dateText}>{text}</Text>
-                <Image style = {styles.calendarImg} source = {calendar}/>
-            </TouchableOpacity>
-        )
+    handlePagination = (no) => {
+        this.setState({ current: no})
+        this.getPaymentsApi(no - 1)
     }
-
+    
     setErrorSnack = (message) => {
         this.setAlert(message, 'Error')
     }
@@ -108,6 +105,31 @@ class MyPayments extends Component {
     setAlert = (message, action) => {
         this.setState({ openAlert: true, alertMessage: message, alertAction: action })
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
+    }
+
+    renderNodataAvailable = () => {
+        return (
+            <View style = {styles.noDataAvailableRoot}>
+                <Text style = {styles.noDataAvailable}>Currently no data available</Text>
+            </View>
+        )
+    }
+
+    renderPagination = (total, current) => {
+        return (
+            <View style = {styles.paginationRoot}>
+                <Pagination total = {total} current = {current} handlePaginationNumberOnPress = {this.handlePagination}/>
+            </View>
+        )
+    }
+
+    renderDate = (text) => {
+        return (
+            <TouchableOpacity style = {styles.date} onPress = {() => this.handleDateOnClick(text)}>
+                <Text style = {styles.dateText}>{text}</Text>
+                <Image style = {styles.calendarImg} source = {calendar}/>
+            </TouchableOpacity>
+        )
     }
 
     renderSelectedDate = (startDate, endDate) => {
@@ -143,7 +165,12 @@ class MyPayments extends Component {
             <View style = {styles.listBlock}>
                 <Text style = {styles.headerTitle}>Checkout your payment history</Text>
                 <View style = {styles.list}>
-                    { paymentsData.map((item, idx) => <PaymentCard paymentItem = {item} key = {idx}/>) }
+                    {
+                        paymentsData.length > 0 ? 
+                        paymentsData.map((item, idx) => <PaymentCard paymentItem = {item} key = {idx}/>)
+                        :
+                        this.renderNodataAvailable()
+                    }
                 </View>
             </View>
         )
@@ -166,7 +193,9 @@ class MyPayments extends Component {
     }
 
     render() {
-        const {loading, openDatePicker, dateTag, startDate, endDate, openAlert, alertMessage, alertAction} = this.state
+        const {
+            loading, openDatePicker, dateTag, startDate, endDate, openAlert, alertMessage, alertAction, total, current,
+        } = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Payments" navigation = {this.props.navigation}/>
@@ -174,6 +203,7 @@ class MyPayments extends Component {
                     <View style = {styles.mainRoot}>
                         { this.renderDateFilter() }
                         { this.renderPaymentList() }
+                        { total > 0 && this.renderPagination(total, current) }
                     </View>
                 </ScrollView>
                 { loading && <Loading open = {loading}/> }

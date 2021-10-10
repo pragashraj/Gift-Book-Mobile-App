@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
+
+const screenHight = Dimensions.get('screen').height
 
 export const styles = StyleSheet.create({
     container: {
@@ -84,5 +86,22 @@ export const styles = StyleSheet.create({
     icon: {
         width: 25,
         height: 25
+    },
+    paginationRoot: {
+        marginTop: 10,
+        backgroundColor: "#fff"
+    },
+    noDataAvailableRoot: {
+        flex: 1,
+        width: "100%",
+        height: screenHight * 0.3,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    noDataAvailable: {
+        textTransform: "uppercase",
+        fontWeight: "700",
+        letterSpacing: 1.2
     }
 })

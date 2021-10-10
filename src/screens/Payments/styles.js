@@ -1,6 +1,8 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 
 import {primaryColor} from '../../values/values'
+
+const screenHight = Dimensions.get('screen').height
 
 export const styles = StyleSheet.create({
     container: {
@@ -136,5 +138,22 @@ export const styles = StyleSheet.create({
         backgroundColor: "#F9EBEA",
         borderRadius: 20,
         padding: 12
+    },
+    paginationRoot: {
+        marginTop: 10,
+        backgroundColor: "#fff",
+    },
+    noDataAvailableRoot: {
+        flex: 1,
+        width: "100%",
+        height: screenHight * 0.4,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    noDataAvailable: {
+        textTransform: "uppercase",
+        fontWeight: "700",
+        letterSpacing: 1.2
     }
 })
