@@ -4,16 +4,16 @@ import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
 import voucherTemplate01 from '../assets/images/others/voucherTemplate.png'
 
 const Voucher = ({voucherItem}) => {
-    const {price, merchant, item} = voucherItem
+    const {value, merchantName, itemName} = voucherItem
     return (
         <View style = {styles.container}>
             <Image style = {styles.background} source = {voucherTemplate01}/>
             <View style = {styles.priceRoot}>
-                <Text style = {styles.value}>{price}</Text>
+                <Text style = {styles.value}>{value}</Text>
             </View>
             <View style = {styles.details}>
-                <Text style = {styles.merchant}>{merchant}</Text>
-                <Text style = {styles.item}>{item}</Text>
+                <Text style = {styles.merchant}>{merchantName}</Text>
+                <Text style = {styles.item}>{itemName}</Text>
             </View>
         </View>
     )

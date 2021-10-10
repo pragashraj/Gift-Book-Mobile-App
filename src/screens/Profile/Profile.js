@@ -432,10 +432,4 @@ const mapStateToProps = state => ({
     user: state.auth.user,
 })
 
-const mapDispatchToProps = dispatch => {
-    return {
-        storeLoginResponse: data => { dispatch(storeLoginResponse(data)) }
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile)
+export default connect(mapStateToProps)(Profile)

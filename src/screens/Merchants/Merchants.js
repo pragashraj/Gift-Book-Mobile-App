@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
 
+import {connect} from 'react-redux'
+
 import {getMerchants, getMerchantsByCategory, getMerchantByName, getMerchantCategories} from '../../api/merchant'
 
 import TopBar from '../../components/TopBar'
@@ -11,9 +13,7 @@ import MerchantPopup from '../../components/MerchantPopup'
 import AlertSnackBar from '../../components/AlertSnackBar'
 
 import {styles} from './styles'
-import allude from '../../assets/images/merchants/allude.png'
 import spring from '../../assets/images/merchants/spring-and-summer.png'
-import factory from '../../assets/images/merchants/the-factory-oulet.png'
 
 class Merchants extends Component {
     state = {
@@ -25,30 +25,23 @@ class Merchants extends Component {
         alertMessage: "",
         alertAction: '',
         categoriesData: [],
-        merchantsData: []
+        merchantsData: [],
+        total: 0,
+        current: 0,
+        selectedCategory: "All"
     }
 
-    categories = ["All", "Fashion", "Food", "Accessories", "Baby", "Books", "Groceries", "Health", "Homeware", "Hotels", "Valentine"]
-
-    merchants = [
-        {id: "1", title: "Allude", src: allude},
-        {id: "2", title: "Spring & Summer", src: spring},
-        {id: "3", title: "Factory outlet", src: factory},
-        {id: "4", title: "Spring & Summer", src: spring},
-        {id: "5", title: "Factory outlet", src: factory},
-        {id: "6", title: "Allude", src: allude},
-    ]
-
     componentDidMount() {
-
+        this.getMerchantsApi(0)
+        this.getMerchantCategoriesApi()
     }
 
     getMerchantsApi = async(page) => {
         try {
             this.setState({ loading: true })
-            const token = null
-            const merchantsData = await getMerchants(page, token)
-            this.setState({ loading: false, merchantsData })
+            const token = this.props.user.token
+            const data = await getMerchants(page, token)
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -58,7 +51,7 @@ class Merchants extends Component {
     getMerchantCategoriesApi = async() => {
         try {
             this.setState({ loading: true })
-            const token = null
+            const token = this.props.user.token
             const categoriesData = await getMerchantCategories(token)
             this.setState({ loading: false, categoriesData })
         } catch (e) {
@@ -70,9 +63,9 @@ class Merchants extends Component {
     searchApi = async(value, page) => {
         try {
             this.setState({ loading: true })
-            const token = null
-            const merchantsData = await getMerchantByName(value, page, token)
-            this.setState({ loading: false, merchantsData })
+            const token = this.props.user.token
+            const data = await getMerchantByName(value, page, token)
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -82,21 +75,22 @@ class Merchants extends Component {
     getMerchantsByCategoryApi = async(value, page) => {
         try {
             this.setState({ loading: true })
-            const token = null
-            const merchantsData = await getMerchantsByCategory(value, page, token)
-            this.setState({ loading: false, merchantsData })
+            const token = this.props.user.token
+            const data = await getMerchantsByCategory(value, page, token)
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
         }
     }
 
-    handleCategoryOnPress = (item) => {
-        if (item === "All") {
+    handleCategoryOnPress = (title) => {
+        this.setState({ selectedCategory: title })
+        if (title === "All") {
             this.getMerchantsApi(0)
         }
         else {
-            this.getMerchantsByCategoryApi(item, 0)
+            this.getMerchantsByCategoryApi(title, 0)
         }
     }
 
@@ -142,13 +136,13 @@ class Merchants extends Component {
         )
     }
 
-    renderMerchantItem = (item) => {
-        const {id, title, src} = item
+    renderMerchantItem = (item, id) => {
+        const {name} = item
         return (
             <View style = {styles.merchant} key = {id}>
                 <Merchant
-                    title = {title}
-                    source = {src}
+                    title = {name}
+                    source = {spring}
                     onPress = {() => this.handleMerchantOnPress(item)}
                     onSelected = { false }
                 />
@@ -157,22 +151,25 @@ class Merchants extends Component {
     }
 
     renderFilterItem = (item, idx) => {
+        const {selectedCategory} = this.state
+        let selected = selectedCategory === item.title
         return (
-            <View style = {styles.filterItem} key = {idx}>
-                <TouchableOpacity onPress = {() => this.handleCategoryOnPress(item)}>
-                    <Text style = {styles.filterItemText}>{item}</Text>
+            <View style = {selected ? styles.filterItemSelected : styles.filterItem} key = {idx}>
+                <TouchableOpacity onPress = {() => this.handleCategoryOnPress(item.title)}>
+                    <Text style = {selected ? styles.filterItemTextSelected : styles.filterItemText}>{item.title}</Text>
                 </TouchableOpacity>
             </View>
         )
     }
 
     renderMerchants = () => {
+        const {merchantsData} = this.state
         return (
             <View style = {styles.merchantsBlock}>
                 <Text style = {styles.headerTitle}>Explore our merchants</Text>
                 <View style = {styles.merchantList}>
                     <View style = {styles.row}>
-                        { this.merchants.map(item => this.renderMerchantItem(item)) }
+                        { merchantsData.map((item, idx) => this.renderMerchantItem(item, idx)) }
                     </View>
                 </View>
             </View>
@@ -180,12 +177,14 @@ class Merchants extends Component {
     }
 
     renderFilters = () => {
+        const {categoriesData} = this.state
         return (
             <View style = {styles.filterBlock}>
                 <Text style = {styles.headerTitle}>Filter merchants by categories</Text>
                 <View style = {styles.filterItemRoot}>
                     <View style = {styles.row}>
-                        { this.categories.map((item, idx) => this.renderFilterItem(item, idx) )}
+                        { this.renderFilterItem({id: 0, title: "All"}, 0) }
+                        { categoriesData.map((item, idx) => this.renderFilterItem(item, idx) )}
                     </View>
                 </View>
             </View>
@@ -228,4 +227,8 @@ class Merchants extends Component {
     }
 }
 
-export default Merchants
+const mapStateToProps = state => ({
+    user: state.auth.user,
+})
+
+export default connect(mapStateToProps)(Merchants)

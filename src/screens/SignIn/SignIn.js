@@ -22,8 +22,8 @@ import {styles} from './styles'
 
 class SignIn extends Component {
     state = {
-        email: "",
-        password: "",
+        email: "spr@gmail.com",
+        password: "123456",
         openAlert: false,
         alertMessage: "",
         visibility: false,
@@ -37,9 +37,8 @@ class SignIn extends Component {
             const response = await signIn(data)
             const {email, name, token, expiration} = response
             const loginResponse = { email, name, token, expiration }
-            this.props.storeLoginResponse(loginResponse)
-            this.setSuccessSnack("Login Successful")
             this.setState({ loading: false })
+            setTimeout(() => { this.props.storeLoginResponse(loginResponse) }, 1000)
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
