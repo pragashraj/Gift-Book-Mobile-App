@@ -6,7 +6,16 @@ import Voucher from './Voucher'
 
 const VoucherPopup = ({open, onClose, selectedItem, handleCancel, handleShare}) => {
 
-    const {value, merchantName, itemName, status, createdAt, owner, description} = selectedItem
+    const {value, merchantName, itemName, status, createdAt, owner} = selectedItem
+
+    const getDate = () => {
+        if (createdAt) {
+            const spliter = createdAt.split("T")
+            return spliter[0] + ", " + spliter[1]
+        }
+        else 
+            return "N/A"
+    }
 
     const renderDetailContent = (content, value) => {
         return (
@@ -31,9 +40,8 @@ const VoucherPopup = ({open, onClose, selectedItem, handleCancel, handleShare}) 
                         { renderDetailContent("Merchant", merchantName) }
                         { renderDetailContent("Price", value) }
                         { renderDetailContent("Status", status) }
-                        { renderDetailContent("Date", createdAt) }
+                        { renderDetailContent("Date", getDate()) }
                         { renderDetailContent("Owned By", owner) }
-                        { renderDetailContent("Description", description) }
                     </View>
                     <View style = {styles.footerBtn}>
                         <CustomButton text = "cancel" btnType = "secondary" handleBtnOnClick = {handleCancel}/>

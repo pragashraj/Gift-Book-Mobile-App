@@ -4,8 +4,9 @@ import { View, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-nati
 import {primaryColor} from '../values/values'
 
 import search from '../assets/images/icons/search.png'
+import searchClear from '../assets/images/icons/searchClear.png'
 
-const Search = ({placeholder, value, onChangeText, name, onPress}) => {
+const Search = ({placeholder, value, onChangeText, name, onPress, onClear, searched}) => {
     return (
         <View style = {styles.container}>
             <View style = {styles.inputRoot}>
@@ -19,8 +20,8 @@ const Search = ({placeholder, value, onChangeText, name, onPress}) => {
                     value = {value}
                     placeholderTextColor = "grey"
                 />
-                <TouchableOpacity onPress = {onPress}>
-                    <Image style = {styles.tinyLogo} source = {search}/>
+                <TouchableOpacity onPress = {searched ? onClear : onPress}>
+                    <Image style = {styles.tinyLogo} source = {searched ? searchClear : search}/>
                 </TouchableOpacity>
             </View>
         </View>

@@ -103,7 +103,7 @@ const PaymentSlip = ({values, profile}) => {
                         <Text style = {styles.totalText}>Total</Text>
                         <View style = {styles.taotalValueRoot}>
                             <Image style = {styles.priceImage} source = {priceSrc}/>
-                            <Text style = {styles.totalValue}>Rs {getTotal}</Text>
+                            <Text style = {styles.totalValue}>Rs {getTotal()}</Text>
                         </View>
                     </View>
                 </View>
