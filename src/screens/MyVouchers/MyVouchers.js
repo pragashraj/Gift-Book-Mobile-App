@@ -94,7 +94,7 @@ class MyVouchers extends Component {
             }
             else {
                 this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
-
+                
                 if (startDate && startDate !== todayDate) {
                     this.filterVouchersByDateApi(startDate, date, 0)
                 }
