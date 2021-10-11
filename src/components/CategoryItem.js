@@ -3,14 +3,14 @@ import { StyleSheet, Image, View,TouchableOpacity } from 'react-native'
 
 const CategoryItem = ({source, onPress, onSelected}) => {
 
-    const getImageSource = (blob) => {
-        return `data:image/jpeg;base64,${blob}`
+    const getImageSource = () => {
+        return `data:image/jpeg;base64,${source}`
     }
 
     return (
         <View style = {[styles.container, onSelected && styles.selcted]}>
             <TouchableOpacity onPress = {onPress}>
-                <Image style = {styles.image} source = {getImageSource(source)}/>
+                <Image style = {styles.image} source = {{uri: getImageSource()}}/>
             </TouchableOpacity>
         </View>
     )

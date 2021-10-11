@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, SafeAreaView, ScrollView } from 'react-native'
+import { Text, View, SafeAreaView, ScrollView, RefreshControl } from 'react-native'
 
 import {connect} from 'react-redux'
 
@@ -48,6 +48,7 @@ class NewVoucher extends Component {
         itemsData: [],
         itemTotal: 0,
         itemCurrent: 0,
+        refreshing: false
     }
 
     footerText = ["Select a merchant", "Select a gift", "Delivery details", "Payment summary"]
@@ -67,9 +68,9 @@ class NewVoucher extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getMerchants(page, token)
-            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1 })
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1, refreshing: false })
         } catch (e) {
-            this.setState({ loading: false })
+            this.setState({ loading: false, refreshing: false })
             this.setErrorSnack(e.response.data.message)
         }
     }
@@ -318,6 +319,11 @@ class NewVoucher extends Component {
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
+    onRefresh = () => {
+        this.setState({ refreshing: true })
+        this.getMerchantsApi(0)
+    }
+
     renderConfirmModal = (openConfirmPopup) => {
         return (
             <ConfirmPopup 
@@ -442,11 +448,17 @@ class NewVoucher extends Component {
     }
 
     render() {
-        const {selectedItem, openItemModal, openAlert, alertMessage, openConfirmPopup, loading, alertAction} = this.state
+        const {selectedItem, openItemModal, openAlert, alertMessage, openConfirmPopup, loading, alertAction, refreshing} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "New Voucher" navigation = {this.props.navigation}/>
-                <ScrollView style = {styles.scrollView} indicatorStyle = "white">
+                <ScrollView 
+                    style = {styles.scrollView} 
+                    indicatorStyle = "white"
+                    refreshControl = {
+                        <RefreshControl refreshing = {refreshing} onRefresh = {this.onRefresh}/>
+                    }
+                >
                     { this.renderMain() }
                 </ScrollView>
                 { this.renderFooter() }

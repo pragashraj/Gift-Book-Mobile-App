@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, SafeAreaView, ScrollView, Image, View, TouchableOpacity } from 'react-native'
+import { Text, SafeAreaView, ScrollView, Image, View, TouchableOpacity, RefreshControl } from 'react-native'
 
 import {connect} from 'react-redux'
 
@@ -15,7 +15,7 @@ import AlertSnackBar from '../../components/AlertSnackBar'
 import Loading from '../../components/Loading'
 
 import ProfileCover from '../../assets/images/screens/coverD.jpg'
-import user from '../../assets/images/others/user.jpg'
+import user from '../../assets/images/others/profile.png'
 import edit from '../../assets/images/icons/edit.png'
 import notVisible from '../../assets/images/icons/notVisible.png'
 import visible from '../../assets/images/icons/visible.png'
@@ -43,7 +43,9 @@ class Profile extends Component {
         alertAction: '',
         profileData: null,
         profileDetailsData: [],
-        paymentCardData: []
+        paymentCardData: [],
+        refreshing: false,
+        voucherStats: []
     }
 
     stat = [
@@ -67,11 +69,12 @@ class Profile extends Component {
             if (data) {
                 this.setProfileDetails(data)
                 this.setPaymentCardDetails(data)
+                this.setVoucherStat(data)
                 this.props.storeProfileDetails(data)
             }
-            this.setState({ loading: false, profileData: data })
+            this.setState({ loading: false, profileData: data, refreshing: false })
         } catch (e) {
-            this.setState({ loading: false })
+            this.setState({ loading: false, refreshing: false })
             this.setErrorSnack(e.response.data.message)
         }
     }
@@ -241,6 +244,15 @@ class Profile extends Component {
         this.setState({ paymentCardData, cardNo: data.cardNo, cardType: data.cardType })
     }
 
+    setVoucherStat = (data) => {
+        let voucherStats = []
+        voucherStats.push(this.createContent("Total", data.noOfVouchers))
+        voucherStats.push(this.createContent("Active", data.noOfActiveVouchers))
+        voucherStats.push(this.createContent("Expired", data.noOfExpiredVouchers))
+
+        this.setState({ voucherStats })
+    }
+
     setSuccessSnack = (message) => {
         this.setAlert(message, 'Success')
     }
@@ -252,6 +264,11 @@ class Profile extends Component {
     setAlert = (message, action) => {
         this.setState({ openAlert: true, alertMessage: message, alertAction: action })
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
+    }
+
+    onRefresh = () => {
+        this.setState({ refreshing: true })
+        this.getProfileDetailsApi(this.props.user.email)
     }
 
     renderPaymentCardEditor = (open) => {
@@ -315,7 +332,7 @@ class Profile extends Component {
                     { this.renderInput("Current password", true, "currentPassword", null) }
                     { this.renderInput("New password", !passwordVisible, "newPassword", passwordVisible ? notVisible : visible) }
                     { this.renderInput("Confirm password", true, "confirmPassword", null) }
-                    <Button text = "Change" handleBtnOnClick = {this.handlePasswordChange}/>
+                    <Button text = "CHANGE" handleBtnOnClick = {this.handlePasswordChange}/>
                 </View>
             </View>
         )
@@ -356,16 +373,17 @@ class Profile extends Component {
     }
 
     renderVoucherStat = () => {
+        const {voucherStats} = this.state
         return (
             <View style = {styles.voucherStatRoot}>
                 <Text style = {styles.headerTitle}>My vouchers</Text>
                 <View style = {styles.vouchers}>
-                    { this.stat.map(item => {
-                        const {id, count, label} = item 
+                    { voucherStats.map((item, idx) => {
+                        const {content, value} = item 
                         return (
-                            <View key = {id}>
-                                <Text style = {styles.vouchersCount}>{count}</Text>
-                                <Text style = {styles.voucherText}>{label}</Text>
+                            <View key = {idx}>
+                                <Text style = {styles.vouchersCount}>{value}</Text>
+                                <Text style = {styles.voucherText}>{content}</Text>
                             </View>
                         )
                     }) }
@@ -379,9 +397,9 @@ class Profile extends Component {
         return (
             <View style = {styles.profileRoot}>
                 <View style = {styles.personal}>
-                    <View style = {styles.profileImageBlock}>
+                    <TouchableOpacity style = {styles.profileImageBlock}>
                         <Image style = {styles.profileImage} source = {user}/>
-                    </View>
+                    </TouchableOpacity>
                     <View style = {styles.profilerBlock}>
                         <Text style = {styles.profilerFN}>{authUser && authUser.email}</Text>
                         <Text style = {styles.profilerLN}>{authUser && authUser.name}</Text>
@@ -412,11 +430,17 @@ class Profile extends Component {
     }
 
     render() {
-        const {openProfileEditor, openCardEditor, openAlert, alertMessage, loading, alertAction} = this.state
+        const {openProfileEditor, openCardEditor, openAlert, alertMessage, loading, alertAction, refreshing} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Profile" navigation = {this.props.navigation}/>
-                <ScrollView style = {styles.scrollView} indicatorStyle = "white">
+                <ScrollView 
+                    style = {styles.scrollView} 
+                    indicatorStyle = "white"
+                    refreshControl = {
+                        <RefreshControl refreshing = {refreshing} onRefresh = {this.onRefresh}/>
+                    }
+                >
                     { this.renderProfileCover() }
                     { this.renderMain() }
                 </ScrollView>

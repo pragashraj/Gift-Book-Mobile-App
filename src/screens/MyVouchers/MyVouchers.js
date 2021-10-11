@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image, RefreshControl } from 'react-native'
 
 import {connect} from 'react-redux'
 
@@ -34,6 +34,7 @@ class MyVouchers extends Component {
         vouchersData: [],
         total: 0,
         current: 0,
+        refreshing: false
     }
 
     componentDidMount() {
@@ -45,9 +46,9 @@ class MyVouchers extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getVouchers(page, token)
-            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current + 1 })
+            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current + 1, refreshing: false })
         } catch (e) {
-            this.setState({ loading: false })
+            this.setState({ loading: false, refreshing: false })
             this.setErrorSnack(e.response.data.message)
         }
     }
@@ -57,7 +58,7 @@ class MyVouchers extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await filterVouchersByDate(start, end, page, token)
-            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current + 1 })
+            this.setState({ loading: false, vouchersData: data.voucherList, total: data.total, current: data.current + 1, })
         } catch (e) {
             this.setState({ loading: false })
             this.setErrorSnack(e.response.data.message)
@@ -138,6 +139,11 @@ class MyVouchers extends Component {
     setAlert = (message, action) => {
         this.setState({ openAlert: true, alertMessage: message, alertAction: action })
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
+    }
+
+    onRefresh = () => {
+        this.setState({ refreshing: true })
+        this.getVouchersApi(0)
     }
 
     renderNodataAvailable = () => {
@@ -270,12 +276,18 @@ class MyVouchers extends Component {
         const {
             loading, openDatePicker, dateTag, startDate, endDate, 
             openVoucherPopup, selectedVoucher, openAlert, alertMessage, alertAction,
-            total, current
+            total, current, refreshing
         } = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Vouchers" navigation = {this.props.navigation}/>
-                <ScrollView style = {styles.scrollView} indicatorStyle = "white">
+                <ScrollView 
+                    style = {styles.scrollView} 
+                    indicatorStyle = "white"
+                    refreshControl = {
+                        <RefreshControl refreshing = {refreshing} onRefresh = {this.onRefresh}/>
+                    }
+                >
                     <View style = {styles.mainRoot}>
                         { this.renderDateFilter() }
                         { this.renderStatusFilter() }

@@ -44,9 +44,10 @@ export const styles = StyleSheet.create({
     profileImageBlock: {
         width: "45%",
         height: "100%",
-        marginTop: -50,
+        marginTop: -40,
         marginLeft: "5%",
         borderRadius: 20,
+        borderWidth: 1,
     },
     profileImage: {
         width: "100%",
