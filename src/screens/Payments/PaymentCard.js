@@ -10,6 +10,15 @@ const PaymentCard = ({paymentItem}) => {
 
     const {id, paymentAt, value, senderType, merchantName, itemName, receiver, paymentCard} = paymentItem
 
+    const getDate = () => {
+        if (paymentAt) {
+            const spliter = paymentAt.split("T")
+            return spliter[0] + ", " + spliter[1]
+        }
+        else 
+            return "N/A"
+    }
+
     const handleMoreOrLessOnPress = (id) => {
         let idx = open.id === id ? 0 : id
         setOpen({id: idx})
@@ -42,7 +51,7 @@ const PaymentCard = ({paymentItem}) => {
         return (
             <View>
                 { renderDetail("Payment By", paymentCard.cardNo) }
-                { renderDetail("Payment Date", paymentAt) }
+                { renderDetail("Payment Date", getDate()) }
                 { renderDetail("Sender", senderType) }
                 { renderDetail("Receiver", receiver.name) }
             </View>

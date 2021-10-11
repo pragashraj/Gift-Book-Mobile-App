@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 
 import CategoryItem from '../../components/CategoryItem'
-import Merchant from '../../components/Item'
+import MerchantItem from '../../components/MerchantItem'
 import Search from '../../components/Search'
 import Pagination from '../../components/Pagination'
 
@@ -51,7 +51,7 @@ const MerchantSelector = ({
         const {id, name, src} = item
         return (
             <View style = {styles.merchant} key = {id}>
-                <Merchant
+                <MerchantItem
                     title = {name}
                     source = {src}
                     onPress = {() => handleMerchantOnPress(item)}

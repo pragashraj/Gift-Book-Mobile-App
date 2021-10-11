@@ -186,7 +186,7 @@ class NewVoucher extends Component {
     handleItemOnSearch = () => {
         const {itemSearch, selectedMerchant} = this.state
         if (itemSearch) {
-            this.searchItemApi(itemSearch, selectedMerchant.title, 0)
+            this.searchItemApi(itemSearch, selectedMerchant.name, 0)
             this.setState({ itemSearched: true })
         }
         else {
@@ -195,8 +195,8 @@ class NewVoucher extends Component {
     }
 
     handleItemSearchOnClear = () => {
-        this.getItemsByMerchantApi(this.state.selectedMerchant.title, 0)
-        this.setState({ itemSearched: false })
+        this.getItemsByMerchantApi(this.state.selectedMerchant.name, 0)
+        this.setState({ itemSearched: false, itemSearch: "" })
     }
 
     handleOnChangeText = (value, name) => {
@@ -207,13 +207,13 @@ class NewVoucher extends Component {
         this.handleConfirmPopup()
         const {
             selectedMerchant, selectedItem, radioValue, senderName, 
-            senderAddress, receiverName, receiverAddress, receiverDistrict
+            senderAddress, receiverName, receiverAddress, receiverDistrict, senderContact
         } = this.state
         const data = {
             email: this.props.user.email,
             value: selectedItem.price,
             senderType: radioValue ? "Anonymous" : "Own",
-            merchantName: selectedMerchant.title,
+            merchantName: selectedMerchant.name,
             itemName: selectedItem.title,
             receiverName,
             receiverAddress,
@@ -290,7 +290,7 @@ class NewVoucher extends Component {
         if (index === 0) {
             if (selectedMerchant) { 
                 idx = index + 1
-                this.getItemsByMerchantApi(selectedMerchant.title, 0) 
+                this.getItemsByMerchantApi(selectedMerchant.name, 0) 
             }
             else {
                 this.setErrorSnack("Please select a merchant")

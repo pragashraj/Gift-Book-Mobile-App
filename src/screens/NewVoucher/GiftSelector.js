@@ -57,7 +57,6 @@ const GiftSelector = ({
                     source = {src}
                     onPress = {() => handleItemOnPress(item)}
                     onSelected = { selectedItem && selectedItem.title === title }
-                    itemType = "item"
                 />
             </View>
         )

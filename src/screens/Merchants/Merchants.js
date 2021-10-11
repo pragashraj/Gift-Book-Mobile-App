@@ -7,7 +7,7 @@ import {getMerchants, getMerchantsByCategory, getMerchantByName, getMerchantCate
 
 import TopBar from '../../components/TopBar'
 import Loading from '../../components/Loading'
-import Merchant from '../../components/Item'
+import MerchantItem from '../../components/MerchantItem'
 import Search from '../../components/Search'
 import MerchantPopup from '../../components/MerchantPopup'
 import AlertSnackBar from '../../components/AlertSnackBar'
@@ -177,7 +177,7 @@ class Merchants extends Component {
         const {name, src} = item
         return (
             <View style = {styles.merchant} key = {id}>
-                <Merchant
+                <MerchantItem
                     title = {name}
                     source = {src}
                     onPress = {() => this.handleMerchantOnPress(item)}

@@ -5,7 +5,12 @@ import CustomButton from './CustomButton'
 
 const ItemPopup = ({open, onClose, selectedItem, handleCancel, handleSelect}) => {
 
-    const {title, src} = selectedItem
+    const {title, src, description, price} = selectedItem
+
+    const getImageSource = () => {
+        const uri = { uri: `data:image/jpeg;base64,${src}` }
+        return uri
+    }
 
     const renderModalContent = () => {
         return (
@@ -15,18 +20,15 @@ const ItemPopup = ({open, onClose, selectedItem, handleCancel, handleSelect}) =>
                         <Text style = {styles.headerTitle}>{title}</Text>
                     </View>
                     <View style = {styles.imageBlock}>
-                        <Image style = {styles.image} source = {src}/>
+                        <Image style = {styles.image} source = {getImageSource()}/>
                     </View>
                     <View style = {styles.descriptiveBlock}>
                         <View style = {styles.description}>
-                            <Text style = {styles.descriptionText}>
-                                The onRequestClose callback is called when the user taps the hardware 
-                                back button on Android or the menu button on Apple TV.
-                            </Text>
+                            <Text style = {styles.descriptionText}>{description}</Text>
                         </View>
                         <View style = {styles.price}>
                             <Text style = {styles.priceText}>Price</Text>
-                            <Text style = {styles.priceValue}>Rs. 450</Text>
+                            <Text style = {styles.priceValue}>Rs. {price}</Text>
                         </View>
                     </View>
                     <View style = {styles.footerBtn}>

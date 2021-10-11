@@ -34,11 +34,14 @@ class MyVouchers extends Component {
         vouchersData: [],
         total: 0,
         current: 0,
-        refreshing: false
+        refreshing: false,
+        todayDate: null
     }
 
     componentDidMount() {
         this.getVouchersApi(0)
+        const now = new Date()
+        this.setState({ todayDate: now, startDate: now, endDate: now })
     }
 
     getVouchersApi = async(page) => {
@@ -78,27 +81,26 @@ class MyVouchers extends Component {
     }
 
     handleDateOnChange = (event) => {
-        if (event.type === "set") {
-            const date = value.nativeEvent.timestamp
-            const {startDate, endDate, dateTag} = this.state
+        const {type} = event
+        if (type === "set") {
+            const date = event.nativeEvent.timestamp
+            const {startDate, endDate, dateTag, todayDate} = this.state
             if (dateTag === "Start") {
                 this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
 
-                const today = new Date()
-                if (endDate && endDate !== today) {
+                if (endDate && endDate !== todayDate) {
                     this.filterVouchersByDateApi(date, endDate, 0)
                 }
             }
             else {
                 this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
 
-                const today = new Date()
-                if (startDate && startDate !== today) {
+                if (startDate && startDate !== todayDate) {
                     this.filterVouchersByDateApi(startDate, date, 0)
                 }
             }
         }
-        else if (event.type === "dismissed") {
+        else if (type === "dismissed") {
             this.setState({ openDatePicker: false, dateTag: "" })
         }
     }
@@ -112,7 +114,14 @@ class MyVouchers extends Component {
     }
 
     handleRadioOnPress = (value) => {
+        const {radioValue} = this.state
         this.setState({ radioValue: value })
+        if (value === "all" && radioValue !== value) {
+            this.getVouchersApi(0)
+        }
+        else {
+            this.filterVouchersByStatusApi(value, 0)
+        }
     }
 
     handleDateClearOnPress = () => {
