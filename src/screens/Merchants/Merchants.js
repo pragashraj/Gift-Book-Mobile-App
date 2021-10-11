@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
+import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, RefreshControl } from 'react-native'
 
 import {connect} from 'react-redux'
 
@@ -14,7 +14,6 @@ import AlertSnackBar from '../../components/AlertSnackBar'
 import Pagination from '../../components/Pagination'
 
 import {styles} from './styles'
-import spring from '../../assets/images/merchants/spring-and-summer.png'
 
 class Merchants extends Component {
     state = {
@@ -29,7 +28,8 @@ class Merchants extends Component {
         merchantsData: [],
         total: 0,
         current: 0,
-        selectedCategory: "All"
+        selectedCategory: "All",
+        refreshing: false
     }
 
     componentDidMount() {
@@ -42,9 +42,9 @@ class Merchants extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getMerchants(page, token)
-            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1 })
+            this.setState({ loading: false, merchantsData: data.merchantList, total: data.total, current: data.current + 1, refreshing: false })
         } catch (e) {
-            this.setState({ loading: false })
+            this.setState({ loading: false, refreshing: false })
             this.setErrorSnack(e.response.data.message)
         }
     }
@@ -131,6 +131,11 @@ class Merchants extends Component {
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
     }
 
+    onRefresh = () => {
+        this.setState({ refreshing: true })
+        this.getMerchantsApi(0)
+    }
+
     renderNodataAvailable = () => {
         return (
             <View style = {styles.noDataAvailableRoot}>
@@ -159,12 +164,12 @@ class Merchants extends Component {
     }
 
     renderMerchantItem = (item, id) => {
-        const {name} = item
+        const {name, src} = item
         return (
             <View style = {styles.merchant} key = {id}>
                 <Merchant
                     title = {name}
-                    source = {spring}
+                    source = {src}
                     onPress = {() => this.handleMerchantOnPress(item)}
                     onSelected = { false }
                 />
@@ -235,11 +240,17 @@ class Merchants extends Component {
     }
 
     render() {
-        const {loading, openMerchantPopup, selectedMerchant, openAlert, alertMessage, alertAction, total, current} = this.state
+        const {loading, openMerchantPopup, selectedMerchant, openAlert, alertMessage, alertAction, total, current, refreshing} = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "Merchants" navigation = {this.props.navigation}/>
-                <ScrollView style = {styles.scrollView} indicatorStyle = "white">
+                <ScrollView 
+                    style = {styles.scrollView} 
+                    indicatorStyle = "white"
+                    refreshControl = {
+                        <RefreshControl refreshing = {refreshing} onRefresh = {this.onRefresh}/>
+                    }
+                >
                     <View style = {styles.mainRoot}>
                         { this.renderSearch() }
                         { this.renderFilters() }

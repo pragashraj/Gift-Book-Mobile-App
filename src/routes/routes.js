@@ -12,13 +12,13 @@ import MyPayments from "../screens/Payments/MyPayments"
 const routes = {
     auth: [
         {
-            name: "Sign-Up",
-            component: SignUp,
+            name: "Sign-In",
+            component: SignIn,
             options: { headerShown: false }
         },
         {
-            name: "Sign-In",
-            component: SignIn,
+            name: "Sign-Up",
+            component: SignUp,
             options: { headerShown: false }
         },
         {
