@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
     category: {
         alignItems: "center",
         justifyContent: "center",
-        marginHorizontal: 2,
+        marginHorizontal: 10,
         marginVertical: 5
     },
     categoryText: {
@@ -223,7 +223,8 @@ export const styles = StyleSheet.create({
         height: screenHight * 0.2,
         backgroundColor: "#fff",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        marginTop: 10
     },
     noDataAvailable: {
         textTransform: "uppercase",

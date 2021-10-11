@@ -7,7 +7,7 @@ import {getMerchants, getMerchantsByCategory, getMerchantByName, getMerchantCate
 
 import TopBar from '../../components/TopBar'
 import Loading from '../../components/Loading'
-import Merchant from '../../components/Item'
+import MerchantItem from '../../components/MerchantItem'
 import Search from '../../components/Search'
 import MerchantPopup from '../../components/MerchantPopup'
 import AlertSnackBar from '../../components/AlertSnackBar'
@@ -29,7 +29,8 @@ class Merchants extends Component {
         total: 0,
         current: 0,
         selectedCategory: "All",
-        refreshing: false
+        refreshing: false,
+        searched: false
     }
 
     componentDidMount() {
@@ -86,12 +87,15 @@ class Merchants extends Component {
     }
 
     handleCategoryOnPress = (title) => {
-        this.setState({ selectedCategory: title })
-        if (title === "All") {
-            this.getMerchantsApi(0)
-        }
-        else {
-            this.getMerchantsByCategoryApi(title, 0)
+        const {selectedCategory} = this.state
+        if (selectedCategory !== title) {
+            this.setState({ selectedCategory: title })
+            if (title === "All") {
+                this.getMerchantsApi(0)
+            }
+            else {
+                this.getMerchantsByCategoryApi(title, 0)
+            }
         }
     }
 
@@ -99,10 +103,16 @@ class Merchants extends Component {
         const {searchValue} = this.state
         if (searchValue) {
             this.searchApi(searchValue, 0)
+            this.setState({ searched: true })
         }
         else {
             this.setErrorSnack("Fields cannot be empty")
         }
+    }
+
+    handleSearchOnClear = () => {
+        this.getMerchantsApi(0)
+        this.setState({ searched: false, searchValue: "" })
     }
 
     handleMerchantOnPress = (item) => {
@@ -139,7 +149,7 @@ class Merchants extends Component {
     renderNodataAvailable = () => {
         return (
             <View style = {styles.noDataAvailableRoot}>
-                <Text style = {styles.noDataAvailable}>Currently no data available</Text>
+                <Text style = {styles.noDataAvailable}>No data available</Text>
             </View>
         )
     }
@@ -167,7 +177,7 @@ class Merchants extends Component {
         const {name, src} = item
         return (
             <View style = {styles.merchant} key = {id}>
-                <Merchant
+                <MerchantItem
                     title = {name}
                     source = {src}
                     onPress = {() => this.handleMerchantOnPress(item)}
@@ -224,7 +234,7 @@ class Merchants extends Component {
     }
 
     renderSearch = () => {
-        const {searchValue} = this.state
+        const {searchValue, searched} = this.state
         return (
             <View style = {styles.searchBlock}>
                 <Text style = {styles.headerTitle}>Search merchant by name</Text>
@@ -234,6 +244,8 @@ class Merchants extends Component {
                     onChangeText = {this.handleOnChangeText}
                     name = "searchValue"
                     onPress = {this.handleSearchOnPress}
+                    onClear = {this.handleSearchOnClear}
+                    searched = {searched}
                 />
             </View>
         )

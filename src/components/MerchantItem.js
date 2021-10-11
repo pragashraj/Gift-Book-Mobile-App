@@ -1,8 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 
-const Item = ({source, title, onPress, onSelected}) => {
-
+const MerchantItem = ({source, title, onPress, onSelected}) => {
     const getImageSource = () => {
         return `data:image/png;base64,${source}`
     }
@@ -17,12 +16,12 @@ const Item = ({source, title, onPress, onSelected}) => {
     )
 }
 
-export default Item
+export default MerchantItem
 
 const styles = StyleSheet.create({
     container: {
         width: 160,
-        height: 180,
+        height: 100,
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
@@ -45,9 +44,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#F9EBEA",
     },
     image: {
-        width: 150,
-        height: 150,
+        width: 100,
+        height: 55,
         resizeMode: "stretch",
-        borderRadius: 10
-    }
+    },
 })
