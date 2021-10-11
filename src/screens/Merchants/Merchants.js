@@ -128,8 +128,21 @@ class Merchants extends Component {
     }
 
     handlePagination = (no) => {
+        const {selectedCategory, searchValue} = this.state
         this.setState({ current: no})
-        this.getMerchantsApi(no - 1)
+
+        if (searchValue) {
+            this.searchApi(searchValue, no - 1)
+            this.setState({ searched: true })
+        } 
+        else {
+            if (selectedCategory === "All") {
+                this.getMerchantsApi(no - 1)
+            } 
+            else {
+                this.getMerchantsByCategoryApi(selectedCategory, no - 1)
+            }
+        }
     }
 
     setErrorSnack = (message) => {

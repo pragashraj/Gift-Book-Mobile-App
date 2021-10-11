@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image, RefreshControl } from 'react-native'
 
 import {connect} from 'react-redux'
+import moment from 'moment'
 
 import {getVouchers, filterVouchersByDate, filterVouchersByStatus} from '../../api/voucher'
 
@@ -89,14 +90,14 @@ class MyVouchers extends Component {
                 this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
 
                 if (endDate && endDate !== todayDate) {
-                    this.filterVouchersByDateApi(date, endDate, 0)
+                    this.filterVouchersByDateApi(this.getDate(date)+"T00:00:00", this.getDate(endDate)+"T23:59:59", 0)
                 }
             }
             else {
                 this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
                 
                 if (startDate && startDate !== todayDate) {
-                    this.filterVouchersByDateApi(startDate, date, 0)
+                    this.filterVouchersByDateApi(this.getDate(startDate)+"T00:00:00", this.getDate(date)+"T23:59:59", 0)
                 }
             }
         }
@@ -125,7 +126,9 @@ class MyVouchers extends Component {
     }
 
     handleDateClearOnPress = () => {
-        this.setState({ startDate: new Date(), endDate: new Date() })
+        const now = new Date()
+        this.setState({ startDate: now, endDate: now, todayDate: now, openDatePicker: false, dateTag: "" })
+        this.getVouchersApi(0)
     }
 
     handleVoucherPopupClose = () => {
@@ -137,7 +140,8 @@ class MyVouchers extends Component {
     }
 
     handlePagination = (no) => {
-        this.setState({ current: no})
+        const now = new Date()
+        this.setState({ current: no, startDate: now, endDate: now, todayDate: now, openDatePicker: false, dateTag: "" })
         this.getVouchersApi(no - 1)
     }
 
@@ -148,6 +152,10 @@ class MyVouchers extends Component {
     setAlert = (message, action) => {
         this.setState({ openAlert: true, alertMessage: message, alertAction: action })
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
+    }
+
+    getDate = (date) => {
+        return moment(date).toISOString().split(".")[0].split("T")[0]
     }
 
     onRefresh = () => {

@@ -22,8 +22,8 @@ import {styles} from './styles'
 
 class SignIn extends Component {
     state = {
-        email: "spr@gmail.com",
-        password: "123456",
+        email: "",
+        password: "",
         openAlert: false,
         alertMessage: "",
         visibility: false,

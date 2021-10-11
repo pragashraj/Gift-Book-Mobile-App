@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image, RefreshControl } from 'react-native'
 
 import {connect} from 'react-redux'
+import moment from 'moment'
 
 import {getPayments, filterPaymentsByDate} from '../../api/payment'
 
@@ -29,11 +30,14 @@ class MyPayments extends Component {
         alertAction: '',
         total: 0,
         current: 0,
-        refreshing: false
+        refreshing: false,
+        todayDate: null
     }
 
     componentDidMount() {
         this.getPaymentsApi(0)
+        const now = new Date()
+        this.setState({ todayDate: now, startDate: now })
     }
 
     getPaymentsApi = async(page) => {
@@ -63,21 +67,19 @@ class MyPayments extends Component {
     handleDateOnChange = (event) => {
         if (event.type === "set") {
             const date = value.nativeEvent.timestamp
-            const {startDate, endDate, dateTag} = this.state
+            const {startDate, endDate, dateTag, todayDate} = this.state
             if (dateTag === "Start") {
                 this.setState({ startDate: date, openDatePicker: false, dateTag: "" })
 
-                const today = new Date()
-                if (endDate && endDate !== today) {
-                    this.filterPaymentsByDateApi(date, endDate, 0)
+                if (endDate && endDate !== todayDate) {
+                    this.filterPaymentsByDateApi(this.getDate(date)+"T00:00:00", this.getDate(endDate)+"T23:59:59", 0)
                 }
             }
             else {
                 this.setState({ endDate: date, openDatePicker: false, dateTag: "" })
 
-                const today = new Date()
-                if (startDate && startDate !== today) {
-                    this.filterPaymentsByDateApi(startDate, date, 0)
+                if (startDate && startDate !== todayDate) {
+                    this.filterPaymentsByDateApi(this.getDate(startDate)+"T00:00:00", this.getDate(date)+"T23:59:59", 0)
                 }
             }
         }
@@ -91,11 +93,14 @@ class MyPayments extends Component {
     }
 
     handleDateClearOnPress = () => {
-        this.setState({ startDate: new Date(), endDate: new Date(), openDatePicker: false })
+        const now = new Date()
+        this.setState({ startDate: now, endDate: now, todayDate: now, openDatePicker: false, dateTag: "" })
+        this.getPaymentsApi(0)
     }
 
     handlePagination = (no) => {
-        this.setState({ current: no})
+        const now = new Date()
+        this.setState({ current: no, startDate: now, endDate: now, todayDate: now, openDatePicker: false, dateTag: "" })
         this.getPaymentsApi(no - 1)
     }
     
@@ -106,6 +111,10 @@ class MyPayments extends Component {
     setAlert = (message, action) => {
         this.setState({ openAlert: true, alertMessage: message, alertAction: action })
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
+    }
+
+    getDate = (date) => {
+        return moment(date).toISOString().split(".")[0].split("T")[0]
     }
 
     onRefresh = () => {
