@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image, RefreshControl } from 'react-native'
 
 import {connect} from 'react-redux'
 
@@ -29,6 +29,7 @@ class MyPayments extends Component {
         alertAction: '',
         total: 0,
         current: 0,
+        refreshing: false
     }
 
     componentDidMount() {
@@ -40,9 +41,9 @@ class MyPayments extends Component {
             this.setState({ loading: true })
             const token = this.props.user.token
             const data = await getPayments(page, token)
-            this.setState({ loading: false, paymentsData: data.paymentList, total: data.total, current: data.current + 1 })
+            this.setState({ loading: false, paymentsData: data.paymentList, total: data.total, current: data.current + 1, refreshing: false })
         } catch (e) {
-            this.setState({ loading: false })
+            this.setState({ loading: false, refreshing: false })
             this.setErrorSnack(e.response.data.message)
         }
     }
@@ -105,6 +106,11 @@ class MyPayments extends Component {
     setAlert = (message, action) => {
         this.setState({ openAlert: true, alertMessage: message, alertAction: action })
         setTimeout(() => { this.setState({ openAlert: false, alertMessage: "", alertAction: '' }) }, 3000)
+    }
+
+    onRefresh = () => {
+        this.setState({ refreshing: true })
+        this.getPaymentsApi(0)
     }
 
     renderNodataAvailable = () => {
@@ -194,12 +200,18 @@ class MyPayments extends Component {
 
     render() {
         const {
-            loading, openDatePicker, dateTag, startDate, endDate, openAlert, alertMessage, alertAction, total, current,
+            loading, openDatePicker, dateTag, startDate, endDate, openAlert, alertMessage, alertAction, total, current, refreshing
         } = this.state
         return (
             <SafeAreaView style = {styles.container}>
                 <TopBar title = "My Payments" navigation = {this.props.navigation}/>
-                <ScrollView style = {styles.scrollView} indicatorStyle = "white">
+                <ScrollView 
+                    style = {styles.scrollView} 
+                    indicatorStyle = "white"
+                    refreshControl = {
+                        <RefreshControl refreshing = {refreshing} onRefresh = {this.onRefresh}/>
+                    }
+                >
                     <View style = {styles.mainRoot}>
                         { this.renderDateFilter() }
                         { this.renderPaymentList() }
