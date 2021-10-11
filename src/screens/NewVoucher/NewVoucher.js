@@ -323,7 +323,33 @@ class NewVoucher extends Component {
     }
 
     handlePagination = (no) => {
+        const {index, selectedCategory, merchantSearch, selectedMerchant, itemSearch} = this.state.index
         this.setState({ current: no})
+
+        const page = no - 1
+
+        if (index === 0) {
+            if (merchantSearch) {
+                this.searchMerchantApi(merchantSearch, page)
+                this.setState({ merchantSearched: true })
+            } 
+            else {
+                if (selectedCategory.title === "All") {
+                    this.getMerchantsApi(page)
+                } 
+                else {
+                    this.getMerchantsByCategoryApi(selectedCategory.title, page)
+                }
+            }
+        }
+        else if (index === 1) {
+            if (itemSearch) {
+                this.searchItemApi(itemSearch, selectedMerchant.name, page)
+            }
+            else {
+                this.getItemsByMerchantApi(selectedMerchant.name, page)
+            }
+        }
     }
 
     setSuccessSnack = (message) => {
@@ -340,7 +366,7 @@ class NewVoucher extends Component {
     }
 
     onRefresh = () => {
-        this.setState({ refreshing: true })
+        this.setState({ refreshing: true, selectedCategory: {id: 0, title: "All", src: null}, selectedMerchant: null, merchantSearch: "" })
         this.getMerchantsApi(0)
     }
 

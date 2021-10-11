@@ -93,11 +93,14 @@ class MyPayments extends Component {
     }
 
     handleDateClearOnPress = () => {
-        this.setState({ startDate: new Date(), endDate: new Date(), openDatePicker: false })
+        const now = new Date()
+        this.setState({ startDate: now, endDate: now, todayDate: now, openDatePicker: false, dateTag: "" })
+        this.getPaymentsApi(0)
     }
 
     handlePagination = (no) => {
-        this.setState({ current: no})
+        const now = new Date()
+        this.setState({ current: no, startDate: now, endDate: now, todayDate: now, openDatePicker: false, dateTag: "" })
         this.getPaymentsApi(no - 1)
     }
     

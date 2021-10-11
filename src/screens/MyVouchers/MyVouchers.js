@@ -126,7 +126,9 @@ class MyVouchers extends Component {
     }
 
     handleDateClearOnPress = () => {
-        this.setState({ startDate: new Date(), endDate: new Date() })
+        const now = new Date()
+        this.setState({ startDate: now, endDate: now, todayDate: now, openDatePicker: false, dateTag: "" })
+        this.getVouchersApi(0)
     }
 
     handleVoucherPopupClose = () => {
@@ -138,7 +140,8 @@ class MyVouchers extends Component {
     }
 
     handlePagination = (no) => {
-        this.setState({ current: no})
+        const now = new Date()
+        this.setState({ current: no, startDate: now, endDate: now, todayDate: now, openDatePicker: false, dateTag: "" })
         this.getVouchersApi(no - 1)
     }
 
