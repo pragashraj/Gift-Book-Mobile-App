@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image, RefreshControl } from 'react-native'
 
 import {connect} from 'react-redux'
+import Moment from 'react-moment'
 
 import {getVouchers, filterVouchersByDate, filterVouchersByStatus} from '../../api/voucher'
 
