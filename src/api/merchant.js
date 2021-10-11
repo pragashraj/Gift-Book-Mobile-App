@@ -10,7 +10,7 @@ export const getMerchants = (page, token) => {
 }
 
 export const getMerchantsByCategory = (category, page, token) => {
-    const endpoint =  getEndpointWithPrefix(`getMerchantsByCategory?categoty=${category}&page=${page}`)
+    const endpoint =  getEndpointWithPrefix(`getMerchantsByCategory?category=${category}&page=${page}`)
     return GET(endpoint, token)
 }
 

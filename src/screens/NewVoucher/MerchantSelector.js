@@ -7,6 +7,7 @@ import Search from '../../components/Search'
 import Pagination from '../../components/Pagination'
 
 import {styles} from './styles'
+import list from '../../assets/images/icons/list.png'
 
 const MerchantSelector = ({
     merchantSearch, 
@@ -20,13 +21,20 @@ const MerchantSelector = ({
     handleMerchantOnPress,
     total,
     current,
-    handlePagination
+    handlePagination,
+    onClear,
+    searched
 }) => {
+
+    const getImageSource = (source) => {
+        const uri = { uri: `data:image/jpeg;base64,${source}` }
+        return uri
+    }
 
     const renderNodataAvailable = () => {
         return (
             <View style = {styles.noDataAvailableRoot}>
-                <Text style = {styles.noDataAvailable}>Currently no data available</Text>
+                <Text style = {styles.noDataAvailable}>No data available</Text>
             </View>
         )
     }
@@ -40,14 +48,14 @@ const MerchantSelector = ({
     }
 
     const renderMerchantItem = (item) => {
-        const {id, title, src} = item
+        const {id, name, src} = item
         return (
             <View style = {styles.merchant} key = {id}>
                 <Merchant
-                    title = {title}
+                    title = {name}
                     source = {src}
                     onPress = {() => handleMerchantOnPress(item)}
-                    onSelected = { selectedMerchant && selectedMerchant.title === title }
+                    onSelected = { selectedMerchant && selectedMerchant.name === name }
                 />
             </View>
         )
@@ -58,7 +66,7 @@ const MerchantSelector = ({
         return (
             <View style = {styles.category} key = {id}>
                 <CategoryItem 
-                    source = {src} 
+                    source = {title === "All" ? src : getImageSource(src)} 
                     onPress = {() => handleCategoryOnPress(item)} 
                     onSelected = { selectedCategory && selectedCategory.title === title }
                 />
@@ -75,10 +83,13 @@ const MerchantSelector = ({
                 onChangeText = {handleOnChangeText}
                 name = "merchantSearch"
                 onPress = {handleSearchOnPress}
+                onClear = {onClear}
+                searched = {searched}
             />
             <View style = {styles.categoryBlock}>
                 <Text style = {styles.headerTitle}>Categories</Text>
                 <View style = {styles.row}>
+                    { renderCatergoryItem({id: 0, title: "All", src: list}, 0) }
                     { categories.map(item => renderCatergoryItem(item)) }
                 </View>
             </View>

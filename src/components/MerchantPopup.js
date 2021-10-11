@@ -5,7 +5,20 @@ import CustomButton from './CustomButton'
 
 const MerchantPopup = ({open, onClose, selectedItem, handleCancel}) => {
 
-    const {title, src} = selectedItem
+    const {title, src, description, location, merchantCategory} = selectedItem
+
+    const getImageSource = () => {
+        return `data:image/png;base64,${src}`
+    }
+
+    const renderDetail = (content, value) => {
+        return (
+            <View style = {styles.row}>
+                <Text style = {styles.detailContent}>{content} : </Text>
+                <Text style = {styles.detailValue}>{value}</Text>
+            </View>
+        )
+    }
 
     const renderModalContent = () => {
         return (
@@ -15,15 +28,16 @@ const MerchantPopup = ({open, onClose, selectedItem, handleCancel}) => {
                         <Text style = {styles.headerTitle}>{title}</Text>
                     </View>
                     <View style = {styles.imageBlock}>
-                        <Image style = {styles.image} source = {src}/>
+                        <Image style = {styles.image} source = {{uri: getImageSource()}}/>
                     </View>
                     <View style = {styles.descriptiveBlock}>
                         <View style = {styles.description}>
-                            <Text style = {styles.descriptionText}>
-                                The onRequestClose callback is called when the user taps the hardware 
-                                back button on Android or the menu button on Apple TV.
-                            </Text>
+                            <Text style = {styles.descriptionText}>{description}</Text>
                         </View>
+                    </View>
+                    <View style = {styles.locationRoot}>
+                        { renderDetail("Location", location) }
+                        { renderDetail("Category", merchantCategory.title) }
                     </View>
                     <View style = {styles.footerBtn}>
                         <CustomButton text = "cancel" btnType = "secondary" handleBtnOnClick = {handleCancel}/>
@@ -96,6 +110,11 @@ const styles = StyleSheet.create({
         height: "100%",
         resizeMode: "stretch",
     },
+    locationRoot: {
+        marginTop: 10,
+        padding: 5,
+        width: "100%"
+    },
     descriptiveBlock: {
         marginTop: 10
     },
@@ -106,12 +125,24 @@ const styles = StyleSheet.create({
     descriptionText: {
         fontSize: 13,
         color: "grey",
-        textAlign: "center"
+        textAlign: "left"
     },
     footerBtn: {
         width: "80%",
         marginTop: 5,
         flexDirection: "row",
         justifyContent: "space-evenly",
-    }
+    },
+    detailContent: {
+        fontSize: 12,
+        marginHorizontal: 15
+    },
+    detailValue: {
+        fontSize: 12,
+        fontWeight: "bold"
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
 })

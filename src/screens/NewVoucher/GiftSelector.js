@@ -18,13 +18,15 @@ const GiftSelector = ({
     handleItemOnPress,
     total,
     current,
-    handlePagination
+    handlePagination,
+    onClear,
+    searched
 }) => {
 
     const renderNodataAvailable = () => {
         return (
             <View style = {styles.noDataAvailableRoot}>
-                <Text style = {styles.noDataAvailable}>Currently no data available</Text>
+                <Text style = {styles.noDataAvailable}>No data available</Text>
             </View>
         )
     }
@@ -69,12 +71,14 @@ const GiftSelector = ({
                 onChangeText = {handleOnChangeText}
                 name = "itemSearch"
                 onPress = {handleSearchOnPress}
+                onClear = {onClear}
+                searched = {searched}
             />
             <View style = {styles.giftSelectorTopBlock}>
                 <Text style = {styles.headerTitle}>Your selection</Text>
                 <View style = {styles.detailContainer}>
                     { renderDetailContent("Category", selectedCategory && selectedCategory.title) }
-                    { renderDetailContent("Merchant", selectedMerchant && selectedMerchant.title) }
+                    { renderDetailContent("Merchant", selectedMerchant && selectedMerchant.name) }
                 </View>
             </View>
             <View style = {styles.merchantBlock}>

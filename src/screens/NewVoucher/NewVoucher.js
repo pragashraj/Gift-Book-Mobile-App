@@ -24,7 +24,7 @@ class NewVoucher extends Component {
     state = {
         index: 0,
         merchantSearch: "",
-        selectedCategory: null,
+        selectedCategory: {id: 0, title: "All", src: null},
         selectedMerchant: null,
         itemSearch: "",
         selectedItem: null,
@@ -48,7 +48,9 @@ class NewVoucher extends Component {
         itemsData: [],
         itemTotal: 0,
         itemCurrent: 0,
-        refreshing: false
+        refreshing: false,
+        merchantSearched: false,
+        itemSearched: false
     }
 
     footerText = ["Select a merchant", "Select a gift", "Delivery details", "Payment summary"]
@@ -169,20 +171,32 @@ class NewVoucher extends Component {
         const merchantSearch = this.state.merchantSearch
         if (merchantSearch) {
             this.searchMerchantApi(merchantSearch, 0)
+            this.setState({ merchantSearched: true })
         }
         else {
             this.setErrorSnack("Please enter a value")
         }
     }
 
+    handleMerchantSearchOnClear = () => {
+        this.getMerchantsApi(0)
+        this.setState({ merchantSearched: false, merchantSearch: "" })
+    }
+
     handleItemOnSearch = () => {
         const {itemSearch, selectedMerchant} = this.state
         if (itemSearch) {
             this.searchItemApi(itemSearch, selectedMerchant.title, 0)
+            this.setState({ itemSearched: true })
         }
         else {
             this.setErrorSnack("Please enter a value")
         }
+    }
+
+    handleItemSearchOnClear = () => {
+        this.getItemsByMerchantApi(this.state.selectedMerchant.title, 0)
+        this.setState({ itemSearched: false })
     }
 
     handleOnChangeText = (value, name) => {
@@ -212,8 +226,14 @@ class NewVoucher extends Component {
     }
 
     handleCategoryOnPress = (item) => {
+        if (item.title === "All") {
+            this.getMerchantsApi(0)
+        }
+        else{
+            this.getMerchantsByCategoryApi(item.title, 0)
+        }
+
         this.setState({ selectedCategory: item, selectedMerchant: null, openAlert: false })
-        this.getMerchantsByCategoryApi(item.title, 0)
     }
 
     handleMerchantOnPress = (item) => {
@@ -392,7 +412,7 @@ class NewVoucher extends Component {
     }
 
     renderGiftSelector = () => {
-        const {itemSearch, selectedItem, selectedCategory, selectedMerchant, itemsData, itemTotal, itemCurrent} = this.state
+        const {itemSearch, selectedItem, selectedCategory, selectedMerchant, itemsData, itemTotal, itemCurrent, itemSearched} = this.state
         return (
             <GiftSelector
                 itemSearch = {itemSearch}
@@ -406,12 +426,14 @@ class NewVoucher extends Component {
                 total = {itemTotal}
                 current = {itemCurrent}
                 handlePagination = {this.handlePagination}
+                onClear = {this.handleItemSearchOnClear}
+                searched = {itemSearched}
             />
         )
     }
 
     renderMerchantSelector = () => {
-        const {merchantSearch, selectedCategory, selectedMerchant, merchantsData, categoriesData, total, current} = this.state
+        const {merchantSearch, selectedCategory, selectedMerchant, merchantsData, categoriesData, total, current, merchantSearched} = this.state
         return (
             <MerchantSelector 
                 merchantSearch = {merchantSearch}
@@ -426,6 +448,8 @@ class NewVoucher extends Component {
                 total = {total}
                 current = {current}
                 handlePagination = {this.handlePagination}
+                onClear = {this.handleMerchantSearchOnClear}
+                searched = {merchantSearched}
             />
         ) 
     }
