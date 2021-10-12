@@ -19,7 +19,7 @@ export const GET = async(endpoint, authorization = null) => {
 
 const createInstance = (authorization, contentType) => {
     const instance = axios.create({
-        baseURL: "http://10.0.2.2:9000/api/"
+        baseURL: "http://192.168.8.102:9000/api/"
     })
       
     if (authorization) {

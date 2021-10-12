@@ -55,7 +55,7 @@ const PaymentSlip = ({values, profile}) => {
 
     const createPayment = () => {
         let payment = []
-        payment.push(createContent("Merchant", selectedMerchant && selectedMerchant.title))
+        payment.push(createContent("Merchant", selectedMerchant && selectedMerchant.name))
         payment.push(createContent("Item", selectedItem && selectedItem.title))
         payment.push(createContent("Price", `Rs. ${selectedItem && selectedItem.price}`))
         payment.push(createContent("Delivery Charge", `Rs. ${deliveryCharge}`))
@@ -66,8 +66,8 @@ const PaymentSlip = ({values, profile}) => {
 
     const createCard = () => {
         let card = []
-        card.push(createContent("Type", profile && profile.cardType))
-        card.push(createContent("Card number", profile && profile.cardNo))
+        card.push(createContent("Type", profile && profile.cardType ? profile.cardType : "Master"))
+        card.push(createContent("Card number", profile && profile.cardNo ? profile.cardNo : "**************"))
 
         setCard(card)
     }
