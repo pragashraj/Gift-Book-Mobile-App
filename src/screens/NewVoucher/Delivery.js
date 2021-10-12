@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Text, View } from 'react-native'
 
 import RadioButton from '../../components/RadioButton'
 import CustomInput from '../../components/CustomInput'
 import Selector from '../../components/Selector'
+import SelectorPopup from '../../components/SelectorPopup'
 
 import {styles} from './styles'
 
@@ -15,14 +16,24 @@ const Delivery = ({
     handleOptionOnPress
 }) => {
 
+    const [open, setOpen] = useState(false)
+
+    const handleModal = () => {
+        setOpen(!open)
+    }
+
+    const handleOptionPress = (value) => {
+        handleModal()
+        handleOptionOnPress(value)
+    }
+
     const renderSelector = (text) => {
         return (
             <View style = {styles.input}>
                 <Text style = {styles.inputText}>{text}</Text>
                 <Selector 
-                    options = {options}
                     selectedValue = {values["receiverDistrict"]} 
-                    setSelectedValue = {handleOptionOnPress}
+                    onPress = {handleModal}
                 />
             </View>
         )
@@ -91,6 +102,7 @@ const Delivery = ({
                 <Text style = {styles.subHeader}>Receiver</Text>
                 { renderReceiverBlock() }
             </View>
+            { open && <SelectorPopup open = {open} options = {options} onClose = {handleModal} handleOptionOnPress = {handleOptionPress}/> }
         </View>
     )
 }
