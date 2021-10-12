@@ -58,6 +58,12 @@ class NewVoucher extends Component {
     districts = [
         {id: "1", label: "Gampaha", value: "Gampaha"},
         {id: "2", label: "Colombo", value: "Colombo"},
+        {id: "3", label: "Kalutara", value: "Kalutara"},
+        {id: "4", label: "Galle", value: "Galle"},
+        {id: "5", label: "Puttalam", value: "Puttalam"},
+        {id: "6", label: "Matara", value: "Matara"},
+        {id: "7", label: "Anuradhapura", value: "Anuradhapura"},
+        {id: "8", label: "Jaffna", value: "Jaffna"},
     ]
 
     componentDidMount() {
